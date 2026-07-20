@@ -1,0 +1,56 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/linqalpha-openapi-original.json
+docs: https://docs.linqalpha.com/quickstart
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: X-API-KEY
+  primary: true
+  applies_to: the whole REST API (declared as a global security requirement in the OpenAPI)
+  docs: https://docs.linqalpha.com/quickstart
+  example_header: 'X-API-KEY: YOUR_API_KEY'
+  sources:
+  - openapi/linqalpha-openapi-original.json
+- name: LinqAlphaOAuth
+  type: oauth2
+  applies_to: the LinqAlpha MCP server at https://api.linqalpha.com/v1/mcp
+  issuer: https://api.linqalpha.com
+  dynamic_client_registration: https://api.linqalpha.com/oauth/register
+  code_challenge_methods_supported:
+  - S256
+  token_endpoint_auth_methods_supported:
+  - none
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.linqalpha.com/oauth/authorize
+    tokenUrl: https://api.linqalpha.com/oauth/token
+    scopes:
+      mcp:tools: Invoke the tools exposed by the LinqAlpha MCP server
+  sources:
+  - https://api.linqalpha.com/.well-known/oauth-authorization-server
+notes: >-
+  The REST API is single-factor API key auth: one X-API-KEY header applied globally, with no
+  per-operation scoping. The MCP endpoint additionally accepts an OAuth 2.0 authorization_code
+  flow with PKCE (S256) and public clients (token_endpoint_auth_methods_supported = none),
+  registered dynamically per RFC 7591. Platform-tier API keys are multi-tenant: several endpoints
+  accept an organization_id to select which organization's data the key reads, defaulting to the
+  key's primary organization.
+errors:
+- code: API_KEY_MISSING
+  status: 401
+- code: INVALID_API_KEY
+  status: 401
+cross_references:
+  scopes: scopes/linqalpha-scopes.yml
+  conventions: conventions/linqalpha-conventions.yml
+  well_known: well-known/linqalpha-well-known.yml
