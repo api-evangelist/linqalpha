@@ -1,0 +1,1283 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing RMS API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: RMS
+  description: Research Management System
+paths:
+  /v1/organizations:
+    post:
+      summary: Create Organization
+      description: 'Creates a new organization with the specified parameters.
+
+
+        **Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+            example:
+              id: organization_001
+              name: Example Investment Fund
+              s3_path: s3://example-bucket/organization_001/
+      responses:
+        '200':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrganizationResponse'
+              example:
+                organization_id: 123e4567-e89b-12d3-a456-426614174000
+                error: null
+        '400':
+          description: Bad Request - Invalid request parameters or incorrect format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: ORGANIZATION_ID_MISSING
+                  msg: organization id is required
+                  message: organization id is required
+                payload: null
+        '401':
+          description: Unauthorized - Invalid API key or authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '500':
+          description: Internal Server Error - An unexpected error occurred on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: SERVER_ERROR
+                  message: An unexpected error occurred on the server.
+                payload: null
+      tags:
+      - RMS
+  /v1/rms_chat:
+    post:
+      summary: RMS Chat (SSE - Stream)
+      description: 'Generate a response using the RMS (Research Management System) with streaming server-sent events. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.
+
+
+        **Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RmsChatRequest'
+            example:
+              organization_id: 123e4567-e89b-12d3-a456-426614174000
+              conversation_id: 987e6543-e21b-32d3-c654-426614174999
+              user_id: 123e4567-e89b-12d3-a456-426614174000
+              user_email: john.doe@example.com
+              user_name: John Doe
+              query: What are the latest insights on AAPL performance?
+              search_types:
+              - rms
+              - external
+              external_types:
+              - transcript
+              - filing
+              - news
+              - ir_slide
+              rms_types:
+              - emailnotes
+              - generalnotes
+              stock_ids:
+              - BBG001S5N8V8
+              per_event_size: 0
+              per_event_sleep_time: 0.01
+              source_batch_id: 123e4567-e89b-12d3-a456-426614174000
+              fiscal_period:
+                start_time:
+                  year: 2023
+                  quarter: 1
+                end_time:
+                  year: 2024
+                  quarter: 3
+      responses:
+        '200':
+          description: SSE stream response with RMS search results
+          content:
+            text/event-stream:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/ConversationEvent'
+                - $ref: '#/components/schemas/DialogueIdEvent'
+                - $ref: '#/components/schemas/ThinkEvent'
+                - $ref: '#/components/schemas/SubQuestionsEvent'
+                - $ref: '#/components/schemas/StatusEvent'
+                - $ref: '#/components/schemas/DialogueIdEvent'
+                - $ref: '#/components/schemas/SearchResultsEvent'
+                - $ref: '#/components/schemas/AnswerEvent'
+                discriminator:
+                  propertyName: event_name
+                  mapping:
+                    conversation: '#/components/schemas/ConversationEvent'
+                    dialogue_id: '#/components/schemas/DialogueIdEvent'
+                    think: '#/components/schemas/ThinkEvent'
+                    sub_questions: '#/components/schemas/SubQuestionsEvent'
+                    status: '#/components/schemas/StatusEvent'
+                    search_results: '#/components/schemas/SearchResultsEvent'
+                    answer: '#/components/schemas/AnswerEvent'
+              examples:
+                conversation_created:
+                  summary: 1) Conversation Created
+                  description: Created conversation ID
+                  value:
+                    event_name: conversation
+                    data:
+                      conversation_id: 123e4567-e89b-12d3-a456-426614174000
+                dialogue_id_event:
+                  summary: 2) Dialogue ID
+                  description: Dialogue ID for stream control/stop
+                  value:
+                    event_name: dialogue_id
+                    data:
+                      dialogue_id: 987e6543-e21b-32d3-c654-426614174999
+                think_event:
+                  summary: 3) Think
+                  description: Model's planning/reasoning piece (streaming)
+                  value:
+                    event_name: think
+                    data:
+                      think_piece: <PLAN_REASONING>
+                sub_questions_event:
+                  summary: 4) Sub Questions
+                  description: Sub-question generation result
+                  value:
+                    event_name: sub_questions
+                    data:
+                      sub_questions:
+                      - What are the key points of AAPL's recent performance?
+                      - What is the summary of the Brokerage Research?
+                search_results_event:
+                  summary: 5) Search Results ID
+                  description: Provide chat_message_id for reference lookup
+                  value:
+                    event_name: search_results
+                    data:
+                      chat_message_id: 123e4567-e89b-12d3-a456-426614174000
+                answer_event:
+                  summary: 6) Answer
+                  description: Final answer piece (streaming)
+                  value:
+                    event_name: answer
+                    data:
+                      answer_piece: Based on the latest research...
+                status_finish:
+                  summary: 7) Status Finish
+                  description: Stream end
+                  value:
+                    event_name: status
+                    data:
+                      status: finish
+        '400':
+          description: Bad Request - Invalid request parameters or incorrect format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: CREATE_CONV_FAIL
+                  message: RMS conversation could not be created.
+                payload: null
+        '401':
+          description: Unauthorized - Invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '403':
+          description: Forbidden - No permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: FORBIDDEN
+                  message: 'Access denied: insufficient permissions.'
+                payload: null
+        '404':
+          description: Not Found - The requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: NOT_FOUND
+                  message: The requested resource was not found.
+                payload: null
+        '500':
+          description: Internal Server Error - An unexpected error occurred on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: SERVER_ERROR
+                  message: An unexpected error occurred on the server.
+                payload: null
+      tags:
+      - RMS
+  /v1/rms_deep_research:
+    post:
+      summary: RMS Deep Research
+      description: 'Generate a response using the RMS (Research Management System) with deep research capabilities. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.
+
+
+        **Note**:This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RmsChatRequest'
+            example:
+              organization_id: 123e4567-e89b-12d3-a456-426614174000
+              conversation_id: 987e6543-e21b-32d3-c654-426614174999
+              user_id: 123e4567-e89b-12d3-a456-426614174000
+              user_email: john.doe@example.com
+              user_name: John Doe
+              query: What are the latest insights on AAPL performance?
+              search_types:
+              - rms
+              - external
+              external_types:
+              - transcript
+              - filing
+              - news
+              - ir_slide
+              rms_types:
+              - emailnotes
+              - generalnotes
+              document_ids:
+              - 123e4567-e89b-12d3-a456-426614174000
+              container_ids:
+              - 123e4567-e89b-12d3-a456-426614174000
+              stock_ids:
+              - BBG001S5N8V8
+              per_event_size: 0
+              per_event_sleep_time: 0.01
+              upload_period:
+                start_time:
+                  year: 2023
+                  month: 1
+                  day: 1
+                end_time:
+                  year: 2024
+                  month: 12
+                  day: 31
+              fiscal_period:
+                start_time:
+                  year: 2023
+                  quarter: 1
+                end_time:
+                  year: 2024
+                  quarter: 3
+      responses:
+        '200':
+          description: 'SSE stream of research events. Each event is sent as `data: {json}\n\n`'
+          content:
+            text/event-stream:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/ConversationEvent'
+                - $ref: '#/components/schemas/ChatMessageEvent'
+                - $ref: '#/components/schemas/StatusEvent'
+                - $ref: '#/components/schemas/KeepAliveEvent'
+                - $ref: '#/components/schemas/DialogueIdEvent'
+                - $ref: '#/components/schemas/ResearchProgressEvent'
+                - $ref: '#/components/schemas/RoundEvent'
+                - $ref: '#/components/schemas/ThinkEvent'
+                - $ref: '#/components/schemas/ToolCallEvent'
+                - $ref: '#/components/schemas/ToolResponseEvent'
+                - $ref: '#/components/schemas/SearchResultsEvent'
+                - $ref: '#/components/schemas/AnswerEvent'
+                discriminator:
+                  propertyName: event_name
+                  mapping:
+                    conversation: '#/components/schemas/ConversationEvent'
+                    chat_message: '#/components/schemas/ChatMessageEvent'
+                    status: '#/components/schemas/StatusEvent'
+                    keep_alive: '#/components/schemas/KeepAliveEvent'
+                    dialogue_id: '#/components/schemas/DialogueIdEvent'
+                    research_progress: '#/components/schemas/ResearchProgressEvent'
+                    round: '#/components/schemas/RoundEvent'
+                    think: '#/components/schemas/ThinkEvent'
+                    tool_call: '#/components/schemas/ToolCallEvent'
+                    tool_response: '#/components/schemas/ToolResponseEvent'
+                    search_results: '#/components/schemas/SearchResultsEvent'
+                    answer: '#/components/schemas/AnswerEvent'
+              examples:
+                conversation_created:
+                  summary: 1) Conversation Created
+                  value:
+                    event_name: conversation
+                    data:
+                      conversation_id: 123e4567-e89b-12d3-a456-426614174000
+                chat_message:
+                  summary: 2) Chat Message
+                  description: Chat message creation event
+                  value:
+                    event_name: chat_message
+                    data:
+                      chat_message_id: 123e4567-e89b-12d3-a456-426614174000
+                      message_type: assistant
+                status_start:
+                  summary: 2) Status Start
+                  value:
+                    event_name: status
+                    data:
+                      status: start
+                keep_alive:
+                  summary: 3) Keep Alive
+                  value:
+                    event_name: keep_alive
+                    data:
+                      keep_alive_counter: 1
+                      timestamp: '2025-10-29T06:00:10.959327'
+                dialogue_id:
+                  summary: 3) Dialogue ID
+                  value:
+                    event_name: dialogue_id
+                    data:
+                      dialogue_id: 123e4567-e89b-12d3-a456-426614174000
+                progress_research:
+                  summary: 3) Research Progress
+                  value:
+                    event_name: research_progress
+                    data:
+                      stage: research
+                      stage_description: Conducting research round 2
+                      progress_percentage: 35
+                      current_round: 1
+                      max_rounds: 5
+                round_start:
+                  summary: 4) Round
+                  value:
+                    event_name: round
+                    data:
+                      count: 2
+                      continue_search: true
+                think:
+                  summary: 5) Think
+                  value:
+                    event_name: think
+                    data:
+                      think_piece: <PLAN_REASONING>
+                tool_call:
+                  summary: 6) Tool Call
+                  value:
+                    event_name: tool_call
+                    data:
+                      tool_name: integrated_search
+                      tool_args:
+                        query: JP Morgan equity research Asia
+                tool_response:
+                  summary: 7) Tool Response
+                  value:
+                    event_name: tool_response
+                    data:
+                      id: 7a21e20f
+                      response:
+                        query: JP Morgan equity research Asia
+                        result: '===== RESPONSE =====
+
+
+                          **Research findings...**'
+                        used_citations:
+                        - title: JP Morgan Asia Research Report
+                          url:
+                          - https://example.com/report
+                          source: JP Morgan
+                          date: '2024-10-15'
+                          hash: 3ee9c11f
+                search_results_event:
+                  summary: 7. Search Results ID Event
+                  description: Unique identifier for the search results
+                  value:
+                    event_name: search_results
+                    data:
+                      chat_message_id: 123e4567-e89b-12d3-a456-426614174000
+                answer_piece:
+                  summary: 9) Answer
+                  value:
+                    event_name: answer
+                    data:
+                      answer_piece: '### Executive Summary
+
+
+                        JP Morgan''s equity research in Asia [3ee9c11f] shows...'
+                status_finish:
+                  summary: 10) Status Finish
+                  value:
+                    event_name: status
+                    data:
+                      status: finish
+        '400':
+          description: Bad Request - Invalid request parameters or incorrect format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: CREATE_CONV_FAIL
+                  message: RMS conversation could not be created.
+                payload: null
+        '401':
+          description: Unauthorized - Invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '403':
+          description: Forbidden - No permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: FORBIDDEN
+                  message: 'Access denied: insufficient permissions.'
+                payload: null
+        '404':
+          description: Not Found - The requested resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: NOT_FOUND
+                  message: The requested resource was not found.
+                payload: null
+        '500':
+          description: Internal Server Error - An unexpected error occurred on the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: SERVER_ERROR
+                  message: An unexpected error occurred on the server.
+                payload: null
+      tags:
+      - RMS
+  /v1/stop_stream:
+    post:
+      summary: Pause RMS Chat Stream
+      description: Pause the RMS (Research Management System) chat stream.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RmsInterruptRequest'
+            example:
+              organization_id: 123e4567-e89b-12d3-a456-426614174000
+              conversation_id: 987e6543-e21b-32d3-c654-426614174999
+              user_id: 123e4567-e89b-12d3-a456-426614174000
+              user_email: john.doe@example.com
+              user_name: John Doe
+              dialogue_id: 2d382478-077e-4bcb-b6ec-4fdcbc75ab33
+      responses:
+        '200':
+          description: Stop Stream response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RmsInterruptResponse'
+              example:
+                status: success
+                message: Interrupt request received
+                dialogue_id: 2d382478-077e-4bcb-b6ec-4fdcbc75ab33
+                paused: 1676198400
+        '400':
+          description: Bad Request - Invalid request parameters or incorrect format.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: ORGANIZATION_ID_MISSING
+                  msg: organization_id is required
+                  message: organization_id is required
+                payload: null
+        '401':
+          description: Unauthorized - Invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '403':
+          description: Forbidden - No permission to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: FORBIDDEN
+                  message: 'Access denied: insufficient permissions.'
+                payload: null
+      tags:
+      - RMS
+components:
+  schemas:
+    ChatSseEvent:
+      type: object
+      description: Base structure for all Chat SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - conversation
+          - status
+          - think
+          - sub_questions
+          - dialogue_id
+          - search_results
+          - answer
+        data:
+          type: object
+          description: Event-specific data payload
+    FiscalPeriodFilter:
+      type: object
+      properties:
+        year:
+          type: integer
+          example: 2024
+        quarter:
+          type: integer
+          minimum: 1
+          maximum: 4
+          example: 3
+      required:
+      - year
+      - quarter
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    DateFilter:
+      type: object
+      description: Date filter with year, month, and optional day
+      properties:
+        year:
+          type: integer
+          description: Year (e.g., 2025)
+          example: 2025
+        month:
+          type: integer
+          description: Month (1-12)
+          minimum: 1
+          maximum: 12
+          example: 1
+        day:
+          type: integer
+          description: Day of month (1-31, optional)
+          minimum: 1
+          maximum: 31
+          example: 15
+      required:
+      - year
+      - month
+    RoundEvent:
+      description: Research round start/end marker
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - round
+          data:
+            type: object
+            required:
+            - count
+            - continue_search
+            properties:
+              count:
+                type: integer
+                description: Current round number (0-indexed)
+              continue_search:
+                type: boolean
+                description: Whether to continue searching in next round
+    ConversationEvent:
+      description: Conversation event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - conversation
+          data:
+            type: object
+            required:
+            - conversation_id
+            properties:
+              conversation_id:
+                type: string
+                description: Unique conversation identifier. Use for multi-turn continuation and References API.
+              message:
+                type: string
+                description: Status message (e.g., 'Successfully created a conversation.')
+            description: Event-specific data payload
+    ChatMessageEvent:
+      type: object
+      description: Chat message event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - chat_message
+          data:
+            type: object
+            required:
+            - chat_message_id
+            - message_type
+    ResearchProgressEvent:
+      description: Research progress tracking event (5-100%)
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - research_progress
+          data:
+            type: object
+            required:
+            - stage
+            - stage_description
+            - progress_percentage
+            properties:
+              stage:
+                type: string
+                enum:
+                - initialization
+                - research
+                - finalizing
+                - complete
+                description: 'Current research stage:
+
+                  - initialization (5-10%): Environment setup and structure generation
+
+                  - research (15-85%): Multi-round research phase
+
+                  - finalizing (90%): Final preparation
+
+                  - complete (100%): Research done, content generation starting'
+              stage_description:
+                type: string
+                description: Human-readable description of current stage
+                example: Conducting research round 3
+              progress_percentage:
+                type: number
+                minimum: 0
+                maximum: 100
+                description: Overall progress percentage (0-100)
+              current_round:
+                type: integer
+                nullable: true
+                description: Current research round (0-indexed, null if not in research stage)
+                example: 2
+              max_rounds:
+                type: integer
+                nullable: true
+                description: Maximum number of research rounds (null if not in research stage)
+                example: 5
+    ThinkEvent:
+      description: Thinking/reasoning process stream
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - think
+          data:
+            type: object
+            required:
+            - think_piece
+            properties:
+              think_piece:
+                type: string
+                description: A piece of the thinking/reasoning process (streamed incrementally)
+                example: <PLAN_REASONING>
+    CreateOrganizationResponse:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization's UUID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        error:
+          type: string
+          nullable: true
+          description: Error message if creation failed
+          example: null
+      required:
+      - organization_id
+    RmsInterruptRequest:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID
+        user_id:
+          type: string
+          description: User ID
+        user_email:
+          type: string
+          description: User email
+        user_name:
+          type: string
+          description: User name
+        conversation_id:
+          type: string
+          format: uuid
+          description: Conversation ID
+        dialogue_id:
+          type: string
+          format: uuid
+          description: Dialogue ID
+      required:
+      - conversation_id
+      - dialogue_id
+    SubQuestionsEvent:
+      description: Sub-questions event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - sub_questions
+          data:
+            type: object
+            required:
+            - sub_questions
+            properties:
+              sub_questions:
+                type: array
+                description: Sub-questions
+                items:
+                  type: string
+                  description: Sub-question
+    ToolCallEvent:
+      description: Tool invocation event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - tool_call
+          data:
+            type: object
+            required:
+            - tool_name
+            - tool_args
+            properties:
+              tool_name:
+                type: string
+                description: Name of the tool being called
+                example: integrated_search
+              tool_args:
+                type: object
+                description: Arguments passed to the tool
+                properties:
+                  query:
+                    type: string
+                    description: Search query
+                    example: JP Morgan equity research Asia
+    CreateOrganizationRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Your organization ID
+          example: org_001
+        name:
+          type: string
+          description: Organization's name
+          example: Example Investment Organization
+        s3_path:
+          type: string
+          description: S3 path for organization data (optional)
+          example: s3://example-bucket/organization_001/
+      required:
+      - id
+      - name
+    SearchResultsEvent:
+      description: Search result id streaming event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - search_results
+          data:
+            type: object
+            required:
+            - chat_message_id
+            properties:
+              chat_message_id:
+                type: string
+                description: Chat message id (You can retrieve search_results using the chat_message_id through the references API.)
+    DialogueIdEvent:
+      type: object
+      description: Dialogue id streaming event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - dialogue_id
+          data:
+            type: object
+            required:
+            - dialogue_id
+            properties:
+              dialogue_id:
+                type: string
+                description: 'A unique identifier (UUID) that represents a specific dialogue or message exchange within a chat session. This ID is provided as an event during the chat process, appearing in the stream before any think events.
+
+
+                  The dialogue_id serves to uniquely identify individual dialogue instances within a chat session, enabling precise control over message streaming and interruption. Here, a dialogue is defined as a single question and answer pair - so a single chat_session is composed of a sequence of dialogues.
+
+
+                  Unlike using only the chat_session_id, the dialogue_id prevents race conditions that could occur when multiple windows or instances interact with the same chat session simultaneously. '
+    BaseSseEvent:
+      type: object
+      description: Base structure for SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - status
+          - research_progress
+          - round
+          - think
+          - sub_questions
+          - tool_call
+          - tool_response
+          - search_results
+          - answer
+          description: Type of SSE event
+        data:
+          type: object
+          description: Event-specific data payload
+    KeepAliveEvent:
+      description: Keep alive event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - keep_alive
+          data:
+            type: object
+            required:
+            - keep_alive_counter
+            - timestamp
+            properties:
+              keep_alive_counter:
+                type: integer
+                description: Counter for keep alive messages
+              timestamp:
+                type: string
+                description: Timestamp of the keep alive message
+    RmsChatRequest:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        conversation_id:
+          type: string
+          format: uuid
+          description: Conversation ID for multi-turn interactions (optional)
+          example: 987e6543-e21b-32d3-c654-426614174999
+        source_batch_id:
+          type: string
+          format: uuid
+          description: Source batch ID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        source_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Optional array of specific source IDs to search within. If provided, only these sources will be searched. If omitted, all sources belonging to the `source_batch_id` will be searched. Requires `source_batch_id` to be specified, and all IDs must exist within that batch.
+          example:
+          - 123e4567-e89b-12d3-a456-426614174000
+          - 223e4567-e89b-12d3-a456-426614174001
+        user_id:
+          type: string
+          description: User ID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        user_email:
+          type: string
+          description: User email
+          example: john.doe@example.com
+        user_name:
+          type: string
+          description: User name
+          example: John Doe
+        container_ids:
+          type: array
+          items:
+            type: string
+          description: Container IDs to search within (optional)
+          example:
+          - container_id1
+          - container_id2
+        document_ids:
+          type: array
+          items:
+            type: string
+          description: Document IDs to search within (optional)
+          example:
+          - document_id1
+          - document_id2
+        query:
+          type: string
+          description: Search query
+          example: What are the latest insights on AAPL performance?
+        search_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - rms
+            - external
+            - all
+          description: Types of search to perform
+          example:
+          - rms
+          - external
+        client_api_url:
+          type: string
+          description: Client API URL
+          example: https://api.example.com
+          nullable: true
+        per_event_size:
+          type: number
+          description: Number of kb size to return per event. When set to 0, search_results will not be returned via stream, only chat_message_id will be returned. You can retrieve search_results using the chat_message_id through the references API. Setting to 0 is recommended for stream stability.
+          default: 0
+          example: 0
+        per_event_sleep_time:
+          type: number
+          description: Sleep time per event
+          default: 0.01
+          example: 0.01
+        rms_types:
+          type: array
+          items:
+            type: string
+          description: RMS document types (customizable)
+          example:
+          - emailnotes
+          - generalnotes
+          - templatednotes
+          - custom-data
+          - structured-data
+        rms_sub_types:
+          type: object
+          description: RMS sub-types mapping (optional)
+          example:
+            template_note:
+            - template_note1
+            - template_note2
+        external_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - transcript
+            - filing
+            - news
+            - ir_slide
+            - structured_data
+          description: External document types (optional, defaults to ["transcript", "filing", "news", "ir_slide"])
+          default:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+          example:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+        stock_ids:
+          type: array
+          items:
+            type: string
+          description: Bloomberg stock IDs (optional)
+          example:
+          - BBG001S5N8V8
+        tags:
+          type: array
+          items:
+            type: string
+          description: Search tags (optional)
+          example:
+          - tech
+          - earnings
+        upload_period:
+          type: object
+          properties:
+            start_time:
+              $ref: '#/components/schemas/DateFilter'
+            end_time:
+              $ref: '#/components/schemas/DateFilter'
+          description: Filter documents by upload date range. At least one of start_time or end_time must be provided.
+        fiscal_period:
+          type: object
+          properties:
+            start_time:
+              $ref: '#/components/schemas/FiscalPeriodFilter'
+            end_time:
+              $ref: '#/components/schemas/FiscalPeriodFilter'
+          description: Fiscal period filter (optional)
+          example:
+            start_time:
+              year: 2023
+              quarter: 1
+            end_time:
+              year: 2024
+              quarter: 3
+        agentic:
+          type: boolean
+          description: Whether to use agentic search
+          example: true
+        prerelease:
+          type: object
+          description: Prerelease filters (optional)
+          example:
+            stream_t2s_table: true
+        custom_filters:
+          type: object
+          description: Custom filters (optional)
+          example:
+            your_own_field: value
+      required:
+      - organization_id
+      - user_id
+      - user_email
+      - user_name
+      - query
+      - search_types
+    AnswerEvent:
+      description: Final answer streaming event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - answer
+          data:
+            type: object
+            required:
+            - answer_piece
+            properties:
+              answer_piece:
+                type: string
+                description: A piece of the final answer (streamed incrementally). Citations are embedded as [hash] format.
+                example: '### Executive Summary'
+    StatusEvent:
+      description: Stream status event (start/finish)
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                description: Stream status indicator
+    RmsInterruptResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Response status
+          example: success
+        message:
+          type: string
+          description: Response message
+          example: Interrupt request received
+        dialogue_id:
+          type: string
+          description: Dialogue ID
+          example: 2d382478-077e-4bcb-b6ec-4fdcbc75ab33
+        paused:
+          type: integer
+          description: Pause timestamp (Unix epoch)
+          example: 1676198400
+    DeepResearchCitation:
+      type: object
+      description: Citation information for a source
+      properties:
+        title:
+          type: string
+          description: Title of the cited source
+        url:
+          type: array
+          items:
+            type: string
+          description: URL(s) of the source
+        source:
+          type: string
+          description: Source name or publication
+        date:
+          type: string
+          description: Publication date (if available)
+        hash:
+          type: string
+          description: Unique hash identifier for the citation
+          example: 3ee9c11f
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+          nullable: true
+      required:
+      - error
+      - payload
+    ToolResponseEvent:
+      description: Tool response event with search results
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - tool_response
+          data:
+            type: object
+            required:
+            - id
+            - response
+            properties:
+              id:
+                type: string
+                description: Unique identifier for the tool response
+                example: 7a21e20f
+              response:
+                type: object
+                required:
+                - query
+                - result
+                properties:
+                  query:
+                    type: string
+                    description: The query that was executed
+                  result:
+                    type: string
+                    description: The search result content
+                  used_citations:
+                    type: array
+                    description: Citations used in the response
+                    items:
+                      $ref: '#/components/schemas/DeepResearchCitation'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

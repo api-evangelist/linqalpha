@@ -1,0 +1,95 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing MCP API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: MCP
+  description: LinqAlpha MCP — Financial data tools for AI assistants via Model Context Protocol
+paths:
+  /v1/mcp:
+    post:
+      summary: LinqAlpha MCP
+      description: "LinqAlpha MCP gives AI assistants direct access to institutional-grade financial data for fundamental research. Through the Model Context Protocol (MCP), your AI can query company fundamentals, earnings estimates, stock prices, economic indicators, SEC filings, and earnings transcripts — all from a single endpoint.\n\nSupports JSON-RPC 2.0 protocol.\n\nAvailable methods:\n- `initialize` — Initialize MCP session\n- `ping` — Health check\n- `tools/list` — List available financial data tools\n- `tools/call` — Execute a financial data tool\n\n**Setup (Claude Desktop):**\n```json\n{\n  \"mcpServers\": {\n    \"linqalpha\": {\n      \"url\": \"https://api.linqalpha.com/v1/mcp\",\n      \"headers\": { \"x-api-key\": \"<your-api-key>\" }\n    }\n  }\n}\n```"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/McpJsonRpcRequest'
+      responses:
+        '200':
+          description: JSON-RPC 2.0 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpJsonRpcResponse'
+        '400':
+          description: Invalid JSON-RPC request
+        '401':
+          description: Authentication failed
+      tags:
+      - MCP
+components:
+  schemas:
+    McpJsonRpcResponse:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type: integer
+          nullable: true
+          description: Request identifier (null for error responses)
+        result:
+          type: object
+          description: Method result (present on success)
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: JSON-RPC error code
+            message:
+              type: string
+              description: Error message
+          description: Error object (present on failure)
+    McpJsonRpcRequest:
+      type: object
+      required:
+      - jsonrpc
+      - method
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+          description: JSON-RPC version
+        method:
+          type: string
+          enum:
+          - initialize
+          - ping
+          - notifications/initialized
+          - tools/list
+          - tools/call
+          description: MCP method to invoke
+        id:
+          type: integer
+          description: Request identifier
+        params:
+          type: object
+          description: 'Method-specific parameters. For tools/call: { name: string, arguments: object }'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

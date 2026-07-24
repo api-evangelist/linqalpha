@@ -1,0 +1,1224 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: Briefing
+  description: Briefing Agent — automated market briefings with scheduling and delivery
+paths:
+  /v1/briefings/sse:
+    post:
+      summary: Generate Briefing
+      description: 'Generate a briefing on-demand from an ad-hoc prompt via Server-Sent Events streaming. The prompt (`query`) is run through the briefing engine (mode=briefing) — the same output family as your scheduled briefings (depth, formatting, citations). Stateless: send a fresh prompt each call. Distinct from `POST /v1/briefings/{id}/generate`, which re-runs an existing saved schedule.'
+      operationId: briefingSse
+      tags:
+      - Briefing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                  description: The ad-hoc briefing prompt (used as the briefing topic), run through the briefing engine
+                tickers:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional ticker symbols to scope the briefing
+                stock_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional internal stock ids to scope the briefing
+                frequency:
+                  type: string
+                  enum:
+                  - daily
+                  - weekly
+                  - monthly
+                  description: Data window (last 1 / 7 / 30 days, anchored at now). Defaults to daily.
+                language:
+                  type: string
+                  description: Output language; auto-detected from the prompt when omitted
+                timezone:
+                  type: string
+                  description: IANA timezone (e.g. Asia/Shanghai) for the window and timestamps. Defaults to UTC.
+                previous_summary:
+                  type: string
+                  description: Prior briefing content, to carry continuity across calls (optional)
+                conversation_id:
+                  type: string
+                  nullable: true
+                  description: Deprecated and ignored; this endpoint is stateless
+                organization_id:
+                  type: string
+                  description: Organization ID for platform API keys
+                user_id:
+                  type: string
+                  description: User ID (customer_id) for platform API keys
+                user_email:
+                  type: string
+                  description: User email for platform API keys
+                user_name:
+                  type: string
+                  description: User name for platform API keys
+      responses:
+        '200':
+          description: 'SSE stream of briefing events, each sent as `data: {json}\n\n`. Sequence: status → [status]* → answer → status:finish. A keepalive is sent as a status event roughly every 30s. On failure a single status event with status "error" (carrying a code) is emitted instead of answer. The answer arrives once (full content), not token-by-token, because inline citations are resolved only after the briefing completes.'
+          content:
+            text/event-stream:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/AnalyticsStatusEvent'
+                - $ref: '#/components/schemas/AnalyticsAnswerEvent'
+              examples:
+                status_start:
+                  summary: Status
+                  description: Progress update while the briefing runs (label in data.message)
+                  value:
+                    event_name: status
+                    data:
+                      status: start
+                      message: Searching news
+                answer:
+                  summary: Answer (full content)
+                  description: The full briefing markdown with linked [N](url) citations, emitted once
+                  value:
+                    event_name: answer
+                    data:
+                      answer_piece: '## Market Overview\n\nAsian equities traded mixed overnight... [1](https://example.com)'
+                status_finish:
+                  summary: Status Finish
+                  description: Stream complete — no more events after this
+                  value:
+                    event_name: status
+                    data:
+                      status: finish
+                status_error:
+                  summary: Status Error
+                  description: Terminal failure instead of answer (carries an error code)
+                  value:
+                    event_name: status
+                    data:
+                      status: error
+                      error:
+                        code: EMPTY_CONTENT
+                        msg: Briefing could not be generated.
+        '400':
+          description: Bad Request - Invalid request parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: INVALID_REQUEST_BODY
+                  msg: query is required and must be a string
+                  message: query is required and must be a string
+                payload: null
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+  /v1/briefings/preview:
+    post:
+      summary: Preview Briefing On-Demand
+      description: 'Run a briefing on-demand from an ad-hoc prompt as a fire-and-forget job: enqueue the run and get a pending delivery handle immediately, then poll `GET /v1/briefings/deliveries/{delivery_id}` for the result.'
+      operationId: briefingPreview
+      tags:
+      - Briefing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - query
+              properties:
+                query:
+                  type: string
+                  description: The ad-hoc briefing prompt (used as the briefing topic), run through the briefing engine
+                tickers:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional ticker symbols to scope the briefing; auto-resolved to stock_ids (stock_ids take priority). An unresolvable symbol returns BRIEFING_GENERATE_FAIL.
+                stock_ids:
+                  type: array
+                  items:
+                    type: string
+                  description: Optional internal stock ids to scope the briefing (preferred over tickers; no resolution needed)
+                language:
+                  type: string
+                  description: Output language; auto-detected from the prompt when omitted
+                frequency:
+                  type: string
+                  enum:
+                  - daily
+                  - weekly
+                  - monthly
+                  description: Data window (last 1 / 7 / 30 days, anchored at now). Defaults to daily.
+                timezone:
+                  type: string
+                  description: IANA timezone (e.g. America/New_York) for the window and timestamps. Defaults to UTC.
+                previous_delivery_id:
+                  type: string
+                  format: uuid
+                  description: A prior briefing delivery (that you own) to carry formatting/continuity from. Returns BRIEFING_NOT_FOUND if not owned.
+                user_id:
+                  type: string
+                  description: User ID (customer_id) for platform API keys
+                user_email:
+                  type: string
+                  description: User email for platform API keys
+                user_name:
+                  type: string
+                  description: User name for platform API keys
+      responses:
+        '202':
+          description: Accepted — the run was enqueued and a pending delivery handle is returned. The briefing is not ready yet; poll `GET /v1/briefings/deliveries/{delivery_id}` with the returned `delivery_id` until its status is terminal.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    type: object
+                    properties:
+                      delivery_id:
+                        type: string
+                        format: uuid
+                        description: Handle for the enqueued run; poll the delivery endpoints with this id
+                      status:
+                        type: string
+                        description: Delivery status; `pending` immediately after enqueue (same `status` field as Get Delivery Detail)
+              example:
+                error: null
+                payload:
+                  delivery_id: b1f2c3d4-5678-90ab-cdef-1234567890ab
+                  status: pending
+        '200':
+          description: Domain error — returned with HTTP 200 and an `error.code` (payload null), consistent with the other briefing JSON endpoints. `BRIEFING_NOT_FOUND` when `previous_delivery_id` is not owned by the caller; `BRIEFING_GENERATE_FAIL` for a generic upstream/generation failure (including a `tickers` symbol that cannot be resolved to a stock).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: BRIEFING_NOT_FOUND
+                  msg: Brief delivery not found.
+                  message: Brief delivery not found.
+                payload: null
+        '400':
+          description: Bad Request - Invalid request parameters (e.g. missing `query`, or `previous_delivery_id` not a valid UUID).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: INVALID_REQUEST_BODY
+                  msg: query is required and must be a string
+                  message: query is required and must be a string
+                payload: null
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+  /v1/briefings/{id}/generate:
+    post:
+      summary: Run Existing Briefing
+      description: Run one of your existing briefings on-demand via Server-Sent Events. The output is the **same briefing your schedule delivers by email** — it re-runs that briefing against a current date window. Distinct from `POST /v1/briefings/sse`, which runs an ad-hoc free-text `query`. Long-running briefings are not supported and return an `UNSUPPORTED` error.
+      operationId: briefingRun
+      tags:
+      - Briefing
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The id of an existing briefing (from List Briefings or Create Briefing).
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: Platform API keys only — customer_id of the user to run the briefing as
+                user_email:
+                  type: string
+                  description: Platform API keys only — email of the user to run the briefing as
+                user_name:
+                  type: string
+                  description: Platform API keys only — display name of the user to run the briefing as
+      responses:
+        '200':
+          description: 'SSE stream of briefing events. Each event is sent as `data: {json}\n\n`. Progress `status` events, then ONE `answer` event carrying the complete briefing markdown (citations already resolved to inline links — delivered whole, not token-by-token), then a terminal `status:finish`. On failure, a single `status` event with `status:error` and an `error` object.'
+          content:
+            text/event-stream:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/AnalyticsStatusEvent'
+                - $ref: '#/components/schemas/AnalyticsAnswerEvent'
+              examples:
+                status:
+                  summary: Status
+                  description: Generation progress (searching, drafting, ...)
+                  value:
+                    event_name: status
+                    data:
+                      status: start
+                      message: Searching news
+                answer:
+                  summary: Answer (full briefing)
+                  description: Single event carrying the complete briefing markdown with inline citation links
+                  value:
+                    event_name: answer
+                    data:
+                      answer_piece: '# Morning Intelligence\n\n...'
+                status_finish:
+                  summary: Status Finish
+                  description: Stream complete — no more events after this
+                  value:
+                    event_name: status
+                    data:
+                      status: finish
+                error:
+                  summary: Error
+                  description: Terminal failure. code is one of NOT_FOUND / UNSUPPORTED / INTERNAL_ERROR.
+                  value:
+                    event_name: status
+                    data:
+                      status: error
+                      error:
+                        code: NOT_FOUND
+                        msg: Briefing schedule not found.
+        '400':
+          description: Bad Request - Missing or invalid briefing id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: INVALID_REQUEST_BODY
+                  msg: briefing id is required
+                  message: briefing id is required
+                payload: null
+        '401':
+          description: Unauthorized - Invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: UNAUTHORIZED
+                  msg: Invalid API key
+                  message: Invalid API key
+                payload: null
+  /v1/briefings:
+    get:
+      summary: List Briefings
+      description: Retrieve all briefing schedules for the authenticated user.
+      operationId: listBriefings
+      tags:
+      - Briefing
+      responses:
+        '200':
+          description: List of briefings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Briefing'
+    post:
+      summary: Create Briefing
+      description: Create a new briefing with topic, tickers, and schedule in a single call.
+      operationId: createBriefing
+      tags:
+      - Briefing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BriefingCreateRequest'
+      responses:
+        '201':
+          description: Briefing created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    $ref: '#/components/schemas/Briefing'
+  /v1/briefings/{id}:
+    patch:
+      summary: Update Briefing
+      description: Update an existing briefing. All fields are optional.
+      operationId: updateBriefing
+      tags:
+      - Briefing
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BriefingUpdateRequest'
+      responses:
+        '200':
+          description: Briefing updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    $ref: '#/components/schemas/Briefing'
+    delete:
+      summary: Delete Briefing
+      description: Delete an existing briefing schedule.
+      operationId: deleteBriefing
+      tags:
+      - Briefing
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Briefing deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+  /v1/briefings/{id}/deliveries:
+    get:
+      summary: List Deliveries
+      description: Retrieve delivery history for a specific briefing.
+      operationId: listBriefingDeliveries
+      tags:
+      - Briefing
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          default: 10
+          maximum: 50
+      responses:
+        '200':
+          description: Paginated delivery list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    type: object
+                    properties:
+                      deliveries:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/BriefingDelivery'
+                      total_count:
+                        type: integer
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+  /v1/briefings/deliveries/{delivery_id}:
+    get:
+      summary: Get Delivery Detail
+      description: Retrieve full delivery detail including briefing content. Also available at /v1/briefings/{id}/deliveries/{delivery_id}.
+      operationId: getBriefingDeliveryDirect
+      tags:
+      - Briefing
+      parameters:
+      - name: delivery_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Delivery detail with content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    nullable: true
+                  payload:
+                    $ref: '#/components/schemas/BriefingDeliveryDetail'
+  /v1/briefings/deliveries/{delivery_id}/references:
+    get:
+      summary: Get Delivery References
+      description: 'Retrieves the full list of citation references (sources) used to generate a briefing delivery.
+
+
+        Briefing email content includes inline citations `[N]` that point into this list via `citation_idx`. Use this endpoint to build custom UIs, export source lists, or link readers back to original documents.
+
+
+        **Usage Flow:**
+
+        1. Get a delivery via [List Deliveries](/api-reference/briefing/deliveries) or [Get Delivery Detail](/api-reference/briefing/delivery-detail) — note the `chat_session_id`
+
+        2. Verify delivery status is `sent`
+
+        3. Call this endpoint with `delivery_id`
+
+        4. For each reference, dispatch on `search_type` to build the viewer URL (see below)
+
+
+        **How to view original documents** (switch on `search_type`):
+
+        - `external` / `news` — the reference already links to the source. Use `external_url` directly (Factset viewer URL for news, publisher URL for external).
+
+        - `tfs` (transcripts & filings) — open in the LinqAlpha document viewer: `https://chat.linqalpha.com/documents/{document_id}`. To download the raw file, pass `document_id` to the [Presigned URL](/api-reference/basic/presigned_url) endpoint.
+
+        - `rms` (internal research, RMS-connected organizations) — open in the RMS viewer: `https://chat.linqalpha.com/rms/viewer?conversation_id={chat_session_id}&citation_idx={citation_idx}`. `chat_session_id` comes from the delivery detail response.
+
+
+        **Error codes** (returned in response body with HTTP 200):
+
+        - `BRIEFING_DELIVERY_NOT_FOUND` — `delivery_id` does not exist or does not belong to your organization
+
+        - `BRIEFING_DELIVERY_REFERENCES_NOT_AVAILABLE` — delivery exists but has no associated session (still pending or generation failed)
+
+        - `GET_SESSION_REFERENCES_FAIL` — upstream fetch failed'
+      operationId: getBriefingDeliveryReferences
+      tags:
+      - Briefing
+      parameters:
+      - name: delivery_id
+        in: path
+        description: Delivery ID (UUID).
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: References used in the briefing delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferencesV2Response'
+              example:
+                error: null
+                payload:
+                  references:
+                  - id: cd0a3298-8798-4817-b78f-734d5e0fc095
+                    citation_idx: 1
+                    search_type: external
+                    chunk_id: c063d35f-f143-4813-9d40-8733e5779b06
+                    text: Stock futures are climbing as President Donald Trump's deadline to reopen the Strait of Hormuz approaches.
+                    text_type: news
+                    document_id: null
+                    document_name: 'Stock Market Today (Apr. 7, 2026): Futures climb ahead of Trump Iran deadline'
+                    s3_file_key: https://www.thestreet.com/latest-news/stock-market-today-apr-7-2026-updates
+                    external_url: https://www.thestreet.com/latest-news/stock-market-today-apr-7-2026-updates
+                    metadata:
+                      source: news
+                      calendar_date: '2026-04-07'
+                  - id: f99d92bc-6d36-4c21-9f2b-2b7d57fa9c79
+                    citation_idx: 10
+                    search_type: external
+                    chunk_id: b78e60cf-e0a2-420a-9da0-e2b5845a7ad0
+                    text: Franklin Resources Reports Lower March Assets Under Management. Franklin Resources (BEN) late Monday reported preliminary March assets under management of $1.68 trillion, down from $1.73 trillion in February.
+                    text_type: news
+                    document_id: b78e60cf-e0a2-420a-9da0-e2b5845a7ad0
+                    document_name: Franklin Resources Reports Lower March Assets Under Management
+                    s3_file_key: null
+                    external_url: https://my.apps.factset.com/viewer-fusion/?_doc_id=A3596626&_doc_date=2026-04-06&_doc_product=MNW
+                    metadata:
+                      source: news
+                      rms_document_type: news
+                      calendar_date: '2026-04-06T17:09:34.000Z'
+                      document_category: news
+                      stock_ids:
+                      - BBG001S5P3W6
+                      tickers:
+                      - BEN
+        '400':
+          description: Invalid `delivery_id` (not a valid UUID).
+components:
+  schemas:
+    BriefingCreateRequest:
+      type: object
+      required:
+      - topic
+      - scheduled_time
+      - timezone
+      properties:
+        topic:
+          type: string
+          description: Briefing instructions/topic
+        stock_ids:
+          type: array
+          items:
+            type: string
+          description: Internal stock UUIDs (preferred). Use /v1/map_tickers to convert ticker symbols.
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols (e.g. AAPL, 9988.HK). Auto-resolved to stock_ids.
+        language:
+          type: string
+          nullable: true
+          enum:
+          - English
+          - Spanish
+          - French
+          - German
+          - Italian
+          - Portuguese
+          - Dutch
+          - Hindi
+          - Japanese
+          - Chinese
+          - Finnish
+          - Korean
+          - Polish
+          - Russian
+          - Turkish
+          - Ukrainian
+          - Vietnamese
+          description: Output language (null = auto-detect)
+        scheduled_time:
+          type: string
+          description: 'Time in h:mm AM/PM format. Examples: ''9:00 AM'', ''3:30 PM'''
+        timezone:
+          type: string
+          description: IANA timezone identifier (e.g. America/New_York, Asia/Seoul, Europe/London)
+        frequency:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+          default: daily
+        scheduled_day_of_week:
+          type: integer
+          minimum: 0
+          maximum: 6
+          description: Day of week for weekly frequency (0=Sun, 1=Mon, ..., 6=Sat)
+        scheduled_day_of_month:
+          type: integer
+          minimum: 1
+          maximum: 31
+          description: Day of month for monthly frequency
+        title:
+          type: string
+          description: Custom briefing title (auto-generated if omitted)
+        source_type:
+          type: string
+          enum:
+          - tfs_only
+          - rms_only
+          - both
+          default: tfs_only
+          description: 'Data source: tfs_only (news+filings), rms_only (uploaded documents), both'
+        attach_pdf:
+          type: boolean
+          default: false
+          description: Attach briefing as PDF to delivery email
+        is_active:
+          type: boolean
+          default: true
+          description: Enable/disable the schedule
+        rms_sources:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: string
+              workspace:
+                type: string
+          description: RMS source configurations for storage-based briefing
+        watchlist_group_id:
+          type: string
+          description: Link to watchlist group for dynamic ticker sync
+        use_custom_email_title:
+          type: boolean
+          default: false
+          description: Use briefing title as fixed email subject
+        organization_id:
+          type: string
+          description: 'Platform (EDS) keys only: org UUID under the key''s platform. Ignored by org-bound keys.'
+        user_id:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s customer_id (your external user id, not a UUID). Ignored by org-bound keys.'
+        user_email:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s email (used to find or create the user). Ignored by org-bound keys.'
+        user_name:
+          type: string
+          description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    ReferencesV2Response:
+      type: object
+      properties:
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferenceV2'
+          description: List of references associated with the conversation
+      required:
+      - references
+    AnalyticsAnswerEvent:
+      description: Final answer event. Contains the complete answer in a single event (not streamed incrementally).
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - answer
+          data:
+            type: object
+            required:
+            - answer_piece
+            properties:
+              answer_piece:
+                type: string
+                description: The complete final answer content. Unlike other SSE endpoints, analytics sends the full answer in a single event rather than streaming it incrementally.
+    AnalyticsSseEvent:
+      type: object
+      description: Base structure for all Analytics SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - message
+          - status
+          - think
+          - tool_use_block
+          - tool_result_block
+          - answer
+          - keepalive
+          description: Type of event in the analytics stream
+        data:
+          type: object
+          description: Event-specific data payload
+    BriefingDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - pending
+          - sent
+          - failed
+          - resynced
+          - skipped
+          description: Delivery status
+        delivered_at:
+          type: string
+          nullable: true
+        scheduled_at:
+          type: string
+          nullable: true
+        email_title:
+          type: string
+          nullable: true
+        tickers:
+          type: array
+          items:
+            type: string
+        frequency:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+    AnalyticsStatusEvent:
+      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                - keep_alive
+                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
+    BriefingUpdateRequest:
+      type: object
+      description: All fields are optional. Only include fields you want to change.
+      properties:
+        topic:
+          type: string
+          description: Briefing instructions/topic
+        stock_ids:
+          type: array
+          items:
+            type: string
+          description: Internal stock UUIDs (preferred)
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols (auto-resolved)
+        language:
+          type: string
+          nullable: true
+          enum:
+          - English
+          - Spanish
+          - French
+          - German
+          - Italian
+          - Portuguese
+          - Dutch
+          - Hindi
+          - Japanese
+          - Chinese
+          - Finnish
+          - Korean
+          - Polish
+          - Russian
+          - Turkish
+          - Ukrainian
+          - Vietnamese
+          description: Output language (null = auto-detect)
+        scheduled_time:
+          type: string
+          description: h:mm AM/PM format (e.g. '9:00 AM')
+        timezone:
+          type: string
+          description: IANA timezone (e.g. Asia/Seoul)
+        frequency:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+        scheduled_day_of_week:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 6
+          description: 0=Sun, 6=Sat
+        scheduled_day_of_month:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 31
+        title:
+          type: string
+          nullable: true
+          description: Custom briefing title
+        source_type:
+          type: string
+          enum:
+          - tfs_only
+          - rms_only
+          - both
+        attach_pdf:
+          type: boolean
+        is_active:
+          type: boolean
+          description: Enable/disable the schedule
+        rms_sources:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: string
+              workspace:
+                type: string
+          description: RMS source configurations
+        watchlist_group_id:
+          type: string
+          nullable: true
+          description: 'Watchlist group ID to link for dynamic ticker sync. Note: unlinking by sending null is not currently supported.'
+        use_custom_email_title:
+          type: boolean
+          description: Use title as fixed email subject
+        organization_id:
+          type: string
+          description: 'Platform (EDS) keys only: org UUID under the key''s platform. Ignored by org-bound keys.'
+        user_id:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s customer_id (your external user id, not a UUID). Ignored by org-bound keys.'
+        user_email:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s email. Ignored by org-bound keys.'
+        user_name:
+          type: string
+          description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
+    ReferenceMetadataV2:
+      type: object
+      properties:
+        rms_type:
+          type: string
+          nullable: true
+        rms_sub_type:
+          type: string
+          nullable: true
+        rms_document_type:
+          type: string
+          nullable: true
+          description: Document type (e.g., "earnings_call", "filing")
+        source:
+          type: string
+          nullable: true
+        countries:
+          type: array
+          items:
+            type: string
+          nullable: true
+        regions:
+          type: array
+          items:
+            type: string
+          nullable: true
+        participants:
+          type: array
+          items:
+            type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        publisher:
+          type: string
+          nullable: true
+        calendar_date:
+          type: string
+          nullable: true
+        fiscal_year:
+          type: string
+          nullable: true
+        fiscal_quarter:
+          type: string
+          nullable: true
+        document_category:
+          type: string
+          nullable: true
+          description: Document category (e.g., "earnings_call")
+        document_subcategory:
+          type: string
+          nullable: true
+        sector:
+          type: string
+          nullable: true
+        subsector:
+          type: string
+          nullable: true
+        stock_ids:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Bloomberg Global Identifiers (e.g., ["BBG001S5N8V8"])
+        tickers:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: Ticker symbols (e.g., ["AAPL"])
+        company_names:
+          type: array
+          items:
+            type: string
+          nullable: true
+        offset:
+          type: integer
+          nullable: true
+        snippet:
+          type: string
+          nullable: true
+    BriefingDeliveryDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Delivery ID
+        status:
+          type: string
+          enum:
+          - pending
+          - sent
+          - failed
+          - resynced
+          - skipped
+          description: Delivery status
+        delivered_at:
+          type: string
+          nullable: true
+          description: ISO 8601 timestamp when delivered
+        scheduled_at:
+          type: string
+          nullable: true
+          description: ISO 8601 timestamp when scheduled
+        email_title:
+          type: string
+          nullable: true
+          description: Email subject line
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols included
+        frequency:
+          type: string
+          nullable: true
+          enum:
+          - daily
+          - weekly
+          - monthly
+          description: Schedule frequency
+        content:
+          type: string
+          nullable: true
+          description: Full briefing content. Markdown for most briefings; may be HTML for certain briefing types.
+        chat_session_id:
+          type: string
+          nullable: true
+          description: Chat session ID from this delivery's generation (informational; the on-demand endpoints do not accept it as input).
+        created_at:
+          type: string
+          description: ISO 8601 creation timestamp
+    Briefing:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          nullable: true
+        topic:
+          type: string
+        tickers:
+          type: array
+          items:
+            type: string
+        language:
+          type: string
+          nullable: true
+        scheduled_time:
+          type: string
+          description: Time in h:mm AM/PM format, echoing the value provided on create/update (e.g. '9:00 AM')
+        timezone:
+          type: string
+          description: IANA timezone
+        frequency:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+        scheduled_day_of_week:
+          type: integer
+          nullable: true
+        scheduled_day_of_month:
+          type: integer
+          nullable: true
+        next_delivery_at:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        source_type:
+          type: string
+        attach_pdf:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    ReferenceV2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Reference ID
+        citation_idx:
+          type: integer
+          description: Citation index number
+        search_type:
+          type: string
+          description: Type of search that produced this reference (e.g., "rms")
+        chunk_id:
+          type: string
+          description: Chunk identifier
+        text:
+          type: string
+          description: Reference text content
+        text_type:
+          type: string
+          description: Type of text (e.g., "paragraph")
+        document_id:
+          type: string
+          format: uuid
+          description: Document ID. Use with presigned_url endpoint for direct download.
+        document_name:
+          type: string
+          description: Document name
+        s3_file_key:
+          type: string
+          nullable: true
+          description: S3 file key (may be null)
+        external_url:
+          type: string
+          description: External URL for the document
+        metadata:
+          $ref: '#/components/schemas/ReferenceMetadataV2'
+      required:
+      - id
+      - citation_idx
+      - search_type
+      - chunk_id
+      - text
+      - text_type
+      - document_id
+      - document_name
+      - s3_file_key
+      - external_url
+      - metadata
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+          nullable: true
+      required:
+      - error
+      - payload
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

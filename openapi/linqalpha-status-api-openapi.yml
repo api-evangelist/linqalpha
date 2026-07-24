@@ -1,0 +1,264 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing Status API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: Status
+  description: Sync status — check organization, document, and container sync progress
+paths:
+  /v1/status/sync:
+    get:
+      summary: Organization sync status
+      description: Returns an overview of the sync status for your organization, including searchable-aware document counts and recent sync job history.
+      tags:
+      - Status
+      parameters:
+      - name: organization_id
+        in: query
+        description: Organization ID. Optional for single-org API keys (inferred from key).
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Sync status overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    nullable: true
+                  payload:
+                    type: object
+                    properties:
+                      organization_name:
+                        type: string
+                      is_syncing:
+                        type: boolean
+                        description: True if an active job hasn't passed indexing yet
+                      current_job_id:
+                        type: string
+                        nullable: true
+                      last_sync_time:
+                        type: string
+                        nullable: true
+                        description: ISO 8601
+                      total_items:
+                        type: integer
+                      synced_items:
+                        type: integer
+                        description: Searchable documents (includes docs with failed base status but past indexing)
+                      failed_items:
+                        type: integer
+                      recent_syncs:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            started_at:
+                              type: string
+                            completed_at:
+                              type: string
+                              nullable: true
+                            status:
+                              type: string
+                              enum:
+                              - pending
+                              - running
+                              - complete
+              example:
+                error: null
+                payload:
+                  organization_name: Acme Research
+                  is_syncing: false
+                  current_job_id: null
+                  last_sync_time: '2026-04-08T03:01:01'
+                  total_items: 10017
+                  synced_items: 10010
+                  failed_items: 7
+                  recent_syncs:
+                  - started_at: '2026-04-08T02:00:39'
+                    completed_at: '2026-04-08T03:01:01'
+                    status: complete
+                  - started_at: '2026-04-07T02:00:20'
+                    completed_at: '2026-04-07T03:11:17'
+                    status: complete
+  /v1/status/documents:
+    get:
+      summary: Document sync status
+      description: Returns per-document sync status. At least one filter (path, name, or document_ids) is required.
+      tags:
+      - Status
+      parameters:
+      - name: organization_id
+        in: query
+        description: Organization ID. Optional for single-org API keys.
+        required: false
+        schema:
+          type: string
+      - name: document_ids
+        in: query
+        description: Comma-separated document IDs.
+        required: false
+        schema:
+          type: string
+        example: doc-id-1,doc-id-2
+      - name: path
+        in: query
+        description: Filter by path prefix.
+        required: false
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Filter by document name (partial, case-insensitive).
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Document status list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    nullable: true
+                  payload:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        document_id:
+                          type: string
+                        document_name:
+                          type: string
+                        status:
+                          type: string
+                          description: 'Display status: Synced, Syncing, Syncing Failed, Deleting, Deleting Failed'
+                        extraction_status:
+                          type: string
+                          enum:
+                          - pending
+                          - completed
+                          - failed
+                        last_synced_at:
+                          type: string
+                          nullable: true
+                        summary:
+                          type: string
+                          nullable: true
+                          description: LLM-generated document summary
+              example:
+                error: null
+                payload:
+                - document_id: 40aef76a-bb93-4f3c-9f4f-9119f38d85bf
+                  document_name: Q1 Earnings Report.pdf
+                  status: Synced
+                  extraction_status: completed
+                  last_synced_at: '2026-04-08T02:38:15'
+                  summary: Q1 2026 earnings report showing 15% YoY revenue growth...
+                - document_id: 7fe4d59f-1097-466d-a7fe-a60e8fe58c46
+                  document_name: Old Report.pdf
+                  status: Syncing Failed
+                  extraction_status: pending
+                  last_synced_at: null
+                  summary: null
+  /v1/status/containers:
+    get:
+      summary: Container sync status
+      description: Returns per-container sync status with direct children IDs. At least one filter (path, name, or container_ids) is required.
+      tags:
+      - Status
+      parameters:
+      - name: organization_id
+        in: query
+        description: Organization ID. Optional for single-org API keys.
+        required: false
+        schema:
+          type: string
+      - name: container_ids
+        in: query
+        description: Comma-separated container IDs.
+        required: false
+        schema:
+          type: string
+        example: container-id-1,container-id-2
+      - name: path
+        in: query
+        description: Filter by path prefix.
+        required: false
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: Filter by container name (partial, case-insensitive).
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Container status list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    nullable: true
+                  payload:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        container_id:
+                          type: string
+                        container_name:
+                          type: string
+                        container_type:
+                          type: string
+                          nullable: true
+                        status:
+                          type: string
+                        last_synced_at:
+                          type: string
+                          nullable: true
+                        child_document_ids:
+                          type: array
+                          items:
+                            type: string
+                        child_container_ids:
+                          type: array
+                          items:
+                            type: string
+              example:
+                error: null
+                payload:
+                - container_id: 001e4e05-d690-4f0b-9ebd-3e58b91e5d6c
+                  container_name: Q1 2026 Earnings
+                  container_type: note
+                  status: Synced
+                  last_synced_at: '2026-04-08T02:04:56'
+                  child_document_ids:
+                  - doc-001
+                  - doc-002
+                  child_container_ids:
+                  - 17fc814d-7d47-4f92-ac82-c970b45955fb
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

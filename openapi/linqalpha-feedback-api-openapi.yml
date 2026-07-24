@@ -1,0 +1,286 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing Feedback API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: Feedback
+  description: Conversation feedback
+paths:
+  /v1/conversations/{conversation_id}/feedback:
+    post:
+      summary: Create Conversation Feedback
+      description: 'Submits feedback for a specific conversation. Use this endpoint to collect user ratings and comments about the quality of AI responses. Feedback helps improve the service and can be used for quality monitoring.
+
+
+        **Rating Options:**
+
+        - `up`: Positive feedback indicating a helpful response
+
+        - `down`: Negative feedback indicating an unsatisfactory response
+
+
+        **Optional Fields:**
+
+        - `message_id`: Target specific message within the conversation
+
+        - `comment`: Additional text feedback from the user'
+      parameters:
+      - name: conversation_id
+        in: path
+        description: The unique identifier of the conversation to provide feedback for
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConversationFeedbackRequest'
+            example:
+              conversation_id: 123e4567-e89b-12d3-a456-426614174000
+              rating: up
+              message_id: msg_abc123
+              comment: Very helpful and accurate response!
+      responses:
+        '200':
+          description: Feedback submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateConversationFeedbackResponse'
+              example:
+                success: true
+        '400':
+          description: Bad Request - Invalid request parameters or missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: INVALID_REQUEST_BODY
+                  msg: Invalid rating value. Must be 'up' or 'down'.
+                  message: Invalid rating value. Must be 'up' or 'down'.
+                payload: null
+        '401':
+          description: Unauthorized - Invalid API key or authentication credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '404':
+          description: Not Found - Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: NOT_FOUND
+                  message: Conversation not found.
+                  msg: Conversation not found.
+                payload: null
+        '500':
+          description: Internal Server Error - An unexpected error occurred on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: CREATE_CONVERSATION_FEEDBACK_FAIL
+                  message: Failed to create conversation feedback.
+                  msg: Failed to create conversation feedback.
+                payload: null
+      tags:
+      - Feedback
+    delete:
+      summary: Delete Conversation Feedback
+      description: Deletes feedback for a specific conversation. If `message_id` is not provided, the feedback from the last message in the conversation will be deleted.
+      parameters:
+      - name: conversation_id
+        in: path
+        description: The unique identifier of the conversation to delete feedback for
+        required: true
+        schema:
+          type: string
+      - name: message_id
+        in: query
+        description: The specific message ID whose feedback should be deleted. If omitted, the last message's feedback is deleted.
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Feedback deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteConversationFeedbackResponse'
+              example:
+                error: null
+                payload:
+                  success: true
+        '400':
+          description: Bad Request - Missing conversation_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: INVALID_REQUEST_BODY
+                  msg: conversation_id is required
+                  message: conversation_id is required
+                payload: null
+        '401':
+          description: Unauthorized - Invalid API key or authentication credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: API_KEY_MISSING
+                  msg: header does not contain api key
+                  message: header does not contain api key
+                payload: null
+        '500':
+          description: Internal Server Error - Failed to delete feedback
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              example:
+                error:
+                  code: DELETE_CONVERSATION_FEEDBACK_FAIL
+                  msg: delete_conversation_feedback failed
+                  message: delete_conversation_feedback failed
+                payload: null
+      tags:
+      - Feedback
+components:
+  schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    CreateConversationFeedbackRequest:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          description: Organization ID (optional, inferred from API key if not provided)
+          example: org_001
+        user_id:
+          type: string
+          description: User ID submitting the feedback (optional)
+          example: user_123
+        user_email:
+          type: string
+          description: User email (optional)
+          example: user@example.com
+        user_name:
+          type: string
+          description: User name (optional)
+          example: John Doe
+        conversation_id:
+          type: string
+          description: The unique identifier of the conversation
+          example: 123e4567-e89b-12d3-a456-426614174000
+        rating:
+          type: string
+          enum:
+          - up
+          - down
+          description: 'Feedback rating: ''up'' for positive, ''down'' for negative'
+          example: up
+        message_id:
+          type: string
+          description: Specific message ID to provide feedback on (optional)
+          example: msg_abc123
+        comment:
+          type: string
+          description: Additional text comment from the user (optional)
+          example: Very helpful and accurate response!
+      required:
+      - conversation_id
+      - rating
+    CreateConversationFeedbackResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the feedback was successfully submitted
+          example: true
+      required:
+      - success
+    DeleteConversationFeedbackResponse:
+      type: object
+      properties:
+        error:
+          nullable: true
+          description: Error object, null on success
+        payload:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Indicates whether the feedback was successfully deleted
+              example: true
+          required:
+          - success
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+          nullable: true
+      required:
+      - error
+      - payload
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

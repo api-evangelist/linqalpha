@@ -1,0 +1,294 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing Connectors API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: Connectors
+  description: Customer Connectors — customer-owned MCP connector management
+paths:
+  /v2/connectors:
+    get:
+      summary: List customer connectors
+      description: Lists customer MCP connectors for the authenticated organization. Query parameters are used to filter the results.
+      responses:
+        '200':
+          description: Connectors returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorListApiResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+    post:
+      summary: Create a customer connector
+      description: Creates a customer MCP connector. Credential fields are write-only and are never logged.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorMutationRequest'
+      responses:
+        '200':
+          description: Connector created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorApiResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+  /v2/connectors/{id}:
+    get:
+      summary: Get a customer connector
+      description: Returns connector metadata for the authenticated organization. Credential values are not returned.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Connector returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorApiResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Connector not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+    patch:
+      summary: Update a customer connector
+      description: Updates a customer MCP connector. Credential fields are write-only and are never logged.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorMutationRequest'
+      responses:
+        '200':
+          description: Connector updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorApiResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Connector not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+    delete:
+      summary: Delete a customer connector
+      description: Deletes a customer MCP connector for the authenticated organization.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Connector deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorApiResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Connector not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+  /v2/connectors/{id}/test:
+    post:
+      summary: Test a customer connector
+      description: Validates and tests the specified customer MCP connector.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Connector test result returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorApiResponse'
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Connector not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      tags:
+      - Connectors
+components:
+  schemas:
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    ConnectorMutationRequest:
+      type: object
+      description: Customer connector create/update body. Any additional fields you include are preserved and forwarded with the request.
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          description: Connector name
+        credentials:
+          type: object
+          description: Write-only credential payload.
+          additionalProperties: true
+          properties:
+            headers:
+              type: object
+              additionalProperties:
+                type: string
+              description: Write-only HTTP headers used by the connector upstream. Values are not returned by read endpoints.
+    ConnectorApiResponse:
+      type: object
+      properties:
+        error:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
+    ConnectorProxyPayload:
+      type: object
+      description: Opaque connector payload. Credential values are write-only and are not returned.
+      additionalProperties: true
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+          nullable: true
+      required:
+      - error
+      - payload
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY

@@ -1,0 +1,269 @@
+openapi: 3.0.1
+info:
+  title: LinqAlpha Briefing Vault API
+  description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
+  version: 1.0.0
+  license:
+    name: MIT
+servers:
+- url: https://api.linqalpha.com
+security:
+- ApiKeyAuth: []
+tags:
+- name: Vault
+paths:
+  /v2/vault/presigned_url:
+    post:
+      tags:
+      - Vault
+      summary: Vault — Get Upload URL
+      description: Step 1 of the Vault upload flow. Returns a single-use presigned upload (PUT) URL. Upload the file directly to that URL, then register it via POST /v2/vault/confirm.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultPresignedUrlRequest'
+            example:
+              file_name: Q4_report.pdf
+              content_type: application/pdf
+              workspace: personal
+      responses:
+        '200':
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultPresignedUrlResponse'
+              example:
+                presigned_url: https://<presigned-upload-host>/.../<hash>.pdf?...
+                file_key: development/data-original/<hash>.pdf
+                document_id: 3a5b47d5-124e-4052-9fa6-0647ddcb1d97
+                expiration_seconds: 600
+        '400':
+          description: Bad request — missing/invalid fields
+        '401':
+          description: Unauthorized — invalid or missing API key
+  /v2/vault/confirm:
+    post:
+      tags:
+      - Vault
+      summary: Vault — Confirm Upload
+      description: Step 3 of the Vault upload flow. Registers the uploaded file in RMS and triggers async ingestion (parse → chunk → embed → index), returning immediately with the rms_document_id. Poll GET /v2/vault/status for processing status / readiness.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VaultConfirmRequest'
+            example:
+              document_id: 3a5b47d5-124e-4052-9fa6-0647ddcb1d97
+              file_key: development/data-original/<hash>.pdf
+              file_name: Q4_report.pdf
+              content_type: application/pdf
+              workspace: personal
+      responses:
+        '200':
+          description: Upload confirmed / registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultConfirmResponse'
+              example:
+                rms_document_id: eeb72343-d883-41a3-a58c-533184bbb9fd
+        '400':
+          description: Bad request — missing/invalid fields
+        '401':
+          description: Unauthorized — invalid or missing API key
+        '500':
+          description: Upstream error — e.g. the uploaded file does not exist yet
+  /v2/vault/status:
+    get:
+      tags:
+      - Vault
+      summary: Vault — Document Status
+      description: Returns the processing status for one or more vault documents. Poll after confirm until status is `Synced` (complete and searchable).
+      parameters:
+      - name: rms_document_ids
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Comma-separated list of rms_document_id values (the rms_document_id returned by confirm — NOT the presign document_id). Max 100.
+        example: eeb72343-d883-41a3-a58c-533184bbb9fd,3a0e9e69-191f-471a-94fd-97505c762ad3
+      - name: organization_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Organization ID (optional).
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: User id (optional).
+      - name: user_email
+        in: query
+        required: false
+        schema:
+          type: string
+          format: email
+        description: User email (optional).
+      - name: user_name
+        in: query
+        required: false
+        schema:
+          type: string
+        description: User name (optional).
+      responses:
+        '200':
+          description: Per-document status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultStatusResponse'
+              example:
+                statuses:
+                - rms_document_id: eeb72343-d883-41a3-a58c-533184bbb9fd
+                  name: Q4_report.pdf
+                  status: Synced
+                  fail_code: null
+        '400':
+          description: Bad request — rms_document_ids required
+        '401':
+          description: Unauthorized — invalid or missing API key
+components:
+  schemas:
+    VaultConfirmResponse:
+      type: object
+      properties:
+        rms_document_id:
+          type: string
+          nullable: true
+          description: RMS document id; null when the upload deduplicated into an existing document. Use it to poll GET /v2/vault/status.
+    VaultStatusResponse:
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultDocumentStatus'
+    VaultPresignedUrlResponse:
+      type: object
+      properties:
+        presigned_url:
+          type: string
+          format: uri
+          description: Single-use presigned upload (PUT) URL. Upload the file body via PUT with header Content-Type matching the request content_type.
+        file_key:
+          type: string
+          description: Server-generated file key. Pass back to POST /v2/vault/confirm.
+        document_id:
+          type: string
+          description: Document id for this upload. Pass back to confirm.
+        expiration_seconds:
+          type: integer
+          example: 600
+    VaultDocumentStatus:
+      type: object
+      properties:
+        rms_document_id:
+          type: string
+          nullable: true
+        name:
+          type: string
+        status:
+          type: string
+          nullable: true
+          description: Processing status. Poll until `Synced` (complete and searchable). See the status values table on this page.
+        fail_code:
+          type: string
+          nullable: true
+          description: Deterministic terminal-failure code (e.g. `PASSWORD_PROTECTED`, `FILE_SIZE_EXCEEDED`, `CONVERSION_FAILED`). Branch on this instead of parsing `status` text; `null` unless the document terminally failed.
+    VaultConfirmRequest:
+      type: object
+      required:
+      - document_id
+      - file_key
+      - file_name
+      - content_type
+      properties:
+        document_id:
+          type: string
+          description: From the presigned_url response.
+        file_key:
+          type: string
+          description: From the presigned_url response.
+        file_name:
+          type: string
+          description: Original filename including the extension. The server resolves the file type from this extension first, so it must be correct.
+          example: Q4_report.pdf
+        content_type:
+          type: string
+          description: Canonical MIME type for the file. Must match the value sent to presigned_url and the upload PUT Content-Type header. If the content_type does not match the file, the document is not processed. See the content_type table on this page for the value per file type.
+          example: application/pdf
+        workspace:
+          type: string
+          enum:
+          - personal
+          - organization
+          default: personal
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID (optional).
+        user_id:
+          type: string
+          format: uuid
+          description: User id (optional).
+        user_email:
+          type: string
+          format: email
+          description: User email (optional).
+        user_name:
+          type: string
+          description: User name (optional).
+    VaultPresignedUrlRequest:
+      type: object
+      required:
+      - file_name
+      - content_type
+      properties:
+        file_name:
+          type: string
+          description: Original file name (with extension).
+          example: Q4_report.pdf
+        content_type:
+          type: string
+          description: MIME type of the file.
+          example: application/pdf
+        workspace:
+          type: string
+          enum:
+          - personal
+          - organization
+          default: personal
+          description: 'Vault scope the document is uploaded into. Must match between presigned_url and confirm. Note: the analytics SSE search must use the same workspace to retrieve the document.'
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID (optional).
+        user_id:
+          type: string
+          format: uuid
+          description: User id (optional).
+        user_email:
+          type: string
+          format: email
+          description: User email (optional).
+        user_name:
+          type: string
+          description: User name (optional).
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
