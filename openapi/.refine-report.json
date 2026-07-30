@@ -1,0 +1,34 @@
+{
+  "provider": "linqalpha",
+  "sources": [
+    "linqalpha-briefing-api-openapi.yml",
+    "linqalpha-connectors-api-openapi.yml",
+    "linqalpha-data-api-openapi.yml",
+    "linqalpha-feedback-api-openapi.yml",
+    "linqalpha-mcp-api-openapi.yml",
+    "linqalpha-rms-api-openapi.yml",
+    "linqalpha-search-api-openapi.yml",
+    "linqalpha-source-management-api-openapi.yml",
+    "linqalpha-status-api-openapi.yml",
+    "linqalpha-vault-api-openapi.yml"
+  ],
+  "outputs": [
+    "linqalpha-briefing-api-openapi.yml",
+    "linqalpha-connectors-api-openapi.yml",
+    "linqalpha-data-api-openapi.yml",
+    "linqalpha-feedback-api-openapi.yml",
+    "linqalpha-mcp-api-openapi.yml",
+    "linqalpha-rms-api-openapi.yml",
+    "linqalpha-search-api-openapi.yml",
+    "linqalpha-source-management-api-openapi.yml",
+    "linqalpha-status-api-openapi.yml",
+    "linqalpha-vault-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [
+    "linqalpha-search-api-openapi.yml: dangling $ref: #/components/schemas/AnalyticsCostMetadataEvent"
+  ],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

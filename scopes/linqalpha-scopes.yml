@@ -1,0 +1,32 @@
+generated: '2026-07-19'
+method: searched
+source: https://api.linqalpha.com/.well-known/oauth-authorization-server
+docs: https://docs.linqalpha.com/api-reference/basic/mcp
+note: >-
+  The published OpenAPI declares only the ApiKeyAuth (X-API-KEY) scheme, so no scopes are derivable
+  from the spec. The OAuth surface is discovered instead from RFC 8414 authorization server metadata
+  at api.linqalpha.com, which fronts the LinqAlpha MCP server.
+schemes:
+- name: LinqAlphaOAuth
+  type: oauth2
+  source: https://api.linqalpha.com/.well-known/oauth-authorization-server
+  issuer: https://api.linqalpha.com
+  registration_endpoint: https://api.linqalpha.com/oauth/register
+  dynamic_client_registration: true
+  token_endpoint_auth_methods_supported:
+  - none
+  code_challenge_methods_supported:
+  - S256
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://api.linqalpha.com/oauth/authorize
+    tokenUrl: https://api.linqalpha.com/oauth/token
+scopes:
+- scope: mcp:tools
+  description: >-
+    Invoke the tools exposed by the LinqAlpha MCP server at https://api.linqalpha.com/v1/mcp.
+    This is the only scope advertised in scopes_supported.
+  flows:
+  - authorizationCode
+  sources:
+  - https://api.linqalpha.com/.well-known/oauth-authorization-server

@@ -1,0 +1,146 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/linqalpha-openapi-original.json
+docs: https://docs.linqalpha.com/quickstart
+format: vendor-json
+rfc9457: false
+note: >-
+  LinqAlpha does not use RFC 9457 application/problem+json. Every error is returned as
+  application/json in a fixed envelope with a machine-readable string code.
+envelope:
+  media_type: application/json
+  schema: '#/components/schemas/ApiErrorResponse'
+  shape:
+    error:
+      code: string, required — machine-readable error code
+      message: string — human-readable detail
+      msg: string — DEPRECATED, superseded by message
+    payload: always null on error responses
+  example: |
+    {
+      "error": {
+        "code": "INVALID_REQUEST_BODY",
+        "message": "query is required and must be a string"
+      },
+      "payload": null
+    }
+status_codes:
+- status: 200
+  operations: 47
+- status: 201
+  operations: 1
+- status: 202
+  operations: 1
+- status: 400
+  operations: 34
+  meaning: Bad request / validation failure
+- status: 401
+  operations: 38
+  meaning: Missing or invalid API key
+- status: 403
+  operations: 5
+  meaning: Forbidden
+- status: 404
+  operations: 13
+  meaning: Resource not found (also returned for cross-tenant access)
+- status: 422
+  operations: 2
+  meaning: Unprocessable entity
+- status: 500
+  operations: 11
+  meaning: Internal service failure
+- status: 502
+  operations: 1
+- status: 504
+  operations: 1
+codes:
+- code: API_KEY_MISSING
+  class: authentication
+  status: 401
+  remediation: Send the X-API-KEY header on every request.
+- code: INVALID_API_KEY
+  class: authentication
+  status: 401
+  remediation: Check the key value and that it is enabled for this organization.
+- code: INVALID_REQUEST_BODY
+  class: validation
+  status: 400
+  remediation: Validate the request body against the operation schema.
+- code: ORGANIZATION_ID_MISSING
+  class: validation
+  status: 400
+  remediation: Platform-tier API keys must pass organization_id.
+- code: TICKERS_MISSING
+  class: validation
+  status: 400
+- code: CHAT_MESSAGE_ID_MISSING
+  class: validation
+  status: 400
+- code: DOCUMENT_ID_MISSING
+  class: validation
+  status: 400
+- code: SEARCH_FAIL
+  class: service
+  status: 500
+- code: TTS_FAIL
+  class: service
+  status: 500
+- code: CREATE_CONV_FAIL
+  class: service
+  status: 500
+- code: GET_STOCK_FAIL
+  class: service
+  status: 500
+- code: CREATE_MSG_FAIL
+  class: service
+  status: 500
+- code: ALPHA_COMP_FAIL
+  class: service
+  status: 500
+- code: GET_REF_FAIL
+  class: service
+  status: 500
+- code: CONNECTOR_LIST_FAIL
+  class: connectors
+  status: 500
+- code: CONNECTOR_NOT_FOUND
+  class: connectors
+  status: 404
+- code: CONNECTOR_CREATE_FAIL
+  class: connectors
+  status: 500
+- code: CONNECTOR_UPDATE_FAIL
+  class: connectors
+  status: 500
+- code: CONNECTOR_DELETE_FAIL
+  class: connectors
+  status: 500
+- code: CONNECTOR_TEST_FAIL
+  class: connectors
+  status: 500
+- code: NOT_FOUND
+  class: not-found
+  status: 404
+document_failure_codes:
+  field: fail_code
+  source: https://docs.linqalpha.com/api-reference/status/documents
+  note: >-
+    Document sync entries return a deterministic terminal-failure code so clients can branch on the
+    reason rather than parse status text. Null unless the document terminally failed.
+  codes:
+  - PASSWORD_PROTECTED
+  - FILE_SIZE_EXCEEDED
+  - CONVERSION_FAILED
+mcp_jsonrpc_errors:
+  source: https://docs.linqalpha.com/api-reference/basic/mcp
+  codes:
+  - code: '-32600'
+    meaning: Invalid JSON-RPC request
+  - code: '-32601'
+    meaning: Method not found
+  - code: '-32602'
+    meaning: Invalid params (e.g. unknown tool name)
+  - code: '-32603'
+    meaning: Internal server error
+  - code: '-32000'
+    meaning: Rate limit exceeded

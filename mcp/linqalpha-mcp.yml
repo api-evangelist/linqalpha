@@ -1,0 +1,104 @@
+generated: '2026-07-19'
+method: searched
+status: published
+source: https://docs.linqalpha.com/api-reference/basic/mcp
+server:
+  name: linqalpha
+  transport: http
+  protocol: JSON-RPC 2.0
+  url: https://api.linqalpha.com/v1/mcp
+  authentication:
+    header: x-api-key
+    alternative: >-
+      OAuth 2.0 authorization_code + PKCE (S256) with dynamic client registration, advertised at
+      https://api.linqalpha.com/.well-known/oauth-authorization-server (scope mcp:tools)
+client_config: |
+  {
+    "mcpServers": {
+      "linqalpha": {
+        "url": "https://api.linqalpha.com/v1/mcp",
+        "headers": { "x-api-key": "<your-api-key>" }
+      }
+    }
+  }
+rate_limits:
+  requests_per_minute: 60
+  scope: per user
+  error_code: '-32000'
+error_codes:
+- code: '-32600'
+  meaning: Invalid JSON-RPC request
+- code: '-32601'
+  meaning: Method not found
+- code: '-32602'
+  meaning: Invalid params (e.g. unknown tool name)
+- code: '-32603'
+  meaning: Internal server error
+- code: '-32000'
+  meaning: Rate limit exceeded
+tool_groups:
+- name: Fundamentals & Estimates
+  tools:
+  - name: fundamentals_data_query
+    description: Query financial datasets including fundamentals, estimates, and ownership data
+  - name: fundamentals_data_docs
+    description: Browse financial data schema documentation and available fields
+  - name: stock_prices
+    description: Get historical and real-time stock price data
+  - name: etf_reference
+    description: Get ETF metadata including expense ratios, strategies, and classifications
+  - name: etf_metrics
+    description: List available ETF performance metrics
+- name: Economic Data
+  tools:
+  - name: economic_data_query
+    description: Query macroeconomic data (GDP, CPI, employment, Treasury yields, VIX)
+  - name: economic_indicators
+    description: List available economic indicators grouped by category
+  - name: economic_indicator_data
+    description: Get economic indicator time series data
+  - name: economic_calendar
+    description: Get upcoming economic data release schedule
+- name: Market Data
+  tools:
+  - name: forex_rates
+    description: Get foreign exchange currency pair rates and history
+  - name: commodity_prices
+    description: Get commodity market data (energy, metals, grains, softs)
+  - name: treasury_rates
+    description: Get US Treasury yield curve data across all maturities (1M-30Y)
+  - name: market_symbols
+    description: List available market symbols for forex, commodities, and economic indicators
+  - name: market_risk_premium
+    description: Get country-level market risk premium for CAPM calculations
+- name: Equity & Search
+  tools:
+  - name: equity_database_query
+    description: Query equity market database (stocks, events, documents)
+  - name: transcript_search
+    description: Full-text search across earnings call transcripts and SEC filings
+- name: Research & Citations
+  tools:
+  - name: search_filings
+    description: Search and cite SEC filings, earnings transcripts, and financial news
+  - name: cite_web_source
+    description: Create a web-based research citation
+  - name: create_research_session
+    description: Create a new research session for citation tracking
+  - name: get_citations
+    description: Retrieve all citations created in the current research session
+  - name: web_search
+    description: Search the web with date range filtering for recent financial news
+- name: Platform
+  tools:
+  - name: my_platform_data
+    description: Query your organization's LinqAlpha platform data
+  - name: list_guides
+    description: List available financial data guides and documentation
+  - name: read_guide
+    description: Read a specific financial data guide
+notes: >-
+  LinqAlpha ships a first-party remote MCP server exposing its institutional financial research
+  surface to AI assistants. The server is also reachable as a REST operation in the OpenAPI
+  (POST /v1/mcp, tag MCP). The developer page markets it as "22 financial data tools" across
+  six categories; the tool reference enumerates the tools captured above.

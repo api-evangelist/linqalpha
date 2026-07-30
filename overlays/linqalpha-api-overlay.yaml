@@ -1,0 +1,70 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for LinqAlpha API
+  version: 1.0.0
+extends: openapi/linqalpha-openapi-original.json
+x-generated: '2026-07-19'
+x-method: generated
+x-source: openapi/linqalpha-openapi-original.json
+x-note: >-
+  Captures API Evangelist's enrichment of the published LinqAlpha OpenAPI without mutating it.
+  The largest real gap in the source document is missing operationIds: only 11 of 48 operations
+  declare one, all of them under the Briefing tag. Every other operation must be addressed by
+  method + path, which blocks Arazzo workflows, generated SDKs, and agent tool binding. That gap
+  is recorded here rather than papered over — this overlay does not invent operationIds.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-19'
+    x-apievangelist-artifacts:
+      authentication: authentication/linqalpha-authentication.yml
+      scopes: scopes/linqalpha-scopes.yml
+      conventions: conventions/linqalpha-conventions.yml
+      errors: errors/linqalpha-problem-types.yml
+      lifecycle: lifecycle/linqalpha-lifecycle.yml
+      conformance: conformance/linqalpha-conformance.yml
+      data_model: data-model/linqalpha-data-model.yml
+      mcp: mcp/linqalpha-mcp.yml
+      rate_limits: rate-limits/linqalpha-rate-limits.yml
+      well_known: well-known/linqalpha-well-known.yml
+- target: $.info
+  update:
+    x-apievangelist-contract-gaps:
+    - id: missing-operation-ids
+      detail: 37 of 48 operations declare no operationId; only the Briefing tag supplies them.
+      impact: blocks Arazzo authoring, SDK generation, and reliable agent tool binding
+    - id: no-idempotency
+      detail: no Idempotency-Key header or parameter on any write operation
+      impact: retried creates may duplicate briefings, source batches, and connectors
+    - id: non-standard-errors
+      detail: errors use a vendor envelope rather than RFC 9457 application/problem+json
+    - id: no-contact-or-license-url
+      detail: info block declares license name MIT with no url and carries no contact object
+- target: $.servers
+  update:
+  - url: https://api.linqalpha.com
+    description: Production
+- target: $.info
+  update:
+    x-apievangelist-auth-summary:
+      rest: X-API-KEY header, global security requirement, unscoped
+      mcp: >-
+        OAuth 2.0 authorization_code with PKCE S256 and dynamic client registration,
+        scope mcp:tools
+- target: $.info
+  update:
+    x-apievangelist-conventions:
+      pagination:
+        style: page-number
+        params:
+        - page
+        - per_page
+      streaming: text/event-stream on 7 operations
+      async: fire-and-forget enqueue then poll
+      versioning: uri-path, v1 and v2 coexist
+      idempotency: not supported
+- target: $.components.securitySchemes.ApiKeyAuth
+  update:
+    description: >-
+      Send your LinqAlpha API key in the X-API-KEY header on every request. Platform-tier keys are
+      multi-tenant; pass organization_id to select which organization's data the key reads.

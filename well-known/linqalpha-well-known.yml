@@ -1,0 +1,39 @@
+generated: '2026-07-19'
+method: searched
+source: live probes of /.well-known/ on the LinqAlpha website and API hosts
+hosts:
+- host: https://api.linqalpha.com
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    standard: RFC 8414 OAuth 2.0 Authorization Server Metadata
+    status: 200
+    file: linqalpha-oauth-authorization-server.json
+  - path: /.well-known/security.txt
+    standard: RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration
+    standard: OpenID Connect Discovery
+    status: 404
+  - path: /.well-known/api-catalog
+    standard: RFC 9727
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://linqalpha.com
+  documents:
+  - path: /.well-known/security.txt
+    standard: RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+notes: >-
+  api.linqalpha.com publishes RFC 8414 OAuth 2.0 Authorization Server Metadata advertising
+  authorization_code with PKCE (S256), RFC 7591 dynamic client registration, and a single
+  scope (mcp:tools). This is the OAuth surface fronting the LinqAlpha MCP server; the REST
+  API itself authenticates with the X-API-KEY header. No security.txt is published on any host.

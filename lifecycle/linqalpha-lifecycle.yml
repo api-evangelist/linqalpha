@@ -1,0 +1,55 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/linqalpha-openapi-original.json
+versioning:
+  scheme: uri-path
+  current: v2
+  versions:
+  - v1
+  - v2
+  docs: https://docs.linqalpha.com/quickstart
+  note: >-
+    v1 and v2 coexist rather than v2 superseding v1. Several resources are published under both
+    prefixes (presigned URLs, references, analytics, chat), with the v2 variants adding structured
+    source selection, hard/soft filters, and RMS/Vault document support.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  field_level_deprecations:
+  - field: error.msg
+    superseded_by: error.message
+    source: openapi/linqalpha-openapi-original.json#/components/schemas/ApiError
+  note: >-
+    LinqAlpha publishes no deprecation or sunset policy, and no operation in the OpenAPI is marked
+    deprecated. The only deprecation signal in the whole contract is a schema-level one: the
+    error envelope's msg property is documented as deprecated in favour of message. RFC 8594
+    Sunset/Deprecation headers are not advertised.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  published: false
+status_page:
+  url: https://status.linqalpha.com/
+  status: 200
+  provider: first-party
+  refresh_interval: 5 minutes
+  components: >-
+    ~15 API endpoints (search, chat, deep research, analytics, earnings analysis, data management)
+    plus three backend services named Alpha, Onyx, and RMS
+  history_window: last 8 hours
+  incident_history: not published
+  uptime_percentages: not published
+changelog:
+  url: null
+  published: false
+  note: >-
+    No dated changelog or release-notes page is published; https://docs.linqalpha.com/changelog
+    returns 404. Product announcements appear informally on https://linqalpha.com/blog.
+gaps:
+- No deprecation or sunset policy
+- No SLA or uptime commitment
+- No dated changelog / release notes
+- Status page carries no incident history or uptime percentages

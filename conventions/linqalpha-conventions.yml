@@ -1,0 +1,98 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/linqalpha-openapi-original.json
+docs: https://docs.linqalpha.com/quickstart
+authentication:
+  style: api-key-header
+  header: X-API-KEY
+  scoped: false
+  multi_tenant_selector: organization_id (platform-tier keys)
+  artifact: authentication/linqalpha-authentication.yml
+idempotency:
+  supported: false
+  evidence: >-
+    No Idempotency-Key header, parameter, or documented replay contract appears anywhere in the
+    OpenAPI or the published documentation. Write operations (POST /v1/briefings,
+    POST /v1/source_batches, POST /v2/connectors, POST /v2/vault/confirm) carry no client-supplied
+    request key, so a retried create may duplicate. Long-running generation is instead made safe by
+    the fire-and-forget + poll pattern below, not by idempotency.
+pagination:
+  style: page-number
+  parameters:
+  - page
+  - per_page
+  applies_to: list endpoints (e.g. GET /v1/briefings, GET /v1/briefings/{id}/deliveries)
+  cursor_support: false
+streaming:
+  protocol: Server-Sent Events
+  media_type: text/event-stream
+  operations: 7
+  endpoints:
+  - POST /v2/chat/sse
+  - POST /v1/analytics/sse
+  - POST /v2/analytics/sse
+  - POST /v1/rms_chat
+  - POST /v1/briefings/sse
+  event_names:
+  - conversation
+  - message
+  - status (start | keep_alive | finish)
+  - tool_use_block
+  - tool_result_block
+  - think
+  - answer
+  - chat_message_id
+  keepalive: status keep_alive heartbeat emitted if there is a gap greater than ~15s
+  cancellation: POST /v1/stop_stream pauses an in-flight RMS chat stream
+async_pattern:
+  style: fire-and-forget then poll
+  examples:
+  - enqueue: POST /v1/briefings/preview
+    poll: GET /v1/briefings/deliveries/{delivery_id}
+  - enqueue: POST /v2/vault/confirm
+    poll: GET /v2/vault/status until status is Synced
+  - enqueue: POST /v1/sources
+    poll: GET /v1/sources/{source_id} until status is success
+versioning:
+  scheme: uri-path
+  versions:
+  - v1
+  - v2
+  note: >-
+    v1 and v2 run side by side rather than v2 replacing v1; several resources are published in both
+    (documents presigned URLs, references, analytics, chat). v2 variants add structured source
+    selection, hard/soft filters, and RMS/vault document support. No version header, no date-pinned
+    version train, and no announced sunset for v1.
+  artifact: lifecycle/linqalpha-lifecycle.yml
+error_envelope:
+  format: vendor-json
+  rfc9457: false
+  shape: '{ "error": { "code", "message" }, "payload": null }'
+  machine_readable_code: error.code
+  artifact: errors/linqalpha-problem-types.yml
+rate_limiting:
+  documented_for: MCP server
+  limit: 60 requests per minute per user
+  signal: JSON-RPC error code -32000
+  response_headers: none documented
+  rest_api: no published REST rate limit
+  artifact: rate-limits/linqalpha-rate-limits.yml
+request_tracing:
+  request_id_header: none documented
+  correlation_ids:
+  - conversation_id
+  - chat_message_id
+  - delivery_id
+  note: >-
+    There is no transport-level request-id header. Tracing is done at the domain level: an SSE
+    stream emits conversation_id and chat_message_id events, and those ids are the handles used to
+    fetch references, submit feedback, and run the grounding judge.
+citations:
+  note: >-
+    Answers carry inline [N] markers that resolve to evidence references retrieved via
+    GET /v2/analytics/conversations/{conversation_id}/references. Source documents are fetched
+    through short-lived presigned URLs (10 minute expiry).
+field_expansion:
+  supported: false
+metadata:
+  supported: false

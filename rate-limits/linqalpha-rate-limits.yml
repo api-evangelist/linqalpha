@@ -1,0 +1,18 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.linqalpha.com/api-reference/basic/mcp
+rate_limits:
+- name: MCP server
+  scope: per user
+  limit_count: 60
+  limit_period: minute
+  applies_to: https://api.linqalpha.com/v1/mcp
+  exceeded_signal:
+    protocol: JSON-RPC 2.0
+    code: '-32000'
+    meaning: Rate limit exceeded
+response_headers: none documented
+notes: >-
+  The only published rate limit is the 60 requests-per-minute per-user ceiling on the MCP server.
+  LinqAlpha publishes no rate limit for the REST API, and no RateLimit-* or Retry-After response
+  headers are documented for either surface.

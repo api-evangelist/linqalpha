@@ -1,0 +1,158 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/linqalpha-openapi-original.json
+note: >-
+  Derived from the 79 component schemas: $ref links plus *_id / *_ids reference fields. LinqAlpha's
+  model is a research-conversation graph — an Organization owns Conversations, each Conversation
+  produces ChatMessages, and each ChatMessage cites References that resolve to Documents. Uploaded
+  content enters through two parallel ingestion paths (SourceBatch/Source for RMS, and Vault) and
+  Briefings are scheduled recurring conversations.
+id_format: UUID (v4) strings throughout; stock identifiers are Bloomberg BBG ids
+entities:
+- name: Organization
+  id_field: organization_id
+  description: Tenant that owns all data; the unit an API key is bound to.
+  schemas:
+  - CreateOrganizationRequest
+  - CreateOrganizationResponse
+- name: User
+  id_field: user_id
+  description: Actor within an organization; optional for org-scoped keys.
+- name: Conversation
+  id_field: conversation_id
+  description: A research session; the handle used to fetch references and submit feedback.
+  schemas:
+  - ConversationEvent
+  - AnalyticsRequest
+  - AnalyticsV2Request
+- name: ChatMessage
+  id_field: chat_message_id
+  description: A single answer within a conversation; the handle for references and the judge.
+  schemas:
+  - ChatMessageResponse
+  - ChatMessageEvent
+- name: Reference
+  id_field: id
+  description: An evidence citation — an exact chunk of a document used in an answer.
+  schemas:
+  - RMSReference
+  - ReferenceV2
+  - ReferenceMetadata
+  - ReferenceMetadataV2
+- name: Document
+  id_field: document_id
+  description: A source file (SEC filing, transcript, IR deck, news, or uploaded note).
+  access: short-lived presigned URL (10 minute expiry)
+- name: SourceBatch
+  id_field: source_batch_id
+  description: Logical container grouping uploaded Sources; must exist before uploading.
+  schemas:
+  - CreateSourceBatchRequest
+  - CreateSourceBatchResponse
+- name: Source
+  id_field: source_id
+  description: A registered uploaded file queued for async parsing.
+  schemas:
+  - CreateSourceRequest
+  - CreateSourceResponse
+  - GetSourceResponse
+- name: VaultDocument
+  id_field: rms_document_id
+  description: A document ingested through the Vault upload flow (presign then confirm).
+  schemas:
+  - VaultConfirmRequest
+  - VaultConfirmResponse
+- name: Briefing
+  id_field: id
+  description: A scheduled recurring research briefing over a topic and a set of tickers.
+  schemas:
+  - Briefing
+  - BriefingCreateRequest
+  - BriefingUpdateRequest
+- name: BriefingDelivery
+  id_field: id
+  description: One execution of a Briefing, with status and generated content.
+  schemas:
+  - BriefingDelivery
+  - BriefingDeliveryDetail
+  status_enum:
+  - pending
+  - sent
+  - failed
+  - resynced
+  - skipped
+- name: Connector
+  id_field: id
+  description: A customer-configured MCP connector registered to an organization.
+  schemas:
+  - ConnectorApiResponse
+  - ConnectorListApiResponse
+- name: Stock
+  id_field: stock_id
+  description: An equity instrument, identified by Bloomberg BBG id; mapped from tickers.
+  resolver: GET /v1/map_tickers
+relationships:
+- from: Organization
+  to: Conversation
+  type: has_many
+  via: organization_id
+- from: Organization
+  to: User
+  type: has_many
+  via: user_id
+- from: Organization
+  to: Connector
+  type: has_many
+  via: organization_id
+- from: Organization
+  to: SourceBatch
+  type: has_many
+  via: organization_id
+- from: Conversation
+  to: ChatMessage
+  type: has_many
+  via: conversation_id
+- from: ChatMessage
+  to: Reference
+  type: has_many
+  via: chat_message_id
+- from: Reference
+  to: Document
+  type: belongs_to
+  via: document_id
+- from: Reference
+  to: Stock
+  type: has_many
+  via: stock_ids
+- from: SourceBatch
+  to: Source
+  type: has_many
+  via: source_batch_id
+- from: Source
+  to: Document
+  type: has_one
+  via: document_id
+- from: VaultDocument
+  to: Document
+  type: has_one
+  via: rms_document_id
+- from: Briefing
+  to: BriefingDelivery
+  type: has_many
+  via: id
+- from: BriefingDelivery
+  to: Conversation
+  type: belongs_to
+  via: chat_session_id
+- from: BriefingDelivery
+  to: Reference
+  type: has_many
+  via: delivery_id
+- from: Briefing
+  to: Stock
+  type: has_many
+  via: stock_ids
+- from: Conversation
+  to: Stock
+  type: has_many
+  via: stock_ids

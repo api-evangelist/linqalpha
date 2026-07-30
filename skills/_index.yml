@@ -1,0 +1,46 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/linqalpha-openapi-original.json
+note: >-
+  Packaged operating instructions for the three marquee LinqAlpha flows. The published OpenAPI
+  declares operationIds only under the Briefing tag (11 of 48 operations), so the briefing skill
+  cites operationIds verbatim and the other two address operations by method + path exactly as the
+  spec defines them. No operationId is invented.
+skills:
+- file: linqalpha-scheduled-briefing.md
+  name: Schedule and retrieve a LinqAlpha research briefing
+  api: openapi/linqalpha-openapi-original.json
+  operations:
+  - createBriefing
+  - listBriefings
+  - updateBriefing
+  - deleteBriefing
+  - briefingPreview
+  - briefingRun
+  - briefingSse
+  - listBriefingDeliveries
+  - getBriefingDeliveryDirect
+  - getBriefingDeliveryReferences
+- file: linqalpha-grounded-research.md
+  name: Run grounded LinqAlpha analytics and verify the citations
+  api: openapi/linqalpha-openapi-original.json
+  operations:
+  - POST /v2/analytics/sse
+  - GET /v2/analytics/conversations/{conversation_id}/references
+  - POST /v2/analytics/messages/{chat_message_id}/judge
+  - GET /v2/documents/{document_id}/presigned_url
+  - GET /v1/map_tickers
+  - POST /v1/conversations/{conversation_id}/feedback
+- file: linqalpha-vault-ingestion.md
+  name: Upload internal documents to LinqAlpha and make them searchable
+  api: openapi/linqalpha-openapi-original.json
+  operations:
+  - POST /v2/vault/presigned_url
+  - POST /v2/vault/confirm
+  - GET /v2/vault/status
+  - POST /v1/source_batches
+  - POST /v1/sources/upload_url
+  - POST /v1/sources
+  - GET /v1/sources/{source_id}
+  - GET /v1/status/documents
+  - GET /v1/status/sync
