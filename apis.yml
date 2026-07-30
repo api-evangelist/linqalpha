@@ -1,25 +1,294 @@
 aid: linqalpha
 name: LinqAlpha
-description: LinqAlpha is a company surfaced as a portfolio company of techstars and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  LinqAlpha is a domain-specialized multi-agent AI platform for institutional investment research,
+  serving hedge funds, asset managers and investment banks. It runs retrieval-augmented, agentic
+  analysis across SEC filings, earnings-call transcripts, IR materials, news and macroeconomic data
+  covering 57,600+ companies in 120+ countries and 30+ languages, returning answers with inline
+  citations that resolve to the exact source chunks. The LinqAlpha API exposes that engine over a
+  REST surface at api.linqalpha.com — streaming analytics and chat over Server-Sent Events,
+  document search, natural-language-to-SQL, scheduled research briefings, an RMS/Vault ingestion
+  path for a firm's own internal documents, and a source-grounding judge that scores how well each
+  claim in an answer is backed by the sources it cited. LinqAlpha also publishes a first-party
+  remote MCP server exposing 22 financial-data tools to AI assistants.
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://framerusercontent.com/assets/D0IBswEXPvcSQAQJ7aO65K0eLAA.png
 url: https://raw.githubusercontent.com/api-evangelist/linqalpha/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - techstars
-x-tier: stub
-x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
 tags:
 - Company
-apis: []
+- Financial Services
+- Investment Research
+- Artificial Intelligence
+- Agents
+- Market Data
+- Equities
+- Economic Data
+- SEC Filings
+- Retrieval Augmented Generation
+- MCP
+apis:
+- aid: linqalpha:linqalpha-briefing-api
+  name: LinqAlpha Briefing API
+  description: Briefing Agent — automated market briefings with scheduling and delivery
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Briefing
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-briefing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-connectors-api
+  name: LinqAlpha Connectors API
+  description: Customer Connectors — customer-owned MCP connector management
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Connectors
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-connectors-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-data-api
+  name: LinqAlpha Data API
+  description: Data retrieval and mapping
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Data
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-data-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-feedback-api
+  name: LinqAlpha Feedback API
+  description: Conversation feedback
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Feedback
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-feedback-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-mcp-api
+  name: LinqAlpha MCP API
+  description: LinqAlpha MCP — Financial data tools for AI assistants via Model Context Protocol
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - MCP
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-mcp-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-rms-api
+  name: LinqAlpha RMS API
+  description: Research Management System
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - RMS
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-rms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-search-api
+  name: LinqAlpha Search API
+  description: Search and generate responses
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-search-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-source-management-api
+  name: LinqAlpha Source Management API
+  description: Source batch and file management
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Source Management
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-source-management-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-status-api
+  name: LinqAlpha Status API
+  description: Sync status — check organization, document, and container sync progress
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Status
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-status-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+- aid: linqalpha:linqalpha-vault-api
+  name: LinqAlpha Vault API
+  description: The Vault API from LinqAlpha — 3 operation(s) for vault.
+  humanURL: https://docs.linqalpha.com/quickstart
+  baseURL: https://api.linqalpha.com
+  tags:
+  - Vault
+  properties:
+  - type: OpenAPI
+    url: openapi/linqalpha-vault-api-openapi.yml
+  - type: Documentation
+    url: https://docs.linqalpha.com/quickstart
+  - type: APIReference
+    url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+  - type: DataModel
+    url: data-model/linqalpha-data-model.yml
+  - type: ErrorCatalog
+    url: errors/linqalpha-problem-types.yml
+common:
+- type: Website
+  url: https://linqalpha.com/
+- type: DeveloperPortal
+  url: https://linqalpha.com/developer
+- type: Documentation
+  url: https://docs.linqalpha.com/quickstart
+- type: APIReference
+  url: https://docs.linqalpha.com/api-reference/basic/analytics-sse
+- type: GettingStarted
+  url: https://docs.linqalpha.com/quickstart
+- type: OpenAPI
+  url: openapi/linqalpha-openapi-original.json
+- type: Blog
+  url: https://linqalpha.com/blog
+- type: Support
+  url: https://linqalpha.com/contact-sales
+- type: SignUp
+  url: https://chat.linqalpha.com/analytics
+- type: TermsOfService
+  url: https://linqalpha.com/terms-of-use
+- type: PrivacyPolicy
+  url: https://linqalpha.com/privacy-policy
+- type: MCPServer
+  url: mcp/linqalpha-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/linqalpha-llms.txt
+- type: Authentication
+  url: authentication/linqalpha-authentication.yml
+- type: OAuthScopes
+  url: scopes/linqalpha-scopes.yml
+- type: Conventions
+  url: conventions/linqalpha-conventions.yml
+- type: ErrorCatalog
+  url: errors/linqalpha-problem-types.yml
+- type: RateLimits
+  url: rate-limits/linqalpha-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/linqalpha-lifecycle.yml
+- type: StatusPage
+  url: https://status.linqalpha.com/
+- type: Conformance
+  url: conformance/linqalpha-conformance.yml
+- type: Compliance
+  url: https://linqalpha.com/security
+- type: TrustCenter
+  url: security/linqalpha-trust-center.yml
+- type: DomainSecurity
+  url: security/linqalpha-domain-security.yml
+- type: WellKnown
+  url: well-known/linqalpha-well-known.yml
+- type: DataModel
+  url: data-model/linqalpha-data-model.yml
+- type: Overlay
+  url: overlays/linqalpha-api-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
-common:
-- type: Website
-  url: https://linqalpha.com/
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
