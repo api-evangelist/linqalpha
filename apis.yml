@@ -237,7 +237,7 @@ common:
 - type: GettingStarted
   url: https://docs.linqalpha.com/quickstart
 - type: OpenAPI
-  url: openapi/linqalpha-openapi-original.json
+  url: openapi/_original/linqalpha-openapi-original.json
 - type: Blog
   url: https://linqalpha.com/blog
 - type: Support
