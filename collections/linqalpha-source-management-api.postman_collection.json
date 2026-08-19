@@ -1,0 +1,986 @@
+{
+  "item": [
+    {
+      "id": "156e1303-019b-430c-9ee8-09b280016fb4",
+      "name": "Source Management",
+      "description": {
+        "content": "Source batch and file management",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "26c090ac-8482-4ce1-b7ed-cfd01fb95dea",
+          "name": "Create Source Batch",
+          "request": {
+            "name": "Create Source Batch",
+            "description": {
+              "content": "Creates a new source batch container for organizing and managing related document sources. A source batch acts as a logical grouping that must be created before uploading any sources. The returned `source_batch_id` is required when creating sources and can be used to reference all contained sources in chat or search requests.\n\n**Workflow:**\n1. Create a source batch (this endpoint)\n2. Upload sources to the batch using the returned `source_batch_id`\n3. Use the `source_batch_id` in chat/search API requests to access all sources in the batch",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "source_batches"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"organization_id\": \"<uuid>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\",\n  \"description\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8909c790-d91d-4c2c-8b10-ff12800555b8",
+              "name": "Source batch created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "source_batches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Financial_Reports\",\n  \"description\": \"Financial documents for Q4 2024 analysis\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a6a7ad38-6854-409d-a3e6-d79ed1042c20",
+              "name": "Bad request - invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "source_batches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Financial_Reports\",\n  \"description\": \"Financial documents for Q4 2024 analysis\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8b5aa66f-e88c-4fb8-9ef7-3b220df614d0",
+              "name": "Unauthorized - invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "source_batches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Financial_Reports\",\n  \"description\": \"Financial documents for Q4 2024 analysis\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2c77d64a-fbc6-4865-a212-9f351ce0d39d",
+          "name": "Get Upload URL",
+          "request": {
+            "name": "Get Upload URL",
+            "description": {
+              "content": "Returns a presigned S3 PUT URL for direct file upload. Lets clients upload files without managing AWS credentials or staging buckets — the server signs a single-use URL bound to a server-generated S3 object key, the client PUTs the file body to that URL, then registers the upload via `POST /v1/sources` with the returned `file_key`.\n\n**Why this exists:** `POST /v1/sources` requires a `file_key` for an object that already exists in our backing storage. Customers without their own staging bucket use this endpoint to obtain an upload URL pointed at the canonical destination directly, eliminating any client-side AWS setup.\n\n**Important — Content-Type binding:** The presigned URL is signed with `Content-Type` baked into the signature. The client **MUST** send a matching `Content-Type` header on the PUT request, otherwise S3 rejects with HTTP 403 (`SignatureDoesNotMatch`). The expected value is returned in the `content_type` field of this response — pass it back as the `Content-Type` header on your PUT.\n\n**Workflow:**\n1. Create a source batch via `POST /v1/source_batches` (returns `source_batch_id`)\n2. Call this endpoint with `name`, `source_type`, `source_batch_id` (returns `upload_url`, `file_key`, `content_type`, `expires_in`)\n3. PUT the file to `upload_url` with `Content-Type: <content_type>` header\n4. Register the source via `POST /v1/sources` with `file_key` from step 2\n5. Poll `GET /v1/sources/{source_id}` until `status: \"success\"`\n6. Reference `source_batch_id` in chat/search requests\n\n**Constraints:**\n- Supported `source_type`: `pdf`, `docx`, `xlsx`, `pptx`, `doc`, `txt`\n- Maximum file size enforced at registration step: 20MB\n- Maximum 10 active sources (status: `processing` or `success`) per source_batch — `failed`/`deleted` sources do not count toward the limit (enforced when generating the URL)\n- URL expires after 10 minutes (`expires_in: 600`)\n- File is validated at registration time (`POST /v1/sources`); a wrong-content upload will be accepted by S3 but rejected when registering",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sources",
+                "upload_url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"source_type\": \"<string>\",\n  \"source_batch_id\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "24e31f24-c454-4555-bfef-807b9002caf3",
+              "name": "Presigned upload URL generated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    "upload_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"source_type\": \"pdf\",\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"upload_url\": \"https://linq-vertex-documents.s3.amazonaws.com/uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf?X-Amz-Algorithm=...&X-Amz-Signature=...\",\n  \"file_key\": \"uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"expires_in\": 600\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7dcde66d-0d55-4909-a3d0-2d17ae948d64",
+              "name": "Bad request — invalid `source_type` or missing required fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    "upload_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"source_type\": \"pdf\",\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7ff63c5e-5a4d-459f-bb3c-80f253aea2ee",
+              "name": "Unauthorized — invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    "upload_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"source_type\": \"pdf\",\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b0194bd4-5fae-4726-a02e-e41e825bb394",
+              "name": "Source batch not found or not accessible to the caller",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    "upload_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"source_type\": \"pdf\",\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "017982c9-28bc-4126-9dd0-13c5d37db9d4",
+              "name": "Source batch already contains the maximum number of sources (10)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    "upload_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"source_type\": \"pdf\",\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "110ae8f3-49b3-45a1-bf9a-af99f8af3087",
+          "name": "Create Source",
+          "request": {
+            "name": "Create Source",
+            "description": {
+              "content": "Registers a previously-uploaded file as a document source under a source batch and queues it for asynchronous parsing. Once `status: \"success\"`, the source is searchable in chat/search conversations that reference its `source_batch_id`.\n\n**Important Notes:**\n- **Prerequisite:** A source batch must be created first using `POST /v1/source_batches`\n- **The file must already be in S3** before calling this endpoint. Two ways to get it there:\n  - **Recommended:** call `POST /v1/sources/upload_url` to obtain a presigned PUT URL, upload the file directly via that URL, then pass the returned `file_key` here. No client-side AWS setup required.\n  - **Alternative:** if you already have your own S3 staging bucket integrated with us, upload there and pass the resulting `file_key`.\n- **Processing:** Sources are queued for asynchronous processing. Use `GET /v1/sources/{source_id}` to poll the processing status before using in conversations.\n- **File Requirements:**\n  - Supported formats: PDF, DOCX, XLSX, DOC, TXT, PPTX\n  - Maximum size: 20MB per file\n  - Maximum files per batch: 10 files\n- **Usage in Conversations:**\n  - Reference sources via `source_batch_id` in chat/search API requests\n  - All sources in a batch are accessible when the batch is referenced\n  - Sources remain available for reuse within conversations that reference their batch\n\n**Workflow (presigned-URL path):**\n1. `POST /v1/source_batches` → `source_batch_id`\n2. `POST /v1/sources/upload_url` → `upload_url`, `file_key`, `content_type`\n3. PUT the file body to `upload_url` with header `Content-Type: <content_type>`\n4. `POST /v1/sources` (this endpoint) with `file_key` from step 2\n5. Poll `GET /v1/sources/{source_id}` until `status: \"success\"`\n6. Reference `source_batch_id` in chat/search requests",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sources"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"source_batch_id\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"file_key\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"organization_id\": \"<uuid>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e0d7bbae-f278-49e4-99b3-97e573a7918e",
+              "name": "Source created and queued for processing",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"file_key\": \"uploaded_sources/2024/q4/revenue_report.pdf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"source_id\": \"456e7890-e89b-12d3-a456-426614174001\",\n  \"size\": 2048576,\n  \"status\": \"processing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "63f36644-2ef7-45a3-b9fd-bf27402735d3",
+              "name": "Bad request - invalid file format, size exceeded, or invalid source_batch_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"file_key\": \"uploaded_sources/2024/q4/revenue_report.pdf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "cbf30c0d-10a6-4717-bbd0-b738addd7e34",
+              "name": "Unauthorized - invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"file_key\": \"uploaded_sources/2024/q4/revenue_report.pdf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6a5beac8-3a2e-4e85-8655-7fbd6d585dae",
+              "name": "Source batch not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"name\": \"Q4_Revenue_Report.pdf\",\n  \"file_key\": \"uploaded_sources/2024/q4/revenue_report.pdf\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cb82597f-ed9a-4381-aa24-13ec30c07601",
+          "name": "Get Source Status",
+          "request": {
+            "name": "Get Source Status",
+            "description": {
+              "content": "Retrieves the current processing status of an uploaded source. Use this endpoint to poll source readiness before including it in chat or search requests.\n\n**Status Values:**\n- `processing`: Source is being parsed and indexed (typically takes 10-60 seconds depending on file size)\n- `success`: Source is ready for use in conversations\n- `failed`: Processing failed (check file format, size, or content validity)\n\n**Best Practice:** Poll this endpoint with exponential backoff until status is `success` before initiating chat/search requests.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "sources",
+                ":source_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "source_id",
+                  "description": "(Required) The unique identifier (UUID) of the source returned from POST /v1/sources"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "67dc8d30-ae55-4a22-a9d0-c49875c76351",
+              "name": "Source status retrieved successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    ":source_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "source_id",
+                      "description": "(Required) The unique identifier (UUID) of the source returned from POST /v1/sources"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"source_id\": \"456e7890-e89b-12d3-a456-426614174001\",\n  \"status\": \"processing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b60ec0a-5885-4b0c-b05b-451f447b8927",
+              "name": "Unauthorized - invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    ":source_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "source_id",
+                      "description": "(Required) The unique identifier (UUID) of the source returned from POST /v1/sources"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "1980aa3c-cf92-4a21-a55d-7dff6e79a7de",
+              "name": "Source not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "sources",
+                    ":source_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "source_id",
+                      "description": "(Required) The unique identifier (UUID) of the source returned from POST /v1/sources"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7c685d38-c419-4fc8-ac6d-f4f47b441eb7",
+    "name": "LinqAlpha Briefing Source Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

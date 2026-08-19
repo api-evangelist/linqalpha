@@ -1,0 +1,1285 @@
+{
+  "item": [
+    {
+      "id": "a1d41c63-3f78-4095-a775-c6b2a9351892",
+      "name": "RMS",
+      "description": {
+        "content": "Research Management System",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5dd83399-e97d-43b3-bab3-c12bab8b2358",
+          "name": "Create Organization",
+          "request": {
+            "name": "Create Organization",
+            "description": {
+              "content": "Creates a new organization with the specified parameters.\n\n**Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "organizations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"s3_path\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c17ec406-3016-4771-be12-39ab9a5f976d",
+              "name": "Organization created successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"organization_001\",\n  \"name\": \"Example Investment Fund\",\n  \"s3_path\": \"s3://example-bucket/organization_001/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "882cc6c1-34f7-4756-8239-5f0c68c12bfa",
+              "name": "Bad Request - Invalid request parameters or incorrect format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"organization_001\",\n  \"name\": \"Example Investment Fund\",\n  \"s3_path\": \"s3://example-bucket/organization_001/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"ORGANIZATION_ID_MISSING\",\n    \"msg\": \"organization id is required\",\n    \"message\": \"organization id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ff3f0aa2-0ddb-4d7e-bbe6-13b82d107524",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"organization_001\",\n  \"name\": \"Example Investment Fund\",\n  \"s3_path\": \"s3://example-bucket/organization_001/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "95c8bdad-42aa-4a62-b918-02dade4ef9df",
+              "name": "Internal Server Error - An unexpected error occurred on the server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "organizations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"organization_001\",\n  \"name\": \"Example Investment Fund\",\n  \"s3_path\": \"s3://example-bucket/organization_001/\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"SERVER_ERROR\",\n    \"message\": \"An unexpected error occurred on the server.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ea1ea801-12cd-42db-9b94-b1efd0e208d4",
+          "name": "RMS Chat (SSE - Stream)",
+          "request": {
+            "name": "RMS Chat (SSE - Stream)",
+            "description": {
+              "content": "Generate a response using the RMS (Research Management System) with streaming server-sent events. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.\n\n**Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "rms_chat"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organization_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\",\n  \"query\": \"<string>\",\n  \"search_types\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"conversation_id\": \"<uuid>\",\n  \"source_batch_id\": \"<uuid>\",\n  \"source_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"container_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"document_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"client_api_url\": \"<string>\",\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"rms_types\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"rms_sub_types\": \"<object>\",\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": \"<integer>\",\n      \"month\": \"<integer>\",\n      \"day\": \"<integer>\"\n    },\n    \"end_time\": {\n      \"year\": \"<integer>\",\n      \"month\": \"<integer>\",\n      \"day\": \"<integer>\"\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": \"<integer>\",\n      \"quarter\": \"<integer>\"\n    },\n    \"end_time\": {\n      \"year\": \"<integer>\",\n      \"quarter\": \"<integer>\"\n    }\n  },\n  \"agentic\": \"<boolean>\",\n  \"prerelease\": \"<object>\",\n  \"custom_filters\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f447b645-26c7-4287-a1fc-375962cbbf19",
+              "name": "SSE stream response with RMS search results",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bf1dd0a9-c2c9-4490-9935-abc6e37c32ce",
+              "name": "Bad Request - Invalid request parameters or incorrect format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"CREATE_CONV_FAIL\",\n    \"message\": \"RMS conversation could not be created.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b466d08c-aa50-41fb-b7b7-0f2bf2a8ec58",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c35832a4-afd5-4e79-b8d6-3053058d9330",
+              "name": "Forbidden - No permission to access this resource.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"FORBIDDEN\",\n    \"message\": \"Access denied: insufficient permissions.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8bf221f-18c3-44e0-8097-1ca2100f19e3",
+              "name": "Not Found - The requested resource does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"The requested resource was not found.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3b3b7f08-01ee-4fdc-a4d6-65920a37f619",
+              "name": "Internal Server Error - An unexpected error occurred on the server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_chat"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"source_batch_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"SERVER_ERROR\",\n    \"message\": \"An unexpected error occurred on the server.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fcd59a48-537e-49fd-a605-e6ff84496e9e",
+          "name": "RMS Deep Research",
+          "request": {
+            "name": "RMS Deep Research",
+            "description": {
+              "content": "Generate a response using the RMS (Research Management System) with deep research capabilities. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.\n\n**Note**:This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "rms_deep_research"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organization_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\",\n  \"query\": \"<string>\",\n  \"search_types\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"conversation_id\": \"<uuid>\",\n  \"source_batch_id\": \"<uuid>\",\n  \"source_ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ],\n  \"container_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"document_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"client_api_url\": \"<string>\",\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"rms_types\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"rms_sub_types\": \"<object>\",\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tags\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": \"<integer>\",\n      \"month\": \"<integer>\",\n      \"day\": \"<integer>\"\n    },\n    \"end_time\": {\n      \"year\": \"<integer>\",\n      \"month\": \"<integer>\",\n      \"day\": \"<integer>\"\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": \"<integer>\",\n      \"quarter\": \"<integer>\"\n    },\n    \"end_time\": {\n      \"year\": \"<integer>\",\n      \"quarter\": \"<integer>\"\n    }\n  },\n  \"agentic\": \"<boolean>\",\n  \"prerelease\": \"<object>\",\n  \"custom_filters\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8c0aecd7-2234-4366-a7e1-98a54d227132",
+              "name": "SSE stream of research events. Each event is sent as `data: {json}\\n\\n`",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5d8c5df8-c5a5-41c7-bafb-52cc3f81f30b",
+              "name": "Bad Request - Invalid request parameters or incorrect format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"CREATE_CONV_FAIL\",\n    \"message\": \"RMS conversation could not be created.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "18a88c8b-6859-49a4-80d7-5ae2b805f8b0",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "817f8dab-2f7b-476c-9c55-9591bc290513",
+              "name": "Forbidden - No permission to access this resource.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"FORBIDDEN\",\n    \"message\": \"Access denied: insufficient permissions.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5fe1a842-0bd6-4bd7-b233-9bf1a35036ac",
+              "name": "Not Found - The requested resource does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"The requested resource was not found.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0ac16857-3552-4f8b-b480-6a033af97672",
+              "name": "Internal Server Error - An unexpected error occurred on the server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "rms_deep_research"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"query\": \"What are the latest insights on AAPL performance?\",\n  \"search_types\": [\n    \"rms\",\n    \"external\"\n  ],\n  \"external_types\": [\n    \"transcript\",\n    \"filing\",\n    \"news\",\n    \"ir_slide\"\n  ],\n  \"rms_types\": [\n    \"emailnotes\",\n    \"generalnotes\"\n  ],\n  \"document_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"container_ids\": [\n    \"123e4567-e89b-12d3-a456-426614174000\"\n  ],\n  \"stock_ids\": [\n    \"BBG001S5N8V8\"\n  ],\n  \"per_event_size\": 0,\n  \"per_event_sleep_time\": 0.01,\n  \"upload_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"month\": 1,\n      \"day\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"month\": 12,\n      \"day\": 31\n    }\n  },\n  \"fiscal_period\": {\n    \"start_time\": {\n      \"year\": 2023,\n      \"quarter\": 1\n    },\n    \"end_time\": {\n      \"year\": 2024,\n      \"quarter\": 3\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"SERVER_ERROR\",\n    \"message\": \"An unexpected error occurred on the server.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eda8fe8c-6f9a-4d9b-8f39-ff92740a8367",
+          "name": "Pause RMS Chat Stream",
+          "request": {
+            "name": "Pause RMS Chat Stream",
+            "description": {
+              "content": "Pause the RMS (Research Management System) chat stream.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "stop_stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": \"<uuid>\",\n  \"dialogue_id\": \"<uuid>\",\n  \"organization_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2ac9fef4-193a-4092-8f98-af6f907a85b8",
+              "name": "Stop Stream response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "stop_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"dialogue_id\": \"2d382478-077e-4bcb-b6ec-4fdcbc75ab33\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"message\": \"Interrupt request received\",\n  \"dialogue_id\": \"2d382478-077e-4bcb-b6ec-4fdcbc75ab33\",\n  \"paused\": 1676198400\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c85e8a19-63d1-4160-9c7d-9f87b0d36327",
+              "name": "Bad Request - Invalid request parameters or incorrect format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "stop_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"dialogue_id\": \"2d382478-077e-4bcb-b6ec-4fdcbc75ab33\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"ORGANIZATION_ID_MISSING\",\n    \"msg\": \"organization_id is required\",\n    \"message\": \"organization_id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "55b5a4af-cd92-442e-ab00-ae0c8fa75e90",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "stop_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"dialogue_id\": \"2d382478-077e-4bcb-b6ec-4fdcbc75ab33\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d5841138-0cfd-4d4c-8484-51b7d1c03aa3",
+              "name": "Forbidden - No permission to access this resource.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "stop_stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"organization_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"conversation_id\": \"987e6543-e21b-32d3-c654-426614174999\",\n  \"user_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"user_email\": \"john.doe@example.com\",\n  \"user_name\": \"John Doe\",\n  \"dialogue_id\": \"2d382478-077e-4bcb-b6ec-4fdcbc75ab33\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"FORBIDDEN\",\n    \"message\": \"Access denied: insufficient permissions.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "18aacb8f-927b-405f-8a19-01e698652bc4",
+    "name": "LinqAlpha Briefing RMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

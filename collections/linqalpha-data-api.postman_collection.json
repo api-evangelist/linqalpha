@@ -1,0 +1,3244 @@
+{
+  "item": [
+    {
+      "id": "35e961cd-05b8-484b-8867-cd9534140d31",
+      "name": "Data",
+      "description": {
+        "content": "Data retrieval and mapping",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f99dd9ef-b189-47fd-87c2-03f7835a87b4",
+          "name": "Chat Message",
+          "request": {
+            "name": "Chat Message",
+            "description": {
+              "content": "Retrieves a specific chat message by its ID.\n\n**How to find chat_message_id:**\nLook for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see [search_results event response](https://docs.linqalpha.com/api-reference/basic/chat_v2#option-6).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "chat_messages",
+                ":chat_message_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "chat_message_id",
+                  "description": "(Required) Chat message ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "7da5b009-350a-46f7-aa60-e0b4d7559f1c",
+              "name": "Chat message response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "chat_messages",
+                    ":chat_message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chat_message_id",
+                      "description": "(Required) Chat message ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"chat_message_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"message\": \"The company's revenue grew by 20% in the last quarter. ...\",\n  \"message_type\": \"assistant\",\n  \"created_at\": \"2025-10-30T09:11:31.667544Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6f014826-a9fa-48cd-ab50-0b158ab27aa9",
+              "name": "Bad Request - Missing or invalid chat_message_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "chat_messages",
+                    ":chat_message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chat_message_id",
+                      "description": "(Required) Chat message ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"CHAT_MESSAGE_ID_MISSING\",\n    \"msg\": \"chat_message_id is required\",\n    \"message\": \"chat_message_id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0fea4eee-eace-4eb1-b55d-646e105fdc8e",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "chat_messages",
+                    ":chat_message_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "chat_message_id",
+                      "description": "(Required) Chat message ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ca8dbaed-d128-4174-aa00-d207427b0e98",
+          "name": "References",
+          "request": {
+            "name": "References",
+            "description": {
+              "content": "Retrieves evidence references for a specific chat message. Each reference corresponds to an exact chunk used in the final answer generated by the LinqAlpha engine. These chunks represent the precise portions of documents (e.g., filings, transcripts, or news) that were retrieved and cited by the model to construct the final response..\n\n**How to find chat_message_id:**\nLook for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see [search_results event response](https://docs.linqalpha.com/api-reference/basic/chat_v2#option-6).\n\n**How to view original documents:**\n1. **Via Viewer:** `https://chat.linqalpha.com/rms/viewer?chat_message_id={chat_message_id}&citation_idx={citation_idx}`\n2. **Direct Download:** If the reference contains a `document_id`, you can access the original document directly through the [presigned_url endpoint](https://docs.linqalpha.com/api-reference/basic/presigned_url).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "references"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "chat_message_id",
+                  "value": "<string>",
+                  "description": "(Required) Chat message ID"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0615db4a-34f2-4667-96c6-a9134ae8a8e2",
+              "name": "References response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"references\": [\n    {\n      \"id\": \"12\",\n      \"citation_idx\": \"12\",\n      \"search_type\": \"rms\",\n      \"chunk_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n      \"text\": \"For fiscal year 2024, Tesla expects EBIT to grow between 15% and 20%...\",\n      \"text_type\": \"paragraph\",\n      \"document_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n      \"document_name\": \"Tesla 10-K 2023\",\n      \"s3_file_key\": \"tesla/filings/2023/10k.pdf\",\n      \"external_url\": \"https://www.sec.gov/ix?doc=/Archives/edgar/data/1318605/000095017024002308/tsla-20231231.htm\",\n      \"metadata\": {\n        \"source\": \"filing\",\n        \"ticker\": \"TSLA\",\n        \"published_at\": \"2024-02-14\"\n      },\n      \"custom_metadata\": null\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8ca20294-0beb-4848-8ddf-f02148ee1336",
+              "name": "Bad Request - Invalid request parameters or incorrect format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"CHAT_MESSAGE_ID_MISSING\",\n    \"msg\": \"chat_message_id is required\",\n    \"message\": \"chat_message_id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c52db01e-5c31-4675-8c65-871280806d99",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9af0a2e8-a26f-4691-ac67-66bfaf297fa5",
+              "name": "Forbidden - No permission to access this resource.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"FORBIDDEN\",\n    \"message\": \"Access denied: insufficient permissions.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "93b0555e-d270-415b-bfe7-966e7c7009a2",
+              "name": "Not Found - The requested resource does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"The requested resource was not found.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "67700c24-a45c-4d40-a10e-d2d190ab97d5",
+              "name": "Internal Server Error - An unexpected error occurred on the server.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chat_message_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"SERVER_ERROR\",\n    \"message\": \"An unexpected error occurred on the server.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "03ad867e-7a37-43cc-9a0c-45000110ebd5",
+          "name": "References (v2)",
+          "request": {
+            "name": "References (v2)",
+            "description": {
+              "content": "Retrieves the list of evidence references (citations) used in a conversation.\n\nThe [Analytics SSE](/api-reference/basic/analytics-sse) endpoint streams the generated answer but **does not include references in the response**. Use this endpoint after the stream completes to fetch the full list of references that were cited in the answer.\n\n**Usage Flow:**\n1. Call the Analytics SSE endpoint (`POST /v1/analytics/sse`)\n2. From the SSE stream, find the `conversation` event → extract `conversation_id`\n3. After the stream finishes, call this endpoint with the `conversation_id`\n4. The response contains all references with citation index, source document info, and metadata\n\n**How to view original documents:**\n- **Via Viewer:** `https://chat.linqalpha.com/rms/viewer?conversation_id={conversation_id}&citation_idx={citation_idx}`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "conversations",
+                ":conversation_id",
+                "references"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<uuid>",
+                  "description": "Organization ID. Required for platform API keys to identify the target organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<string>",
+                  "description": "User ID. Required together with `user_email` for platform API keys to identify the specific user who owns the conversation."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_email",
+                  "value": "<email>",
+                  "description": "User email. Required together with `user_id` for platform API keys to identify the specific user who owns the conversation."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "conversation_id",
+                  "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dda098fb-7b2b-4384-8f97-f3f2b2f8e3f7",
+              "name": "References response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"references\": [\n      {\n        \"id\": \"9162ee3d-e71e-4f2d-81a7-9981ecb06597\",\n        \"citation_idx\": 1,\n        \"search_type\": \"rms\",\n        \"chunk_id\": \"7601005986849213491\",\n        \"text\": \"Through our Apple Manufacturing Academy in Detroit, we're already training American businesses and innovators on the latest smart manufacturing and artificial intelligence techniques. Six months since opening, the academy is already making an enormously positive impact...\",\n        \"text_type\": \"paragraph\",\n        \"document_id\": \"ed6ed077-949c-46ec-b036-d01fafc9bb84\",\n        \"document_name\": \"Apple, Inc., Q1 2026 Earnings Call, 29-January-2026 5\",\n        \"s3_file_key\": null,\n        \"external_url\": \"\",\n        \"metadata\": {\n          \"rms_type\": null,\n          \"rms_sub_type\": null,\n          \"rms_document_type\": \"earnings_call\",\n          \"source\": null,\n          \"countries\": null,\n          \"regions\": null,\n          \"participants\": null,\n          \"tags\": null,\n          \"publisher\": null,\n          \"calendar_date\": null,\n          \"fiscal_year\": null,\n          \"fiscal_quarter\": null,\n          \"document_category\": \"earnings_call\",\n          \"document_subcategory\": null,\n          \"sector\": null,\n          \"subsector\": null,\n          \"stock_ids\": [\n            \"BBG001S5N8V8\"\n          ],\n          \"tickers\": [\n            \"AAPL\"\n          ],\n          \"company_names\": null,\n          \"offset\": null,\n          \"snippet\": null\n        }\n      },\n      {\n        \"id\": \"05cc6e75-674c-4263-9427-a2113d06a51c\",\n        \"citation_idx\": 2,\n        \"search_type\": \"rms\",\n        \"chunk_id\": \"7575071132181705859\",\n        \"text\": \"Our revenue of $102.5 billion was up 8% year-over-year and is a new September quarter record. We set September quarter records in the Americas, Europe, Japan and the rest of Asia Pacific, and grew in the vast majority of markets we track...\",\n        \"text_type\": \"paragraph\",\n        \"document_id\": \"c893ee34-fb85-491d-b667-0be2be515418\",\n        \"document_name\": \"Apple, Inc., Q4 2025 Earnings Call, 30-October-2025 5\",\n        \"s3_file_key\": null,\n        \"external_url\": \"\",\n        \"metadata\": {\n          \"rms_type\": null,\n          \"rms_sub_type\": null,\n          \"rms_document_type\": \"earnings_call\",\n          \"source\": null,\n          \"countries\": null,\n          \"regions\": null,\n          \"participants\": null,\n          \"tags\": null,\n          \"publisher\": null,\n          \"calendar_date\": null,\n          \"fiscal_year\": null,\n          \"fiscal_quarter\": null,\n          \"document_category\": \"earnings_call\",\n          \"document_subcategory\": null,\n          \"sector\": null,\n          \"subsector\": null,\n          \"stock_ids\": [\n            \"BBG001S5N8V8\"\n          ],\n          \"tickers\": [\n            \"AAPL\"\n          ],\n          \"company_names\": null,\n          \"offset\": null,\n          \"snippet\": null\n        }\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eb6d5fe3-8b94-4620-a2e2-2ecf6bcf40cf",
+              "name": "Bad Request - Invalid conversation_id format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"conversation_id must be a valid UUID\",\n    \"message\": \"conversation_id must be a valid UUID\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "436f8408-e065-4474-aa6f-25035779ab6a",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4ccb6ac0-b202-47f9-8931-7eba01fee6c0",
+          "name": "Analytics V2 References",
+          "request": {
+            "name": "Analytics V2 References",
+            "description": {
+              "content": "Retrieves the list of evidence references (citations) used in an analytics conversation, in normalized format with enriched metadata.\n\n> **Note:** This endpoint returns references from the Analytics V2 SSE endpoint. Some source types (e.g., `rms`) require a separate onboarding process. For more information, please contact us at support@linqalpha.com.\n\n**Usage Flow:**\n1. Call the Analytics SSE V2 endpoint (`POST /v2/analytics/sse`)\n2. From the SSE stream, find the `conversation` event → extract `conversation_id`\n3. After the stream finishes, call this endpoint with the `conversation_id`\n4. The response contains all references with citation index, source document info, and metadata\n\n**How to view original documents:**\n- **Via Viewer:** `https://chat.linqalpha.com/rms/viewer?conversation_id={conversation_id}&citation_idx={citation_idx}`\n\n**Note:** This endpoint returns references in the same normalized format as the v1 references API, with enriched metadata fields (s3_file_key, external_url, calendar_date, fiscal_year, etc.). Use this endpoint when consuming the v2 analytics SSE stream.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "analytics",
+                "conversations",
+                ":conversation_id",
+                "references"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<uuid>",
+                  "description": "Organization ID. Required for platform API keys to identify the target organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<string>",
+                  "description": "User ID. Required together with `user_email` for platform API keys to identify the specific user who owns the conversation."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_email",
+                  "value": "<email>",
+                  "description": "User email. Required together with `user_id` for platform API keys to identify the specific user who owns the conversation."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "conversation_id",
+                  "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event from the Analytics SSE V2 endpoint."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a349d850-663a-48d1-b46d-747fd7747b1e",
+              "name": "References response (normalized format)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "analytics",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event from the Analytics SSE V2 endpoint."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"references\": [\n      {\n        \"id\": \"1\",\n        \"citation_idx\": \"1\",\n        \"search_type\": \"rms\",\n        \"chunk_id\": \"ad477254-58ef-4965-b86a-26ff9f5b3614\",\n        \"text\": \"UBS Investment Research report on energy sector companies...\",\n        \"text_type\": \"paragraph\",\n        \"document_id\": \"47061a59-2e02-4711-a096-8ba5744c73d0\",\n        \"document_name\": \"ued39062.pdf\",\n        \"s3_file_key\": \"production/data-original/1ec8b21f-c799-4fbb-a6cc-1548d45334f3/organization/2a96a7ca-f2ba-4098-92f8-742e9eb2ede6/s3/4b24a452b612b89d2c046e1740c5c6f75952ce8abc46b00abcc548409196f9f3.pdf\",\n        \"external_url\": null,\n        \"metadata\": {\n          \"calendar_date\": \"2026-03-02T00:00:00Z\",\n          \"fiscal_year\": 2025,\n          \"fiscal_quarter\": 4,\n          \"source\": \"filing\",\n          \"tickers\": [\n            \"BRKM5\",\n            \"ECOPETL\",\n            \"PETR4\",\n            \"YPFD\",\n            \"PRIO3\"\n          ],\n          \"company_names\": [\n            \"Braskem\",\n            \"Ecopetrol\",\n            \"Petrobras\",\n            \"YPF\",\n            \"PRIO\"\n          ],\n          \"stock_ids\": [\n            \"BBG001S6ZH89\",\n            \"BBG001SSJG36\",\n            \"BBG001S7GRB2\",\n            \"BBG001S7KCP5\",\n            \"BBG001T9LDJ4\"\n          ],\n          \"document_category\": \"Analysis, Report & Note\",\n          \"document_subcategory\": \"Brokerage\",\n          \"rms_document_type\": null,\n          \"rms_type\": null,\n          \"rms_sub_type\": null,\n          \"sector\": [\n            \"Energy\"\n          ],\n          \"subsector\": [\n            \"Oil & gas\"\n          ],\n          \"publisher\": \"UBS\",\n          \"countries\": [\n            \"United States\",\n            \"Iran\",\n            \"Israel\",\n            \"Saudi Arabia\",\n            \"Brazil\"\n          ],\n          \"regions\": [\n            \"North America\",\n            \"EMEA\",\n            \"LatAm\",\n            \"Europe\",\n            \"APAC\"\n          ],\n          \"participants\": [\n            {\n              \"name\": \"Donald Trump\",\n              \"role\": \"President\",\n              \"organization\": \"United States\",\n              \"participation_type\": \"referenced\"\n            }\n          ],\n          \"tags\": [],\n          \"parent_id\": \"608fabf4-c879-486f-83d1-3a889d91f74e\",\n          \"parent_document_id\": \"608fabf4-c879-486f-83d1-3a889d91f74e\",\n          \"creation_timestamp\": \"2026-03-02T15:49:29+00:00\",\n          \"last_contribution_timestamp\": \"2026-03-02T15:49:29+00:00\",\n          \"document_tags\": [\n            \"research_report\",\n            \"brokerage\"\n          ],\n          \"creator_name\": null,\n          \"last_contributor_name\": null,\n          \"offset\": [\n            {\n              \"top\": 0.683,\n              \"left\": 0.076,\n              \"page\": 8,\n              \"width\": 0.561,\n              \"height\": 0.229\n            }\n          ]\n        },\n        \"custom_metadata\": null\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "59eb4ede-7466-48e7-8c57-e76740b2329a",
+              "name": "Bad Request - Invalid conversation_id format.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "analytics",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event from the Analytics SSE V2 endpoint."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"conversation_id must be a valid UUID\",\n    \"message\": \"conversation_id must be a valid UUID\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4c71acd0-eef0-4b09-b61a-f1737a7e7ee8",
+              "name": "Unauthorized - Invalid authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "analytics",
+                    "conversations",
+                    ":conversation_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "user-123"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "john.doe@example.com"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "conversation_id",
+                      "description": "(Required) Conversation ID (UUID). Provided in the `conversation` SSE event from the Analytics SSE V2 endpoint."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3bf72b3e-76bc-40f0-a3df-8349b9748fe1",
+          "name": "TTSQL",
+          "request": {
+            "name": "TTSQL",
+            "description": {
+              "content": "Converts natural language query to SQL, executes it, and returns results in markdown format",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "ttsql"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f2e9aadb-8938-4daf-8d18-5abd734cab6d",
+              "name": "Query executed successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ttsql"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Show me NVIDIA's quarterly revenue and net income for 2024\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 0,\n  \"success\": true,\n  \"message\": \"success\",\n  \"response\": {\n    \"execution_id\": \"2548d578-0446-4abc-b6f6-f50c966d341c\",\n    \"stock_name_mapping\": {\n      \"BBG001S5TZJ6\": \"NVIDIA Corporation\"\n    },\n    \"currency_info\": [\n      {\n        \"currency\": \"USD\",\n        \"exchange_rate\": 1\n      }\n    ],\n    \"field_currency_info\": {\n      \"BBG001S6Q004\": {\n        \"SALES\": \"TWD\",\n        \"EPS\": \"TWD\",\n        \"ff_sales\": \"TWD\"\n      }\n    },\n    \"execution_duration\": 171,\n    \"date_range\": [\n      \"2024-01-01\",\n      \"2024-12-31\"\n    ],\n    \"rdb_result\": \"### Company Annual Financials\\n\\n| name | Fiscal Period End Date | Dividends Per Share |\\n| --- | --- | --- |\\n| NVIDIA Corporation | 2024-01-31 | 0.016 |\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3354a0e-0d5f-4d2d-9ee9-5a06c6e1bdda",
+              "name": "Bad request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ttsql"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Show me NVIDIA's quarterly revenue and net income for 2024\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8e0ecdc-45c8-4737-8921-079013b4a1c4",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ttsql"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Show me NVIDIA's quarterly revenue and net income for 2024\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9edecee6-dde2-4d85-8536-abdadb3e4d92",
+              "name": "Internal server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "ttsql"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"Show me NVIDIA's quarterly revenue and net income for 2024\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1add6bf2-5b08-4b36-880f-37cd56d0a7c3",
+          "name": "Map tickers to stock IDs",
+          "request": {
+            "name": "Map tickers to stock IDs",
+            "description": {
+              "content": "Accepts a list of ticker strings via query parameters and returns their corresponding stock IDs (BBG IDs).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "map_tickers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "(Required) One or more ticker symbols to map. Can be repeated multiple times, e.g., `tickers=AAPL&tickers=GOOG`."
+                },
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "(Required) One or more ticker symbols to map. Can be repeated multiple times, e.g., `tickers=AAPL&tickers=GOOG`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "259e3b78-f289-4cd9-bf46-66b835156a68",
+              "name": "Mapping results of tickers to stock IDs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "map_tickers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": [\n    {\n      \"raw_ticker\": \"AAPL\",\n      \"stock_id\": \"BBG001S5N8V8\"\n    },\n    {\n      \"raw_ticker\": \"GOOGL\",\n      \"stock_id\": \"BBG009S39JY5\"\n    },\n    {\n      \"raw_ticker\": \"MSFT\",\n      \"stock_id\": \"BBG001S5TD05\"\n    },\n    {\n      \"raw_ticker\": \"AMZN\",\n      \"stock_id\": \"BBG001S5PQL7\"\n    },\n    {\n      \"raw_ticker\": \"TSLA\",\n      \"stock_id\": \"BBG001SQKGD7\"\n    },\n    {\n      \"raw_ticker\": \"NVDA\",\n      \"stock_id\": \"BBG001S5TZJ6\"\n    },\n    {\n      \"raw_ticker\": \"META\",\n      \"stock_id\": \"BBG001SQCQC5\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "54882715-fffc-4b9d-a046-e016e1f4face",
+              "name": "Bad Request - if the provided ticker list is invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "map_tickers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"TICKERS_MISSING\",\n    \"msg\": \"tickers query parameter is required\",\n    \"message\": \"tickers query parameter is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "13e8c6b5-a845-4b89-b973-5b1ec5d910bd",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "map_tickers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3b8face4-1969-44a3-a7dc-327a60d776cd",
+              "name": "Internal Server Error - if an unexpected error occurred on the server",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "map_tickers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"SERVER_ERROR\",\n    \"message\": \"An unexpected error occurred on the server.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "15a120dd-3f4b-43c7-8a74-5be78018bca9",
+          "name": "Presigned URL",
+          "request": {
+            "name": "Presigned URL",
+            "description": {
+              "content": "Generates a temporary presigned URL for secure access to the original document file.\n\nProvide a `document_id` (obtained from the References API) to receive a time-limited (10 min) URL that allows you to download or view the source document directly. This is useful when you need to access the actual file that was referenced in the search results.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "documents",
+                ":document_id",
+                "presigned_url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "document_id",
+                  "description": "(Required) Document ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e4607ee3-956c-49ec-9e43-af182739e7cf",
+              "name": "Presigned URL",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"url\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8824be47-3750-4557-ac0b-6936da29dace",
+              "name": "Bad Request - Missing or invalid document_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"DOCUMENT_ID_MISSING\",\n    \"msg\": \"document_id is required\",\n    \"message\": \"document_id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6d5d350-01c8-4d94-8c26-442563ecc6c1",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d00e3ef9-95f8-48bd-8e03-0afbcda9c8a0",
+          "name": "Batch Presigned URLs",
+          "request": {
+            "name": "Batch Presigned URLs",
+            "description": {
+              "content": "Generates temporary presigned URLs for multiple documents in a single request.\n\nFilter documents by ticker, document type, and date ranges. Returns paginated results with presigned URLs and document metadata.\n\nThis is useful when you need to download multiple source documents at once, rather than calling the single-document presigned URL endpoint repeatedly.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "documents",
+                "batch_presigned_urls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "Ticker symbol(s) to filter by. At least one ticker or stock_id is required. Use multiple `tickers` params for multiple tickers (e.g., `?tickers=AAPL&tickers=MSFT`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "Ticker symbol(s) to filter by. At least one ticker or stock_id is required. Use multiple `tickers` params for multiple tickers (e.g., `?tickers=AAPL&tickers=MSFT`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "stock_ids",
+                  "value": "<string>",
+                  "description": "Stock ID(s) to filter by. Can be used instead of or together with `tickers`."
+                },
+                {
+                  "disabled": false,
+                  "key": "stock_ids",
+                  "value": "<string>",
+                  "description": "Stock ID(s) to filter by. Can be used instead of or together with `tickers`."
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_type",
+                  "value": "<string>",
+                  "description": "Document type filter (e.g., `filing`, `earnings_call`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_type",
+                  "value": "<string>",
+                  "description": "Document type filter (e.g., `filing`, `earnings_call`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_sub_type",
+                  "value": "<string>",
+                  "description": "Document sub-type filter (e.g., `10-K`, `10-Q`, `annual_report`, `press_release`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_sub_type",
+                  "value": "<string>",
+                  "description": "Document sub-type filter (e.g., `10-K`, `10-Q`, `annual_report`, `press_release`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[start_time][year]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested object notation in the query string (e.g., `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[start_time][quarter]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested object notation in the query string (e.g., `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[end_time][year]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested object notation in the query string (e.g., `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[end_time][quarter]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested object notation in the query string (e.g., `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][year]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][month]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][day]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][year]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][month]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][day]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested object notation in the query string (e.g., `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Number of results per page (default: 20, max: 200)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "88fdd26f-3295-4c16-96b7-ee858e609f9d",
+              "name": "Batch presigned URLs with document metadata",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    "batch_presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2023"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"documents\": [\n      {\n        \"id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"ticker\": \"AAPL\",\n        \"doc_type\": \"filing\",\n        \"doc_sub_type\": \"10-K\",\n        \"name\": \"Q4 2024 Apple Inc.\",\n        \"fiscal_date\": \"2024-12-31\",\n        \"calendar_date\": \"2025-01-30\",\n        \"published_at\": \"2025-01-30T16:00:00Z\",\n        \"presigned_url\": \"https://linq-vertex-documents.s3.amazonaws.com/...\"\n      }\n    ],\n    \"total_count\": 42,\n    \"page\": 1,\n    \"per_page\": 20,\n    \"has_more\": false,\n    \"skipped_count\": 3\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bb2db44a-f718-496d-9ec4-41d70bd6a4f1",
+              "name": "Bad Request - Missing ticker parameter",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    "batch_presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2023"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"TICKERS_MISSING\",\n    \"msg\": \"ticker query parameter is required\",\n    \"message\": \"ticker query parameter is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0e80ad16-4ca3-4753-bd1a-433ee589b524",
+              "name": "Unauthorized - Invalid API key or authentication credentials.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "documents",
+                    "batch_presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2023"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b3ad8d43-c086-4c52-9bf2-a94ebe13795a",
+          "name": "Presigned URL V2",
+          "request": {
+            "name": "Presigned URL V2",
+            "description": {
+              "content": "Generates a temporary presigned URL for secure access to a document file. Supports both external documents (filings, transcripts, news) and RMS documents (Third Bridge transcripts, internal notes, EDS content).\n\nUse `search_type=rms` to access RMS documents. Default is `external` (same behavior as V1).\n\nFor platform API keys, pass `organization_id` to specify which org's documents to query. If omitted, defaults to the API key's primary organization.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "documents",
+                ":document_id",
+                "presigned_url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "search_type",
+                  "value": "external",
+                  "description": "Document source. `external` (default) returns external documents. `rms` returns documents from your Research Management System (RMS)."
+                },
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<string>",
+                  "description": "Organization ID. Recommended for `search_type=rms` and required for platform API keys. If omitted, defaults to the API key's primary organization."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "document_id",
+                  "description": "(Required) Document ID (from search/analytics references)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "572688d3-7575-4b6f-8101-c386d5b2b5fe",
+              "name": "Presigned URL with document metadata",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID (from search/analytics references)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"document_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n    \"document_name\": \"document.pdf\",\n    \"presigned_url\": \"https://example.s3.amazonaws.com/...\",\n    \"expiration_seconds\": 3600\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cdafb3f2-0a06-450b-b8af-2172165eb4b5",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID (from search/analytics references)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"organization_id is required when search_type is rms\",\n    \"message\": \"organization_id is required when search_type is rms\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1da07ea2-3ab2-47a9-91c5-acfa214ca8a6",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    ":document_id",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "document_id",
+                      "description": "(Required) Document ID (from search/analytics references)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8b897a09-e043-4ea6-9333-9e46b3ef75f3",
+          "name": "Batch Presigned URLs V2",
+          "request": {
+            "name": "Batch Presigned URLs V2",
+            "description": {
+              "content": "Generates temporary presigned URLs for multiple documents. Supports both external documents and RMS documents via the `search_type` parameter.\n\n**Two modes:**\n- **By document IDs** (RMS only): Pass `document_ids` to get presigned URLs for specific documents from search/analytics references.\n- **By filters**: Pass `tickers`, `doc_type`, etc. to browse and get presigned URLs.\n\nFor platform API keys, pass `organization_id` to specify which org to query.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "documents",
+                "presigned_urls"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "search_type",
+                  "value": "external",
+                  "description": "Document source. `external` (default) returns external documents. `rms` returns documents from your Research Management System (RMS)."
+                },
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<string>",
+                  "description": "Organization ID. Recommended for `search_type=rms` and required for platform API keys."
+                },
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "Ticker symbol(s). Use multiple params for multiple tickers (e.g., `?tickers=AAPL&tickers=MSFT`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "tickers",
+                  "value": "<string>",
+                  "description": "Ticker symbol(s). Use multiple params for multiple tickers (e.g., `?tickers=AAPL&tickers=MSFT`)."
+                },
+                {
+                  "disabled": false,
+                  "key": "stock_ids",
+                  "value": "<string>",
+                  "description": "Stock ID(s). Can be used instead of or together with tickers."
+                },
+                {
+                  "disabled": false,
+                  "key": "stock_ids",
+                  "value": "<string>",
+                  "description": "Stock ID(s). Can be used instead of or together with tickers."
+                },
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<string>",
+                  "description": "Document ID(s) for batch lookup. **RMS only** — not supported for `search_type=external`."
+                },
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<string>",
+                  "description": "Document ID(s) for batch lookup. **RMS only** — not supported for `search_type=external`."
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_type",
+                  "value": "<string>",
+                  "description": "Document type filter. Valid values differ by `search_type` and organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_type",
+                  "value": "<string>",
+                  "description": "Document type filter. Valid values differ by `search_type` and organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_sub_type",
+                  "value": "<string>",
+                  "description": "Document sub-type filter. Valid values differ by `search_type` and organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "doc_sub_type",
+                  "value": "<string>",
+                  "description": "Document sub-type filter. Valid values differ by `search_type` and organization."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[start_time][year]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested notation: `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[start_time][quarter]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested notation: `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[end_time][year]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested notation: `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "fiscal_period[end_time][quarter]",
+                  "value": "<integer>",
+                  "description": "Fiscal period filter. Use nested notation: `fiscal_period[start_time][year]=2024&fiscal_period[start_time][quarter]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][year]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][month]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[start_time][day]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][year]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][month]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "calendar_period[end_time][day]",
+                  "value": "<integer>",
+                  "description": "Calendar period filter. Use nested notation: `calendar_period[start_time][year]=2025&calendar_period[start_time][month]=1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Results per page (default: 20, max: 200)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "af4d3128-bd40-4b73-96df-f873bea9d8ea",
+              "name": "Batch presigned URLs with document metadata",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    "presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"documents\": [\n      {\n        \"document_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n        \"document_name\": \"document.pdf\",\n        \"ticker\": \"AAPL\",\n        \"doc_type\": \"filing\",\n        \"doc_sub_type\": \"10-K\",\n        \"source\": null,\n        \"fiscal_date\": \"2025-12-31\",\n        \"calendar_date\": \"2026-01-30\",\n        \"published_at\": \"2026-01-30T16:00:00Z\",\n        \"presigned_url\": \"https://example.s3.amazonaws.com/...\",\n        \"expiration_seconds\": null\n      }\n    ],\n    \"total_count\": 8234,\n    \"page\": 1,\n    \"per_page\": 20,\n    \"has_more\": true,\n    \"skipped_count\": 0\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ade4391d-0e16-45d3-9c8b-2345489764f6",
+              "name": "Bad Request - Missing required filters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    "presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"At least one of tickers, stock_ids, or document_ids is required for rms search\",\n    \"message\": \"At least one of tickers, stock_ids, or document_ids is required for rms search\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "af892a52-b940-4d92-8304-e4faca467816",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "documents",
+                    "presigned_urls"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "search_type",
+                      "value": "external"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "tickers",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "stock_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "doc_sub_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][year]",
+                      "value": "2024"
+                    },
+                    {
+                      "key": "fiscal_period[start_time][quarter]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "fiscal_period[end_time][quarter]",
+                      "value": "4"
+                    },
+                    {
+                      "key": "calendar_period[start_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[start_time][month]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[start_time][day]",
+                      "value": "1"
+                    },
+                    {
+                      "key": "calendar_period[end_time][year]",
+                      "value": "2025"
+                    },
+                    {
+                      "key": "calendar_period[end_time][month]",
+                      "value": "12"
+                    },
+                    {
+                      "key": "calendar_period[end_time][day]",
+                      "value": "31"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "779c9096-1a28-48bf-af57-ae242c10ff62",
+    "name": "LinqAlpha Briefing Data API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

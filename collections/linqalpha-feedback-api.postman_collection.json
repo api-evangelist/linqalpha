@@ -1,0 +1,707 @@
+{
+  "item": [
+    {
+      "id": "3fbed5f7-d509-43f1-a94d-e7f80a491a66",
+      "name": "Feedback",
+      "description": {
+        "content": "Conversation feedback",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "020aae7a-19e8-48f0-8907-a37d166168c4",
+          "name": "Create Conversation Feedback",
+          "request": {
+            "name": "Create Conversation Feedback",
+            "description": {
+              "content": "Submits feedback for a specific conversation. Use this endpoint to collect user ratings and comments about the quality of AI responses. Feedback helps improve the service and can be used for quality monitoring.\n\n**Rating Options:**\n- `up`: Positive feedback indicating a helpful response\n- `down`: Negative feedback indicating an unsatisfactory response\n\n**Optional Fields:**\n- `message_id`: Target specific message within the conversation\n- `comment`: Additional text feedback from the user",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "conversations",
+                ":conversation_id",
+                "feedback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "conversation_id",
+                  "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": \"<string>\",\n  \"rating\": \"<string>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\",\n  \"message_id\": \"<string>\",\n  \"comment\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5c8659b5-e35f-47de-bcbe-a3568a5b8368",
+              "name": "Feedback submitted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"rating\": \"up\",\n  \"message_id\": \"msg_abc123\",\n  \"comment\": \"Very helpful and accurate response!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b9c0bf1e-578d-4721-83c8-b255c0532e6b",
+              "name": "Bad Request - Invalid request parameters or missing required fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"rating\": \"up\",\n  \"message_id\": \"msg_abc123\",\n  \"comment\": \"Very helpful and accurate response!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"Invalid rating value. Must be 'up' or 'down'.\",\n    \"message\": \"Invalid rating value. Must be 'up' or 'down'.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "57fe4d73-59b7-48f3-8bda-6767d8bac220",
+              "name": "Unauthorized - Invalid API key or authentication credentials",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"rating\": \"up\",\n  \"message_id\": \"msg_abc123\",\n  \"comment\": \"Very helpful and accurate response!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "487bcf21-1952-4d6d-af9b-3176719633cc",
+              "name": "Not Found - Conversation not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"rating\": \"up\",\n  \"message_id\": \"msg_abc123\",\n  \"comment\": \"Very helpful and accurate response!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"NOT_FOUND\",\n    \"message\": \"Conversation not found.\",\n    \"msg\": \"Conversation not found.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8e41541-748e-4435-9f0b-c18636ff1b04",
+              "name": "Internal Server Error - An unexpected error occurred on the server",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to provide feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"conversation_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"rating\": \"up\",\n  \"message_id\": \"msg_abc123\",\n  \"comment\": \"Very helpful and accurate response!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"CREATE_CONVERSATION_FEEDBACK_FAIL\",\n    \"message\": \"Failed to create conversation feedback.\",\n    \"msg\": \"Failed to create conversation feedback.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "613185fa-2928-4a76-b64d-57f81650e3c1",
+          "name": "Delete Conversation Feedback",
+          "request": {
+            "name": "Delete Conversation Feedback",
+            "description": {
+              "content": "Deletes feedback for a specific conversation. If `message_id` is not provided, the feedback from the last message in the conversation will be deleted.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "conversations",
+                ":conversation_id",
+                "feedback"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "message_id",
+                  "value": "<string>",
+                  "description": "The specific message ID whose feedback should be deleted. If omitted, the last message's feedback is deleted."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "conversation_id",
+                  "description": "(Required) The unique identifier of the conversation to delete feedback for"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b8b7bd98-6774-4937-81e6-ba73f891db0b",
+              "name": "Feedback deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to delete feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"success\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc2fcc46-43eb-43fa-a12d-a31fb402a093",
+              "name": "Bad Request - Missing conversation_id",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to delete feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"conversation_id is required\",\n    \"message\": \"conversation_id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "317fff7b-3dec-4c4c-bcc6-a75b51f9167c",
+              "name": "Unauthorized - Invalid API key or authentication credentials",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to delete feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "69196731-0e87-4b8c-b62a-9cc1479fefe7",
+              "name": "Internal Server Error - Failed to delete feedback",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "conversations",
+                    ":conversation_id",
+                    "feedback"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "message_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "conversation_id",
+                      "description": "(Required) The unique identifier of the conversation to delete feedback for"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"DELETE_CONVERSATION_FEEDBACK_FAIL\",\n    \"msg\": \"delete_conversation_feedback failed\",\n    \"message\": \"delete_conversation_feedback failed\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "09a76956-65f0-470e-a9be-9717c3080145",
+    "name": "LinqAlpha Briefing Feedback API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

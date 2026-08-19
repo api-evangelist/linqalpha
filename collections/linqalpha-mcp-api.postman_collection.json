@@ -1,0 +1,246 @@
+{
+  "item": [
+    {
+      "id": "ed076b21-1521-4240-b762-4f329c9d986c",
+      "name": "MCP",
+      "description": {
+        "content": "LinqAlpha MCP — Financial data tools for AI assistants via Model Context Protocol",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9f345e07-1098-454a-95ce-db595340fb32",
+          "name": "LinqAlpha MCP",
+          "request": {
+            "name": "LinqAlpha MCP",
+            "description": {
+              "content": "LinqAlpha MCP gives AI assistants direct access to institutional-grade financial data for fundamental research. Through the Model Context Protocol (MCP), your AI can query company fundamentals, earnings estimates, stock prices, economic indicators, SEC filings, and earnings transcripts — all from a single endpoint.\n\nSupports JSON-RPC 2.0 protocol.\n\nAvailable methods:\n- `initialize` — Initialize MCP session\n- `ping` — Health check\n- `tools/list` — List available financial data tools\n- `tools/call` — Execute a financial data tool\n\n**Setup (Claude Desktop):**\n```json\n{\n  \"mcpServers\": {\n    \"linqalpha\": {\n      \"url\": \"https://api.linqalpha.com/v1/mcp\",\n      \"headers\": { \"x-api-key\": \"<your-api-key>\" }\n    }\n  }\n}\n```",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "mcp"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": \"<integer>\",\n  \"params\": \"<object>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f8d84619-b8ca-4603-87e4-52503e09eba0",
+              "name": "JSON-RPC 2.0 response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "mcp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": \"<integer>\",\n  \"params\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2076,\n  \"result\": {},\n  \"error\": {\n    \"code\": 1289,\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b091cdf9-d68d-46c7-acb1-a9f09e24b914",
+              "name": "Invalid JSON-RPC request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "mcp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": \"<integer>\",\n  \"params\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d99c5c52-5075-4e99-b386-403c1a675f2c",
+              "name": "Authentication failed",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "mcp"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"id\": \"<integer>\",\n  \"params\": \"<object>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0afae017-68b5-4228-b3a3-d856d3351832",
+    "name": "LinqAlpha Briefing MCP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

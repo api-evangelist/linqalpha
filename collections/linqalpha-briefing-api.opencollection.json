@@ -1,0 +1,210 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Briefing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Generate Briefing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/briefings/sse",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate a briefing on-demand from an ad-hoc prompt via Server-Sent Events streaming. The prompt (`query`) is run through the briefing engine (mode=briefing) — the same output family as your scheduled briefings (depth, formatting, citations). Stateless: send a fresh prompt each call. Distinct from `POST /v1/briefings/{id}/generate`, which re-runs an existing saved schedule."
+        },
+        {
+          "info": {
+            "name": "Preview Briefing On-Demand",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/briefings/preview",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run a briefing on-demand from an ad-hoc prompt as a fire-and-forget job: enqueue the run and get a pending delivery handle immediately, then poll `GET /v1/briefings/deliveries/{delivery_id}` for the result."
+        },
+        {
+          "info": {
+            "name": "Run Existing Briefing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/briefings/:id/generate",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of an existing briefing (from List Briefings or Create Briefing)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run one of your existing briefings on-demand via Server-Sent Events. The output is the **same briefing your schedule delivers by email** — it re-runs that briefing against a current date window. Distinct from `POST /v1/briefings/sse`, which runs an ad-hoc free-text `query`. Long-running briefings are not supported and return an `UNSUPPORTED` error."
+        },
+        {
+          "info": {
+            "name": "List Briefings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/briefings"
+          },
+          "docs": "Retrieve all briefing schedules for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Create Briefing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/briefings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new briefing with topic, tickers, and schedule in a single call."
+        },
+        {
+          "info": {
+            "name": "Update Briefing",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.linqalpha.com/v1/briefings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing briefing. All fields are optional."
+        },
+        {
+          "info": {
+            "name": "Delete Briefing",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.linqalpha.com/v1/briefings/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Delete an existing briefing schedule."
+        },
+        {
+          "info": {
+            "name": "List Deliveries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/briefings/:id/deliveries",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve delivery history for a specific briefing."
+        },
+        {
+          "info": {
+            "name": "Get Delivery Detail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/briefings/deliveries/:delivery_id",
+            "params": [
+              {
+                "name": "delivery_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve full delivery detail including briefing content. Also available at /v1/briefings/{id}/deliveries/{delivery_id}."
+        },
+        {
+          "info": {
+            "name": "Get Delivery References",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/briefings/deliveries/:delivery_id/references",
+            "params": [
+              {
+                "name": "delivery_id",
+                "value": "",
+                "type": "path",
+                "description": "Delivery ID (UUID)."
+              }
+            ]
+          },
+          "docs": "Retrieves the full list of citation references (sources) used to generate a briefing delivery.\n\nBriefing email content includes inline citations `[N]` that point into this list via `citation_idx`. Use this endpoint to build custom UIs, export source lists, or link readers back to original documents.\n\n**Usage Flow:**\n1. Get a delivery via [List Deliveries](/api-reference/briefing/deliveries) or [Get Delivery Detail](/api-reference/briefing/delivery-detail) — note the `chat_session_id`\n2. Verify d"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

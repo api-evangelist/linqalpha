@@ -1,0 +1,99 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing Vault API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Vault",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Vault — Get Upload URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v2/vault/presigned_url",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Step 1 of the Vault upload flow. Returns a single-use presigned upload (PUT) URL. Upload the file directly to that URL, then register it via POST /v2/vault/confirm."
+        },
+        {
+          "info": {
+            "name": "Vault — Confirm Upload",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v2/vault/confirm",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Step 3 of the Vault upload flow. Registers the uploaded file in RMS and triggers async ingestion (parse → chunk → embed → index), returning immediately with the rms_document_id. Poll GET /v2/vault/status for processing status / readiness."
+        },
+        {
+          "info": {
+            "name": "Vault — Document Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v2/vault/status",
+            "params": [
+              {
+                "name": "rms_document_ids",
+                "value": "eeb72343-d883-41a3-a58c-533184bbb9fd,3a0e9e69-191f-471a-94fd-97505c762ad3",
+                "type": "query",
+                "description": "Comma-separated list of rms_document_id values (the rms_document_id returned by confirm — NOT the presign document_id). Max 100."
+              },
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization ID (optional)."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "User id (optional)."
+              },
+              {
+                "name": "user_email",
+                "value": "",
+                "type": "query",
+                "description": "User email (optional)."
+              },
+              {
+                "name": "user_name",
+                "value": "",
+                "type": "query",
+                "description": "User name (optional)."
+              }
+            ]
+          },
+          "docs": "Returns the processing status for one or more vault documents. Poll after confirm until status is `Synced` (complete and searchable)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

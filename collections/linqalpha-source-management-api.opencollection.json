@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing Source Management API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Source Management",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Source Batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/source_batches",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new source batch container for organizing and managing related document sources. A source batch acts as a logical grouping that must be created before uploading any sources. The returned `source_batch_id` is required when creating sources and can be used to reference all contained sources in chat or search requests.\n\n**Workflow:**\n1. Create a source batch (this endpoint)\n2. Upload sources to the batch using the returned `source_batch_id`\n3. Use the `source_batch_id` in chat/search API "
+        },
+        {
+          "info": {
+            "name": "Get Upload URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/sources/upload_url",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a presigned S3 PUT URL for direct file upload. Lets clients upload files without managing AWS credentials or staging buckets — the server signs a single-use URL bound to a server-generated S3 object key, the client PUTs the file body to that URL, then registers the upload via `POST /v1/sources` with the returned `file_key`.\n\n**Why this exists:** `POST /v1/sources` requires a `file_key` for an object that already exists in our backing storage. Customers without their own staging bucket us"
+        },
+        {
+          "info": {
+            "name": "Create Source",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/sources",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers a previously-uploaded file as a document source under a source batch and queues it for asynchronous parsing. Once `status: \"success\"`, the source is searchable in chat/search conversations that reference its `source_batch_id`.\n\n**Important Notes:**\n- **Prerequisite:** A source batch must be created first using `POST /v1/source_batches`\n- **The file must already be in S3** before calling this endpoint. Two ways to get it there:\n  - **Recommended:** call `POST /v1/sources/upload_url` to "
+        },
+        {
+          "info": {
+            "name": "Get Source Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/sources/:source_id",
+            "params": [
+              {
+                "name": "source_id",
+                "value": "456e7890-e89b-12d3-a456-426614174001",
+                "type": "path",
+                "description": "The unique identifier (UUID) of the source returned from POST /v1/sources"
+              }
+            ]
+          },
+          "docs": "Retrieves the current processing status of an uploaded source. Use this endpoint to poll source readiness before including it in chat or search requests.\n\n**Status Values:**\n- `processing`: Source is being parsed and indexed (typically takes 10-60 seconds depending on file size)\n- `success`: Source is ready for use in conversations\n- `failed`: Processing failed (check file format, size, or content validity)\n\n**Best Practice:** Poll this endpoint with exponential backoff until status is `success`"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

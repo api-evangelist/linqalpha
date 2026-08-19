@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing Status API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Status",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Organization sync status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/status/sync",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization ID. Optional for single-org API keys (inferred from key)."
+              }
+            ]
+          },
+          "docs": "Returns an overview of the sync status for your organization, including searchable-aware document counts and recent sync job history."
+        },
+        {
+          "info": {
+            "name": "Document sync status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/status/documents",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization ID. Optional for single-org API keys."
+              },
+              {
+                "name": "document_ids",
+                "value": "doc-id-1,doc-id-2",
+                "type": "query",
+                "description": "Comma-separated document IDs."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Filter by path prefix."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by document name (partial, case-insensitive)."
+              }
+            ]
+          },
+          "docs": "Returns per-document sync status. At least one filter (path, name, or document_ids) is required."
+        },
+        {
+          "info": {
+            "name": "Container sync status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v1/status/containers",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "query",
+                "description": "Organization ID. Optional for single-org API keys."
+              },
+              {
+                "name": "container_ids",
+                "value": "container-id-1,container-id-2",
+                "type": "query",
+                "description": "Comma-separated container IDs."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "query",
+                "description": "Filter by path prefix."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Filter by container name (partial, case-insensitive)."
+              }
+            ]
+          },
+          "docs": "Returns per-container sync status with direct children IDs. At least one filter (path, name, or container_ids) is required."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

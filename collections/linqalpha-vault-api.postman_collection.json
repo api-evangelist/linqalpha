@@ -1,0 +1,758 @@
+{
+  "item": [
+    {
+      "id": "1ac402fc-6511-4690-a25c-7a72438419fc",
+      "name": "Vault",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "170a9f30-b20d-4e63-9285-7f4dd10abcfb",
+          "name": "Vault — Get Upload URL",
+          "request": {
+            "name": "Vault — Get Upload URL",
+            "description": {
+              "content": "Step 1 of the Vault upload flow. Returns a single-use presigned upload (PUT) URL. Upload the file directly to that URL, then register it via POST /v2/vault/confirm.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "vault",
+                "presigned_url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"file_name\": \"<string>\",\n  \"content_type\": \"<string>\",\n  \"workspace\": \"personal\",\n  \"organization_id\": \"<uuid>\",\n  \"user_id\": \"<uuid>\",\n  \"user_email\": \"<email>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "94b6e4a9-3b73-41b1-ae93-b76cf87bc943",
+              "name": "Presigned upload URL generated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"presigned_url\": \"https://<presigned-upload-host>/.../<hash>.pdf?...\",\n  \"file_key\": \"development/data-original/<hash>.pdf\",\n  \"document_id\": \"3a5b47d5-124e-4052-9fa6-0647ddcb1d97\",\n  \"expiration_seconds\": 600\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c6dcedf7-65cb-4c2a-9531-a710f846926b",
+              "name": "Bad request — missing/invalid fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ccaf9c6f-1c51-4c80-a601-4b729e535a82",
+              "name": "Unauthorized — invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "presigned_url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3f798218-d697-4a46-9be4-61a39438ed01",
+          "name": "Vault — Confirm Upload",
+          "request": {
+            "name": "Vault — Confirm Upload",
+            "description": {
+              "content": "Step 3 of the Vault upload flow. Registers the uploaded file in RMS and triggers async ingestion (parse → chunk → embed → index), returning immediately with the rms_document_id. Poll GET /v2/vault/status for processing status / readiness.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "vault",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document_id\": \"<string>\",\n  \"file_key\": \"<string>\",\n  \"file_name\": \"<string>\",\n  \"content_type\": \"<string>\",\n  \"workspace\": \"personal\",\n  \"organization_id\": \"<uuid>\",\n  \"user_id\": \"<uuid>\",\n  \"user_email\": \"<email>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "770b1867-f579-4c33-a0db-31e1157ae03d",
+              "name": "Upload confirmed / registered",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document_id\": \"3a5b47d5-124e-4052-9fa6-0647ddcb1d97\",\n  \"file_key\": \"development/data-original/<hash>.pdf\",\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"rms_document_id\": \"eeb72343-d883-41a3-a58c-533184bbb9fd\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cc0ee279-4331-4082-a962-c8841768f84d",
+              "name": "Bad request — missing/invalid fields",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document_id\": \"3a5b47d5-124e-4052-9fa6-0647ddcb1d97\",\n  \"file_key\": \"development/data-original/<hash>.pdf\",\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "69d88c39-2163-40e4-99be-eccf663413ed",
+              "name": "Unauthorized — invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document_id\": \"3a5b47d5-124e-4052-9fa6-0647ddcb1d97\",\n  \"file_key\": \"development/data-original/<hash>.pdf\",\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d24aadd2-24ff-4212-863f-fa44a4488eb8",
+              "name": "Upstream error — e.g. the uploaded file does not exist yet",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"document_id\": \"3a5b47d5-124e-4052-9fa6-0647ddcb1d97\",\n  \"file_key\": \"development/data-original/<hash>.pdf\",\n  \"file_name\": \"Q4_report.pdf\",\n  \"content_type\": \"application/pdf\",\n  \"workspace\": \"personal\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "403242cb-871a-4ec4-bc76-2a239570f3b6",
+          "name": "Vault — Document Status",
+          "request": {
+            "name": "Vault — Document Status",
+            "description": {
+              "content": "Returns the processing status for one or more vault documents. Poll after confirm until status is `Synced` (complete and searchable).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "vault",
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "rms_document_ids",
+                  "value": "<string>",
+                  "description": "(Required) Comma-separated list of rms_document_id values (the rms_document_id returned by confirm — NOT the presign document_id). Max 100."
+                },
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<uuid>",
+                  "description": "Organization ID (optional)."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_id",
+                  "value": "<uuid>",
+                  "description": "User id (optional)."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_email",
+                  "value": "<email>",
+                  "description": "User email (optional)."
+                },
+                {
+                  "disabled": false,
+                  "key": "user_name",
+                  "value": "<string>",
+                  "description": "User name (optional)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f1d995af-6e2a-4baa-acc5-6162cddc8f25",
+              "name": "Per-document status",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "rms_document_ids",
+                      "value": "eeb72343-d883-41a3-a58c-533184bbb9fd,3a0e9e69-191f-471a-94fd-97505c762ad3"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "key": "user_name",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statuses\": [\n    {\n      \"rms_document_id\": \"eeb72343-d883-41a3-a58c-533184bbb9fd\",\n      \"name\": \"Q4_report.pdf\",\n      \"status\": \"Synced\",\n      \"fail_code\": null\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed3df3e0-c8d8-41d5-80d8-5267a34c1ed8",
+              "name": "Bad request — rms_document_ids required",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "rms_document_ids",
+                      "value": "eeb72343-d883-41a3-a58c-533184bbb9fd,3a0e9e69-191f-471a-94fd-97505c762ad3"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "key": "user_name",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4f525dd7-0359-47dd-88c2-3a1bb9691846",
+              "name": "Unauthorized — invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vault",
+                    "status"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "rms_document_ids",
+                      "value": "eeb72343-d883-41a3-a58c-533184bbb9fd,3a0e9e69-191f-471a-94fd-97505c762ad3"
+                    },
+                    {
+                      "key": "organization_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_id",
+                      "value": "<uuid>"
+                    },
+                    {
+                      "key": "user_email",
+                      "value": "<email>"
+                    },
+                    {
+                      "key": "user_name",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "346224b7-056d-4ee4-bd2c-5bf0deef7964",
+    "name": "LinqAlpha Briefing Vault API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,391 @@
+{
+  "item": [
+    {
+      "id": "ea32d21e-efff-435c-aeaf-7656846ef4db",
+      "name": "Status",
+      "description": {
+        "content": "Sync status — check organization, document, and container sync progress",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f400318c-1f80-4436-9190-626222eff4c1",
+          "name": "Organization sync status",
+          "request": {
+            "name": "Organization sync status",
+            "description": {
+              "content": "Returns an overview of the sync status for your organization, including searchable-aware document counts and recent sync job history.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "status",
+                "sync"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<string>",
+                  "description": "Organization ID. Optional for single-org API keys (inferred from key)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c245163c-d28e-4ddf-b18d-81c4fba229b2",
+              "name": "Sync status overview",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "status",
+                    "sync"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"organization_name\": \"Acme Research\",\n    \"is_syncing\": false,\n    \"current_job_id\": null,\n    \"last_sync_time\": \"2026-04-08T03:01:01\",\n    \"total_items\": 10017,\n    \"synced_items\": 10010,\n    \"failed_items\": 7,\n    \"recent_syncs\": [\n      {\n        \"started_at\": \"2026-04-08T02:00:39\",\n        \"completed_at\": \"2026-04-08T03:01:01\",\n        \"status\": \"complete\"\n      },\n      {\n        \"started_at\": \"2026-04-07T02:00:20\",\n        \"completed_at\": \"2026-04-07T03:11:17\",\n        \"status\": \"complete\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "55753ce5-1d4d-44d0-b4ee-bc497500fd32",
+          "name": "Document sync status",
+          "request": {
+            "name": "Document sync status",
+            "description": {
+              "content": "Returns per-document sync status. At least one filter (path, name, or document_ids) is required.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "status",
+                "documents"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<string>",
+                  "description": "Organization ID. Optional for single-org API keys."
+                },
+                {
+                  "disabled": false,
+                  "key": "document_ids",
+                  "value": "<string>",
+                  "description": "Comma-separated document IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "path",
+                  "value": "<string>",
+                  "description": "Filter by path prefix."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Filter by document name (partial, case-insensitive)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6186222c-8b02-4d20-9bdb-1728be437db0",
+              "name": "Document status list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "status",
+                    "documents"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "document_ids",
+                      "value": "doc-id-1,doc-id-2"
+                    },
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": [\n    {\n      \"document_id\": \"40aef76a-bb93-4f3c-9f4f-9119f38d85bf\",\n      \"document_name\": \"Q1 Earnings Report.pdf\",\n      \"status\": \"Synced\",\n      \"extraction_status\": \"completed\",\n      \"last_synced_at\": \"2026-04-08T02:38:15\",\n      \"summary\": \"Q1 2026 earnings report showing 15% YoY revenue growth...\"\n    },\n    {\n      \"document_id\": \"7fe4d59f-1097-466d-a7fe-a60e8fe58c46\",\n      \"document_name\": \"Old Report.pdf\",\n      \"status\": \"Syncing Failed\",\n      \"extraction_status\": \"pending\",\n      \"last_synced_at\": null,\n      \"summary\": null\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "96557a92-123c-4b21-87fe-3d185150aa87",
+          "name": "Container sync status",
+          "request": {
+            "name": "Container sync status",
+            "description": {
+              "content": "Returns per-container sync status with direct children IDs. At least one filter (path, name, or container_ids) is required.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "status",
+                "containers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "organization_id",
+                  "value": "<string>",
+                  "description": "Organization ID. Optional for single-org API keys."
+                },
+                {
+                  "disabled": false,
+                  "key": "container_ids",
+                  "value": "<string>",
+                  "description": "Comma-separated container IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "path",
+                  "value": "<string>",
+                  "description": "Filter by path prefix."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Filter by container name (partial, case-insensitive)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a84c51b5-9233-4244-9619-b97d58e09b3f",
+              "name": "Container status list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "status",
+                    "containers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "organization_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "container_ids",
+                      "value": "container-id-1,container-id-2"
+                    },
+                    {
+                      "key": "path",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": [\n    {\n      \"container_id\": \"001e4e05-d690-4f0b-9ebd-3e58b91e5d6c\",\n      \"container_name\": \"Q1 2026 Earnings\",\n      \"container_type\": \"note\",\n      \"status\": \"Synced\",\n      \"last_synced_at\": \"2026-04-08T02:04:56\",\n      \"child_document_ids\": [\n        \"doc-001\",\n        \"doc-002\"\n      ],\n      \"child_container_ids\": [\n        \"17fc814d-7d47-4f92-ac82-c970b45955fb\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3e1db984-ee07-4654-b531-3bcea76f2124",
+    "name": "LinqAlpha Briefing Status API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

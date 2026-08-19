@@ -1,0 +1,1536 @@
+{
+  "item": [
+    {
+      "id": "0c887344-6c77-4518-93cb-6e3512ee853b",
+      "name": "Briefing",
+      "description": {
+        "content": "Briefing Agent — automated market briefings with scheduling and delivery",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "05549eb8-a721-47bc-bbc7-dd900834351b",
+          "name": "Generate Briefing",
+          "request": {
+            "name": "Generate Briefing",
+            "description": {
+              "content": "Generate a briefing on-demand from an ad-hoc prompt via Server-Sent Events streaming. The prompt (`query`) is run through the briefing engine (mode=briefing) — the same output family as your scheduled briefings (depth, formatting, citations). Stateless: send a fresh prompt each call. Distinct from `POST /v1/briefings/{id}/generate`, which re-runs an existing saved schedule.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                "sse"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"frequency\": \"<string>\",\n  \"language\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_summary\": \"<string>\",\n  \"conversation_id\": \"<string>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1bfc2399-2a10-45df-873b-276212e19c5e",
+              "name": "SSE stream of briefing events, each sent as `data: {json}\\n\\n`. Sequence: status → [status]* → answer → status:finish. A keepalive is sent as a status event roughly every 30s. On failure a single status event with status \"error\" (carrying a code) is emitted instead of answer. The answer arrives once (full content), not token-by-token, because inline citations are resolved only after the briefing completes.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "sse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"frequency\": \"<string>\",\n  \"language\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_summary\": \"<string>\",\n  \"conversation_id\": \"<string>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "12809594-d836-4d6b-929c-a4101e9bc5a7",
+              "name": "Bad Request - Invalid request parameters.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "sse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"frequency\": \"<string>\",\n  \"language\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_summary\": \"<string>\",\n  \"conversation_id\": \"<string>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "274c0d7d-13e5-4fbf-8f66-60d8c828ffbb",
+              "name": "Unauthorized - Invalid or missing API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "sse"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"frequency\": \"<string>\",\n  \"language\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_summary\": \"<string>\",\n  \"conversation_id\": \"<string>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f193ed3e-0731-49b5-84d9-0c3f7b14036c",
+          "name": "Preview Briefing On-Demand",
+          "request": {
+            "name": "Preview Briefing On-Demand",
+            "description": {
+              "content": "Run a briefing on-demand from an ad-hoc prompt as a fire-and-forget job: enqueue the run and get a pending delivery handle immediately, then poll `GET /v1/briefings/deliveries/{delivery_id}` for the result.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                "preview"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_delivery_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8076dc1c-afe3-4625-bbcd-31de24cdcaba",
+              "name": "Domain error — returned with HTTP 200 and an `error.code` (payload null), consistent with the other briefing JSON endpoints. `BRIEFING_NOT_FOUND` when `previous_delivery_id` is not owned by the caller; `BRIEFING_GENERATE_FAIL` for a generic upstream/generation failure (including a `tickers` symbol that cannot be resolved to a stock).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "preview"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_delivery_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"BRIEFING_NOT_FOUND\",\n    \"msg\": \"Brief delivery not found.\",\n    \"message\": \"Brief delivery not found.\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2da85fad-057d-44f2-8905-35fc8db6e7dd",
+              "name": "Accepted — the run was enqueued and a pending delivery handle is returned. The briefing is not ready yet; poll `GET /v1/briefings/deliveries/{delivery_id}` with the returned `delivery_id` until its status is terminal.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "preview"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_delivery_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"delivery_id\": \"b1f2c3d4-5678-90ab-cdef-1234567890ab\",\n    \"status\": \"pending\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38726698-5d0f-4ee7-951d-7c39fcf63881",
+              "name": "Bad Request - Invalid request parameters (e.g. missing `query`, or `previous_delivery_id` not a valid UUID).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "preview"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_delivery_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"query is required and must be a string\",\n    \"message\": \"query is required and must be a string\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0065eb13-e861-4c81-bc49-caf7879459bb",
+              "name": "Unauthorized - Invalid or missing API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "preview"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"<string>\",\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"previous_delivery_id\": \"<uuid>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"API_KEY_MISSING\",\n    \"msg\": \"header does not contain api key\",\n    \"message\": \"header does not contain api key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e82a2204-10f7-4ea0-90d4-b27813d2c57b",
+          "name": "Run Existing Briefing",
+          "request": {
+            "name": "Run Existing Briefing",
+            "description": {
+              "content": "Run one of your existing briefings on-demand via Server-Sent Events. The output is the **same briefing your schedule delivers by email** — it re-runs that briefing against a current date window. Distinct from `POST /v1/briefings/sse`, which runs an ad-hoc free-text `query`. Long-running briefings are not supported and return an `UNSUPPORTED` error.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                ":id",
+                "generate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of an existing briefing (from List Briefings or Create Briefing)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ec42784f-a99b-4381-afb2-20118de1ff7f",
+              "name": "SSE stream of briefing events. Each event is sent as `data: {json}\\n\\n`. Progress `status` events, then ONE `answer` event carrying the complete briefing markdown (citations already resolved to inline links — delivered whole, not token-by-token), then a terminal `status:finish`. On failure, a single `status` event with `status:error` and an `error` object.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id",
+                    "generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of an existing briefing (from List Briefings or Create Briefing)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9be39d59-c823-4a7a-97a2-eebec4a42020",
+              "name": "Bad Request - Missing or invalid briefing id.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id",
+                    "generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of an existing briefing (from List Briefings or Create Briefing)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"INVALID_REQUEST_BODY\",\n    \"msg\": \"briefing id is required\",\n    \"message\": \"briefing id is required\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1ab85868-0e88-4921-b33e-173207a5f956",
+              "name": "Unauthorized - Invalid or missing API key.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id",
+                    "generate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of an existing briefing (from List Briefings or Create Briefing)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"code\": \"UNAUTHORIZED\",\n    \"msg\": \"Invalid API key\",\n    \"message\": \"Invalid API key\"\n  },\n  \"payload\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "05fdb11b-4fb5-4bcf-a23a-9d7d4b7cf2a5",
+          "name": "List Briefings",
+          "request": {
+            "name": "List Briefings",
+            "description": {
+              "content": "Retrieve all briefing schedules for the authenticated user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6983b9d8-acb0-4728-bdc8-373268796658",
+              "name": "List of briefings",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": [\n    {\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"topic\": \"string\",\n      \"tickers\": [\n        \"string\",\n        \"string\"\n      ],\n      \"language\": \"string\",\n      \"scheduled_time\": \"string\",\n      \"timezone\": \"string\",\n      \"frequency\": \"monthly\",\n      \"scheduled_day_of_week\": 6242,\n      \"scheduled_day_of_month\": 7250,\n      \"next_delivery_at\": \"string\",\n      \"is_active\": true,\n      \"source_type\": \"string\",\n      \"attach_pdf\": false,\n      \"created_at\": \"string\",\n      \"updated_at\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"title\": \"string\",\n      \"topic\": \"string\",\n      \"tickers\": [\n        \"string\",\n        \"string\"\n      ],\n      \"language\": \"string\",\n      \"scheduled_time\": \"string\",\n      \"timezone\": \"string\",\n      \"frequency\": \"daily\",\n      \"scheduled_day_of_week\": 557,\n      \"scheduled_day_of_month\": 2244,\n      \"next_delivery_at\": \"string\",\n      \"is_active\": false,\n      \"source_type\": \"string\",\n      \"attach_pdf\": true,\n      \"created_at\": \"string\",\n      \"updated_at\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "973351c2-f701-446d-900f-e29877e8c84d",
+          "name": "Create Briefing",
+          "request": {
+            "name": "Create Briefing",
+            "description": {
+              "content": "Create a new briefing with topic, tickers, and schedule in a single call.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": \"<string>\",\n  \"scheduled_time\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"daily\",\n  \"scheduled_day_of_week\": \"<integer>\",\n  \"scheduled_day_of_month\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"source_type\": \"tfs_only\",\n  \"attach_pdf\": false,\n  \"is_active\": true,\n  \"rms_sources\": [\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    },\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    }\n  ],\n  \"watchlist_group_id\": \"<string>\",\n  \"use_custom_email_title\": false,\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "acee3136-defb-406c-90ff-2d992d6e14a1",
+              "name": "Briefing created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"topic\": \"<string>\",\n  \"scheduled_time\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"frequency\": \"daily\",\n  \"scheduled_day_of_week\": \"<integer>\",\n  \"scheduled_day_of_month\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"source_type\": \"tfs_only\",\n  \"attach_pdf\": false,\n  \"is_active\": true,\n  \"rms_sources\": [\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    },\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    }\n  ],\n  \"watchlist_group_id\": \"<string>\",\n  \"use_custom_email_title\": false,\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": {\n    \"id\": \"string\",\n    \"title\": \"string\",\n    \"topic\": \"string\",\n    \"tickers\": [\n      \"string\",\n      \"string\"\n    ],\n    \"language\": \"string\",\n    \"scheduled_time\": \"string\",\n    \"timezone\": \"string\",\n    \"frequency\": \"monthly\",\n    \"scheduled_day_of_week\": 2048,\n    \"scheduled_day_of_month\": 8375,\n    \"next_delivery_at\": \"string\",\n    \"is_active\": false,\n    \"source_type\": \"string\",\n    \"attach_pdf\": true,\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8ae5d462-9422-409f-9caf-cbd11bd42370",
+          "name": "Update Briefing",
+          "request": {
+            "name": "Update Briefing",
+            "description": {
+              "content": "Update an existing briefing. All fields are optional.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": \"<string>\",\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"scheduled_time\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"scheduled_day_of_week\": \"<integer>\",\n  \"scheduled_day_of_month\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"source_type\": \"<string>\",\n  \"attach_pdf\": \"<boolean>\",\n  \"is_active\": \"<boolean>\",\n  \"rms_sources\": [\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    },\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    }\n  ],\n  \"watchlist_group_id\": \"<string>\",\n  \"use_custom_email_title\": \"<boolean>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "25179993-700a-4436-ae00-0ffdb66dd7eb",
+              "name": "Briefing updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"topic\": \"<string>\",\n  \"stock_ids\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"tickers\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"language\": \"<string>\",\n  \"scheduled_time\": \"<string>\",\n  \"timezone\": \"<string>\",\n  \"frequency\": \"<string>\",\n  \"scheduled_day_of_week\": \"<integer>\",\n  \"scheduled_day_of_month\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"source_type\": \"<string>\",\n  \"attach_pdf\": \"<boolean>\",\n  \"is_active\": \"<boolean>\",\n  \"rms_sources\": [\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    },\n    {\n      \"source\": \"<string>\",\n      \"workspace\": \"<string>\"\n    }\n  ],\n  \"watchlist_group_id\": \"<string>\",\n  \"use_custom_email_title\": \"<boolean>\",\n  \"organization_id\": \"<string>\",\n  \"user_id\": \"<string>\",\n  \"user_email\": \"<string>\",\n  \"user_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": {\n    \"id\": \"string\",\n    \"title\": \"string\",\n    \"topic\": \"string\",\n    \"tickers\": [\n      \"string\",\n      \"string\"\n    ],\n    \"language\": \"string\",\n    \"scheduled_time\": \"string\",\n    \"timezone\": \"string\",\n    \"frequency\": \"monthly\",\n    \"scheduled_day_of_week\": 2048,\n    \"scheduled_day_of_month\": 8375,\n    \"next_delivery_at\": \"string\",\n    \"is_active\": false,\n    \"source_type\": \"string\",\n    \"attach_pdf\": true,\n    \"created_at\": \"string\",\n    \"updated_at\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cc7245a4-9478-454b-aff4-72ffce918816",
+          "name": "Delete Briefing",
+          "request": {
+            "name": "Delete Briefing",
+            "description": {
+              "content": "Delete an existing briefing schedule.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3dcfa27f-d89a-450c-ba13-acd2fab054c0",
+              "name": "Briefing deleted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": {\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "75b0014c-0cdc-4a23-9637-2f3125a261fd",
+          "name": "List Deliveries",
+          "request": {
+            "name": "List Deliveries",
+            "description": {
+              "content": "Retrieve delivery history for a specific briefing.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                ":id",
+                "deliveries"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3fa49311-47cf-4a3a-98a7-b4525b512b70",
+              "name": "Paginated delivery list",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    ":id",
+                    "deliveries"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": {\n    \"deliveries\": [\n      {\n        \"id\": \"string\",\n        \"status\": \"sent\",\n        \"delivered_at\": \"string\",\n        \"scheduled_at\": \"string\",\n        \"email_title\": \"string\",\n        \"tickers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"frequency\": \"string\",\n        \"created_at\": \"string\"\n      },\n      {\n        \"id\": \"string\",\n        \"status\": \"failed\",\n        \"delivered_at\": \"string\",\n        \"scheduled_at\": \"string\",\n        \"email_title\": \"string\",\n        \"tickers\": [\n          \"string\",\n          \"string\"\n        ],\n        \"frequency\": \"string\",\n        \"created_at\": \"string\"\n      }\n    ],\n    \"total_count\": 9106,\n    \"current_page\": 8363,\n    \"total_pages\": 8740\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "084fe8f5-e1df-43fe-bc4d-66039563a77f",
+          "name": "Get Delivery Detail",
+          "request": {
+            "name": "Get Delivery Detail",
+            "description": {
+              "content": "Retrieve full delivery detail including briefing content. Also available at /v1/briefings/{id}/deliveries/{delivery_id}.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                "deliveries",
+                ":delivery_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "delivery_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "23ca2031-2d5c-4af1-8c47-5212559c1afc",
+              "name": "Delivery detail with content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "deliveries",
+                    ":delivery_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "delivery_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {},\n  \"payload\": {\n    \"id\": \"string\",\n    \"status\": \"failed\",\n    \"delivered_at\": \"string\",\n    \"scheduled_at\": \"string\",\n    \"email_title\": \"string\",\n    \"tickers\": [\n      \"string\",\n      \"string\"\n    ],\n    \"frequency\": \"daily\",\n    \"content\": \"string\",\n    \"chat_session_id\": \"string\",\n    \"created_at\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fe496663-914c-4d86-85a8-c8cc2f6b0b77",
+          "name": "Get Delivery References",
+          "request": {
+            "name": "Get Delivery References",
+            "description": {
+              "content": "Retrieves the full list of citation references (sources) used to generate a briefing delivery.\n\nBriefing email content includes inline citations `[N]` that point into this list via `citation_idx`. Use this endpoint to build custom UIs, export source lists, or link readers back to original documents.\n\n**Usage Flow:**\n1. Get a delivery via [List Deliveries](/api-reference/briefing/deliveries) or [Get Delivery Detail](/api-reference/briefing/delivery-detail) — note the `chat_session_id`\n2. Verify delivery status is `sent`\n3. Call this endpoint with `delivery_id`\n4. For each reference, dispatch on `search_type` to build the viewer URL (see below)\n\n**How to view original documents** (switch on `search_type`):\n- `external` / `news` — the reference already links to the source. Use `external_url` directly (Factset viewer URL for news, publisher URL for external).\n- `tfs` (transcripts & filings) — open in the LinqAlpha document viewer: `https://chat.linqalpha.com/documents/{document_id}`. To download the raw file, pass `document_id` to the [Presigned URL](/api-reference/basic/presigned_url) endpoint.\n- `rms` (internal research, RMS-connected organizations) — open in the RMS viewer: `https://chat.linqalpha.com/rms/viewer?conversation_id={chat_session_id}&citation_idx={citation_idx}`. `chat_session_id` comes from the delivery detail response.\n\n**Error codes** (returned in response body with HTTP 200):\n- `BRIEFING_DELIVERY_NOT_FOUND` — `delivery_id` does not exist or does not belong to your organization\n- `BRIEFING_DELIVERY_REFERENCES_NOT_AVAILABLE` — delivery exists but has no associated session (still pending or generation failed)\n- `GET_SESSION_REFERENCES_FAIL` — upstream fetch failed",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "briefings",
+                "deliveries",
+                ":delivery_id",
+                "references"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "delivery_id",
+                  "description": "(Required) Delivery ID (UUID)."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b0e58372-1791-45ae-96d9-489a18d4aa8d",
+              "name": "References used in the briefing delivery.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "deliveries",
+                    ":delivery_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "delivery_id",
+                      "description": "(Required) Delivery ID (UUID)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": null,\n  \"payload\": {\n    \"references\": [\n      {\n        \"id\": \"cd0a3298-8798-4817-b78f-734d5e0fc095\",\n        \"citation_idx\": 1,\n        \"search_type\": \"external\",\n        \"chunk_id\": \"c063d35f-f143-4813-9d40-8733e5779b06\",\n        \"text\": \"Stock futures are climbing as President Donald Trump's deadline to reopen the Strait of Hormuz approaches.\",\n        \"text_type\": \"news\",\n        \"document_id\": null,\n        \"document_name\": \"Stock Market Today (Apr. 7, 2026): Futures climb ahead of Trump Iran deadline\",\n        \"s3_file_key\": \"https://www.thestreet.com/latest-news/stock-market-today-apr-7-2026-updates\",\n        \"external_url\": \"https://www.thestreet.com/latest-news/stock-market-today-apr-7-2026-updates\",\n        \"metadata\": {\n          \"source\": \"news\",\n          \"calendar_date\": \"2026-04-07\"\n        }\n      },\n      {\n        \"id\": \"f99d92bc-6d36-4c21-9f2b-2b7d57fa9c79\",\n        \"citation_idx\": 10,\n        \"search_type\": \"external\",\n        \"chunk_id\": \"b78e60cf-e0a2-420a-9da0-e2b5845a7ad0\",\n        \"text\": \"Franklin Resources Reports Lower March Assets Under Management. Franklin Resources (BEN) late Monday reported preliminary March assets under management of $1.68 trillion, down from $1.73 trillion in February.\",\n        \"text_type\": \"news\",\n        \"document_id\": \"b78e60cf-e0a2-420a-9da0-e2b5845a7ad0\",\n        \"document_name\": \"Franklin Resources Reports Lower March Assets Under Management\",\n        \"s3_file_key\": null,\n        \"external_url\": \"https://my.apps.factset.com/viewer-fusion/?_doc_id=A3596626&_doc_date=2026-04-06&_doc_product=MNW\",\n        \"metadata\": {\n          \"source\": \"news\",\n          \"rms_document_type\": \"news\",\n          \"calendar_date\": \"2026-04-06T17:09:34.000Z\",\n          \"document_category\": \"news\",\n          \"stock_ids\": [\n            \"BBG001S5P3W6\"\n          ],\n          \"tickers\": [\n            \"BEN\"\n          ]\n        }\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "686529d8-fd7b-4992-b971-450aae542b5e",
+              "name": "Invalid `delivery_id` (not a valid UUID).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "briefings",
+                    "deliveries",
+                    ":delivery_id",
+                    "references"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "delivery_id",
+                      "description": "(Required) Delivery ID (UUID)."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.linqalpha.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "a8df22f1-9226-44cc-93f0-4d9f4b2bb402",
+    "name": "LinqAlpha Briefing API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.",
+      "type": "text/plain"
+    }
+  }
+}

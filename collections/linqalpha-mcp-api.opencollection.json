@@ -1,0 +1,41 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing MCP API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MCP",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "LinqAlpha MCP",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/mcp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "LinqAlpha MCP gives AI assistants direct access to institutional-grade financial data for fundamental research. Through the Model Context Protocol (MCP), your AI can query company fundamentals, earnings estimates, stock prices, economic indicators, SEC filings, and earnings transcripts — all from a single endpoint.\n\nSupports JSON-RPC 2.0 protocol.\n\nAvailable methods:\n- `initialize` — Initialize MCP session\n- `ping` — Health check\n- `tools/list` — List available financial data tools\n- `tools/call"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

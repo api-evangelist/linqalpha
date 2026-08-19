@@ -1,0 +1,74 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing Feedback API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feedback",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Conversation Feedback",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/conversations/:conversation_id/feedback",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the conversation to provide feedback for"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits feedback for a specific conversation. Use this endpoint to collect user ratings and comments about the quality of AI responses. Feedback helps improve the service and can be used for quality monitoring.\n\n**Rating Options:**\n- `up`: Positive feedback indicating a helpful response\n- `down`: Negative feedback indicating an unsatisfactory response\n\n**Optional Fields:**\n- `message_id`: Target specific message within the conversation\n- `comment`: Additional text feedback from the user"
+        },
+        {
+          "info": {
+            "name": "Delete Conversation Feedback",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.linqalpha.com/v1/conversations/:conversation_id/feedback",
+            "params": [
+              {
+                "name": "conversation_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the conversation to delete feedback for"
+              },
+              {
+                "name": "message_id",
+                "value": "",
+                "type": "query",
+                "description": "The specific message ID whose feedback should be deleted. If omitted, the last message's feedback is deleted."
+              }
+            ]
+          },
+          "docs": "Deletes feedback for a specific conversation. If `message_id` is not provided, the feedback from the last message in the conversation will be deleted."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

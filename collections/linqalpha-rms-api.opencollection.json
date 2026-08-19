@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing RMS API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "RMS",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/organizations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new organization with the specified parameters.\n\n**Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)"
+        },
+        {
+          "info": {
+            "name": "RMS Chat (SSE - Stream)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/rms_chat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate a response using the RMS (Research Management System) with streaming server-sent events. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.\n\n**Note**: This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)"
+        },
+        {
+          "info": {
+            "name": "RMS Deep Research",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/rms_deep_research",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate a response using the RMS (Research Management System) with deep research capabilities. This endpoint provides enhanced search capabilities with organization-specific data and customizable document types.\n\n**Note**:This feature is available to a limited set of users only. Access requires a separate onboarding process, which will be provided upon request. For more information, please contact us at [support@linqalpha.com](mailto:support@linqalpha.com)"
+        },
+        {
+          "info": {
+            "name": "Pause RMS Chat Stream",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v1/stop_stream",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Pause the RMS (Research Management System) chat stream."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

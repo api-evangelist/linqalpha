@@ -1,0 +1,128 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LinqAlpha Briefing Connectors API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Connectors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List customer connectors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v2/connectors"
+          },
+          "docs": "Lists customer MCP connectors for the authenticated organization. Query parameters are used to filter the results."
+        },
+        {
+          "info": {
+            "name": "Create a customer connector",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v2/connectors",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a customer MCP connector. Credential fields are write-only and are never logged."
+        },
+        {
+          "info": {
+            "name": "Get a customer connector",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.linqalpha.com/v2/connectors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns connector metadata for the authenticated organization. Credential values are not returned."
+        },
+        {
+          "info": {
+            "name": "Update a customer connector",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.linqalpha.com/v2/connectors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a customer MCP connector. Credential fields are write-only and are never logged."
+        },
+        {
+          "info": {
+            "name": "Delete a customer connector",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.linqalpha.com/v2/connectors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes a customer MCP connector for the authenticated organization."
+        },
+        {
+          "info": {
+            "name": "Test a customer connector",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.linqalpha.com/v2/connectors/:id/test",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Validates and tests the specified customer MCP connector."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
