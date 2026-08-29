@@ -11,6 +11,18 @@ description: >-
   path for a firm's own internal documents, and a source-grounding judge that scores how well each
   claim in an answer is backed by the sources it cited. LinqAlpha also publishes a first-party
   remote MCP server exposing 22 financial-data tools to AI assistants.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
