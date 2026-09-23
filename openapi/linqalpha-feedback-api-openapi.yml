@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing Feedback API
+  title: LinqAlpha Feedback API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -108,6 +108,8 @@ paths:
                 payload: null
       tags:
       - Feedback
+      operationId: postV1ConversationsByConversationIdFeedback
+      x-operation-id-source: derived
     delete:
       summary: Delete Conversation Feedback
       description: Deletes feedback for a specific conversation. If `message_id` is not provided, the feedback from the last message in the conversation will be deleted.
@@ -173,8 +175,30 @@ paths:
                 payload: null
       tags:
       - Feedback
+      operationId: deleteV1ConversationsByConversationIdFeedback
+      x-operation-id-source: derived
 components:
   schemas:
+    CreateConversationFeedbackResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the feedback was successfully submitted
+          example: true
+      required:
+      - success
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
     ApiError:
       type: object
       properties:
@@ -243,20 +267,10 @@ components:
       required:
       - conversation_id
       - rating
-    CreateConversationFeedbackResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Indicates whether the feedback was successfully submitted
-          example: true
-      required:
-      - success
     DeleteConversationFeedbackResponse:
       type: object
       properties:
         error:
-          nullable: true
           description: Error object, null on success
         payload:
           type: object
@@ -267,18 +281,6 @@ components:
               example: true
           required:
           - success
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-          nullable: true
-      required:
-      - error
-      - payload
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

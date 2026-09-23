@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing MCP API
+  title: LinqAlpha MCP API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -16,7 +16,44 @@ paths:
   /v1/mcp:
     post:
       summary: LinqAlpha MCP
-      description: "LinqAlpha MCP gives AI assistants direct access to institutional-grade financial data for fundamental research. Through the Model Context Protocol (MCP), your AI can query company fundamentals, earnings estimates, stock prices, economic indicators, SEC filings, and earnings transcripts — all from a single endpoint.\n\nSupports JSON-RPC 2.0 protocol.\n\nAvailable methods:\n- `initialize` — Initialize MCP session\n- `ping` — Health check\n- `tools/list` — List available financial data tools\n- `tools/call` — Execute a financial data tool\n\n**Setup (Claude Desktop):**\n```json\n{\n  \"mcpServers\": {\n    \"linqalpha\": {\n      \"url\": \"https://api.linqalpha.com/v1/mcp\",\n      \"headers\": { \"x-api-key\": \"<your-api-key>\" }\n    }\n  }\n}\n```"
+      description: 'LinqAlpha MCP gives AI assistants direct access to institutional-grade financial data for fundamental research. Through the Model Context Protocol (MCP), your AI can query company fundamentals, earnings estimates, stock prices, economic indicators, SEC filings, and earnings transcripts — all from a single endpoint.
+
+
+        Supports JSON-RPC 2.0 protocol.
+
+
+        Available methods:
+
+        - `initialize` — Initialize MCP session
+
+        - `ping` — Health check
+
+        - `tools/list` — List available financial data tools
+
+        - `tools/call` — Execute a financial data tool
+
+
+        **Setup (Claude Desktop):**
+
+        ```json
+
+        {
+
+        "mcpServers": {
+
+        "linqalpha": {
+
+        "url": "https://api.linqalpha.com/v1/mcp",
+
+        "headers": { "x-api-key": "" }
+
+        }
+
+        }
+
+        }
+
+        ```'
       requestBody:
         required: true
         content:
@@ -36,6 +73,8 @@ paths:
           description: Authentication failed
       tags:
       - MCP
+      operationId: postV1Mcp
+      x-operation-id-source: derived
 components:
   schemas:
     McpJsonRpcResponse:
@@ -46,8 +85,9 @@ components:
           enum:
           - '2.0'
         id:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Request identifier (null for error responses)
         result:
           type: object

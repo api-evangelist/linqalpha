@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing Search API
+  title: LinqAlpha Search API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -85,8 +85,9 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: object
-                    nullable: true
+                    type:
+                    - object
+                    - 'null'
                   payload:
                     type: object
                     properties:
@@ -165,6 +166,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+      operationId: postV2AnalyticsMessagesByChatMessageIdJudge
+      x-operation-id-source: derived
   /v1/search:
     post:
       summary: Search
@@ -175,7 +178,7 @@ paths:
 
         1. **Via Viewer:** `https://chat.linqalpha.com/rms/viewer?chat_message_id={chat_message_id}&citation_idx={citation_idx}`
 
-        2. **Direct Download:** If the reference contains a `document_id`, you can access the original document directly through the [presigned_url endpoint](https://docs.linqalpha.com/api-reference/basic/presigned_url).'
+        2. **Direct Download:** If the reference contains a `document_id`, you can access the original document directly through the presigned_url endpoint.'
       requestBody:
         required: true
         content:
@@ -286,13 +289,15 @@ paths:
                 payload: null
       tags:
       - Search
+      operationId: postV1Search
+      x-operation-id-source: derived
   /v2/chat/sse:
     post:
       summary: Generate a response from the LinqAlpha engine via SSE
       description: 'Generate a response from the LinqAlpha engine. LinqAlpha uses different types of language models and data sources to generate an answer. The response is provided as a server-sent events (SSE) stream.
 
 
-        **Note**: For this search chat endpoint, the stock_id (BBG_ID) can be obtained by referring to the [Map Tickers API](https://docs.linqalpha.com/api-reference/basic/map_tickers) and using the `stock_id` value from its response.'
+        **Note**: For this search chat endpoint, the stock_id (BBG_ID) can be obtained by referring to the Map Tickers API and using the `stock_id` value from its response.'
       requestBody:
         required: true
         content:
@@ -432,6 +437,8 @@ paths:
                 payload: null
       tags:
       - Search
+      operationId: postV2ChatSse
+      x-operation-id-source: derived
   /v1/analytics/sse:
     post:
       summary: Generate an analytics response via SSE
@@ -449,29 +456,29 @@ paths:
 
         ```
 
-        conversation          -> conversation_id for this session
+        conversation -> conversation_id for this session
 
-        message               -> echo of user query
+        message -> echo of user query
 
-        status: start         -> stream begins
+        status: start -> stream begins
 
         +-- AGENTIC LOOP (repeats) ----------------------------+
 
-        |  tool_use_block     -> 1-N parallel tool calls (batch)|
+        | tool_use_block -> 1-N parallel tool calls (batch)|
 
-        |  tool_result_block  -> results for each call          |
+        | tool_result_block -> results for each call |
 
-        |  status: keep_alive -> heartbeat (if >15s gap)        |
+        | status: keep_alive -> heartbeat (if >15s gap) |
 
-        |  think (x N)        -> reasoning tokens               |
+        | think (x N) -> reasoning tokens |
 
         +------------------------------------------------------+
 
-        think (x N)           -> extended reasoning / draft
+        think (x N) -> extended reasoning / draft
 
-        answer                -> single chunk final answer
+        answer -> single chunk final answer
 
-        status: finish        -> stream ends
+        status: finish -> stream ends
 
         ```'
       requestBody:
@@ -594,6 +601,8 @@ paths:
                 payload: null
       tags:
       - Search
+      operationId: postV1AnalyticsSse
+      x-operation-id-source: derived
   /v2/analytics/sse:
     post:
       summary: Generate an analytics response via SSE (V2)
@@ -612,27 +621,27 @@ paths:
 
         ```
 
-        conversation            ← conversation_id
+        conversation ← conversation_id
 
-        message                 ← echo of user query
+        message ← echo of user query
 
-        status: start           ← stream begins
+        status: start ← stream begins
 
         +-- AGENTIC LOOP (repeats) ---------+
 
-        |  tool_use_block (x1-3)            |
+        | tool_use_block (x1-3) |
 
-        |  tool_result_block (x1-3)         |
+        | tool_result_block (x1-3) |
 
-        |  keepalive (~15s)                 |
+        | keepalive (~15s) |
 
-        |  think (xN)                       |
+        | think (xN) |
 
         +------------------------------------+
 
-        answer                  ← full answer with [1][2] citations
+        answer ← full answer with [1][2] citations
 
-        status: finish          ← stream ends
+        status: finish ← stream ends
 
         ```
 
@@ -650,7 +659,7 @@ paths:
         ```
 
 
-        Returns normalized references with enriched metadata. See [Analytics V2 References](/api-reference/basic/analytics_references) for details.'
+        Returns normalized references with enriched metadata. See Analytics V2 References for details.'
       requestBody:
         required: true
         content:
@@ -802,11 +811,47 @@ paths:
                 payload: null
       tags:
       - Search
+      operationId: postV2AnalyticsSse
+      x-operation-id-source: derived
 components:
   schemas:
-    ChatSseEvent:
+    ApiErrorResponse:
       type: object
-      description: Base structure for all Chat SSE events
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
+    DialogueIdEvent:
+      type: object
+      description: Dialogue id streaming event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - dialogue_id
+          data:
+            type: object
+            required:
+            - dialogue_id
+            properties:
+              dialogue_id:
+                type: string
+                description: 'A unique identifier (UUID) that represents a specific dialogue or message exchange within a chat session. This ID is provided as an event during the chat process, appearing in the stream before any think events.
+
+
+                  The dialogue_id serves to uniquely identify individual dialogue instances within a chat session, enabling precise control over message streaming and interruption. Here, a dialogue is defined as a single question and answer pair - so a single chat_session is composed of a sequence of dialogues.
+
+
+                  Unlike using only the chat_session_id, the dialogue_id prevents race conditions that could occur when multiple windows or instances interact with the same chat session simultaneously. '
+    AnalyticsSseEvent:
+      type: object
+      description: Base structure for all Analytics SSE events
       required:
       - event_name
       - data
@@ -814,504 +859,21 @@ components:
         event_name:
           type: string
           enum:
-          - conversation
+          - message
           - status
           - think
-          - sub_questions
-          - dialogue_id
-          - search_results
+          - tool_use_block
+          - tool_result_block
           - answer
+          - keepalive
+          description: Type of event in the analytics stream
         data:
           type: object
           description: Event-specific data payload
-    ApiError:
-      type: object
-      properties:
-        code:
-          type: string
-          description: 'Error code indicating the type of error. Common codes:
-
-            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
-
-            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
-
-            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
-
-            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
-
-            - Not Found: `NOT_FOUND`'
-          example: INVALID_REQUEST_BODY
-        msg:
-          type: string
-          description: Error message (deprecated, use `message` instead)
-          example: query is required and must be a string
-        message:
-          type: string
-          description: Error message providing more details about the error
-          example: query is required and must be a string
-      required:
-      - code
-    AnalyticsToolResultBlockEvent:
-      description: Tool execution result event. Contains the output from a tool call.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - tool_result_block
-          data:
-            type: object
-            required:
-            - content
-            properties:
-              content:
-                type: string
-                description: JSON-encoded result from the tool execution
-    DateFilter:
-      type: object
-      description: Date filter with year, month, and optional day
-      properties:
-        year:
-          type: integer
-          description: Year (e.g., 2025)
-          example: 2025
-        month:
-          type: integer
-          description: Month (1-12)
-          minimum: 1
-          maximum: 12
-          example: 1
-        day:
-          type: integer
-          description: Day of month (1-31, optional)
-          minimum: 1
-          maximum: 31
-          example: 15
-      required:
-      - year
-      - month
-    SearchResponse:
-      type: object
-      properties:
-        chat_message_id:
-          type: string
-          format: uuid
-          description: Chat message ID
-        search_result_count:
-          type: number
-          description: Search result count
-        execution_time_ms:
-          type: number
-          description: Execution time in milliseconds
-        references:
-          type: array
-          items:
-            type: object
-            properties:
-              citation_idx:
-                type: string
-                description: Citation index
-              chunk_id:
-                type: string
-                description: Chunk ID
-              document_id:
-                type: string
-                description: Document ID
-              text:
-                type: string
-                description: Text
-              text_type:
-                type: string
-                description: Text type
-              document_name:
-                type: string
-                description: Document name
-              external_url:
-                type: string
-                description: External URL
-              metadata:
-                $ref: '#/components/schemas/ReferenceMetadata'
-              custom_metadata:
-                $ref: '#/components/schemas/CustomMetadata'
-            required:
-            - citation_idx
-            - chunk_id
-            - text
-            - text_type
-            - document_name
-            - external_url
-            - metadata
-          description: References
-      required:
-      - chat_message_id
-    ConversationEvent:
-      description: Conversation event
-      allOf:
-      - $ref: '#/components/schemas/ChatSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - conversation
-          data:
-            type: object
-            required:
-            - conversation_id
-            properties:
-              conversation_id:
-                type: string
-                description: Unique conversation identifier. Use for multi-turn continuation and References API.
-              message:
-                type: string
-                description: Status message (e.g., 'Successfully created a conversation.')
-            description: Event-specific data payload
-    AnalyticsMessageEvent:
-      description: User message echo event. Second event in the stream (after conversation), echoing the user's query.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - message
-          data:
-            type: object
-            required:
-            - message_id
-            - message_type
-            - message
-            properties:
-              message_id:
-                type: integer
-                description: Unique message identifier
-              message_type:
-                type: string
-                enum:
-                - user
-                - assistant
-                description: Type of message
-              message:
-                type: string
-                description: The message content
-    AnalyticsThinkEvent:
-      description: Thinking/reasoning process stream. Sent as the model reasons through the problem.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - think
-          data:
-            type: object
-            required:
-            - think_piece
-            properties:
-              think_piece:
-                type: string
-                description: A piece of the thinking/reasoning process (streamed incrementally)
-    ChatSseV2Request:
-      type: object
-      properties:
-        query:
-          type: string
-          description: A search query
-          example: What are the latest updates on AAPL?
-        conversation_id:
-          type: string
-          format: uuid
-          description: 'Conversation id (optional)
-
-
-            Every user-initiated chat is grouped under a conversation. A conversation contains one or more messages generated either by the user or LinqAlpha. Use the conversation_id to track the context of previous interactions.'
-          example: 123e4567-e89b-12d3-a456-426614174000
-        stock_ids:
-          type: array
-          items:
-            type: string
-          description: Bloomberg stock IDs (optional)
-          example:
-          - BBG001S5N8V8
-        tickers:
-          type: array
-          items:
-            type: string
-          description: Ticker symbols (optional)
-          example:
-          - AAPL
-        external_types:
-          type: array
-          items:
-            type: string
-          description: External document types (optional, defaults to ["transcript", "filing", "news", "ir_slide"])
-          default:
-          - transcript
-          - filing
-          - news
-          - ir_slide
-          example:
-          - transcript
-          - filing
-          - news
-          - ir_slide
-        top_k:
-          type: number
-          description: 'Specifies the number of top search results to return.
-
-            If the value exceeds 50, it will be capped at 50
-
-            The number of returned results will be less than or equal to the specified top_k value.
-
-            Results are sorted by relevancy in descending order (from highest to lowest).'
-          example: 50
-        upload_period:
-          type: object
-          description: Filter documents by upload date range. At least one of start_time or end_time must be provided.
-          properties:
-            start_time:
-              $ref: '#/components/schemas/DateFilter'
-            end_time:
-              $ref: '#/components/schemas/DateFilter'
-          example:
-            start_time:
-              year: 2025
-              month: 1
-              day: 1
-            end_time:
-              year: 2026
-              month: 1
-              day: 17
-      required:
-      - query
-    AnalyticsToolUseBlockEvent:
-      description: Tool invocation event. Indicates a tool is being called during analysis. Multiple tool_use_block events may be sent in parallel batches.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - tool_use_block
-          data:
-            type: object
-            required:
-            - name
-            - input
-            properties:
-              name:
-                type: string
-                description: Name of the tool being called (e.g., mcp__linq__manticore_sql, mcp__linq__factset_query)
-                example: mcp__linq__manticore_sql
-              input:
-                type: object
-                description: Input arguments passed to the tool. Structure varies by tool.
-                additionalProperties: true
-    AnalyticsKeepaliveEvent:
-      description: Heartbeat event sent periodically (every ~15s during idle periods) to keep the connection alive.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - keepalive
-          data:
-            type: object
-            required:
-            - timestamp
-            properties:
-              timestamp:
-                type: string
-                format: date-time
-                description: ISO 8601 timestamp of the keepalive event
-                example: '2026-02-26T22:46:50.780316'
-    AnalyticsStatusEvent:
-      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - status
-          data:
-            type: object
-            required:
-            - status
-            properties:
-              status:
-                type: string
-                enum:
-                - start
-                - finish
-                - keep_alive
-                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
-    AnalyticsV2Request:
-      type: object
-      properties:
-        organization_id:
-          type: string
-          format: uuid
-          description: Organization ID
-        user_id:
-          type: string
-          format: uuid
-          description: User ID
-        user_email:
-          type: string
-          format: email
-          description: User email
-        user_name:
-          type: string
-          description: User name
-        query:
-          type: string
-          description: The analytics query to process.
-          example: What are the latest insights on AAPL earnings?
-        conversation_id:
-          type: string
-          nullable: true
-          description: Existing conversation ID for multi-turn continuation. Omit or null for new conversation.
-        search_types:
-          type: object
-          nullable: true
-          description: Structured source selection. Controls which document sources to query. Omitting a category means don't search it.
-          properties:
-            rms:
-              type: array
-              nullable: true
-              items:
-                type: object
-                properties:
-                  workspace:
-                    type: string
-                    enum:
-                    - personal
-                    - organization
-                    description: Workspace scope
-                  source:
-                    type: string
-                    nullable: true
-                    description: 'Source type for this RMS selection. For Vault-uploaded documents (referenced by their rms_document_id in document_ids), you MUST set source to "vault". If omitted, the documents are searched generically: they are not retrieved for direct file citation, the answer''s [N] markers won''t resolve, and GET /v2/analytics/conversations/{id}/references returns an empty list.'
-                  type:
-                    type: string
-                    nullable: true
-                  subtypes:
-                    type: array
-                    items:
-                      type: string
-                    nullable: true
-                  container_ids:
-                    type: array
-                    items:
-                      type: string
-                    nullable: true
-                  document_ids:
-                    type: array
-                    items:
-                      type: string
-                    nullable: true
-                required:
-                - workspace
-            external:
-              type: array
-              nullable: true
-              description: Third-party sources
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                  subtypes:
-                    type: array
-                    items:
-                      type: string
-                    nullable: true
-                  document_ids:
-                    type: array
-                    items:
-                      type: string
-                    nullable: true
-                required:
-                - type
-            structured:
-              type: array
-              nullable: true
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                required:
-                - type
-        filters:
-          type: object
-          nullable: true
-          description: Metadata filters. Hard filters exclude non-matching documents (AND between fields, OR within arrays). Soft filters boost relevance without excluding.
-          properties:
-            rms:
-              type: object
-              nullable: true
-              properties:
-                hard_filters:
-                  type: object
-                  nullable: true
-                  description: Strict metadata constraints for internal sources. AND between fields, OR within arrays.
-                soft_filters:
-                  type: object
-                  nullable: true
-                  description: Preferred but not required metadata for internal sources. Boosts relevance.
-            external:
-              type: object
-              nullable: true
-              properties:
-                soft_filters:
-                  type: object
-                  nullable: true
-                  description: Preferred metadata for external sources. No hard filters on external by design.
-        connectors:
-          type: array
-          nullable: true
-          description: Customer MCP connectors to enable for this analytics request.
-          items:
-            type: object
-            additionalProperties: true
-            properties:
-              name:
-                type: string
-                description: Connector name
-              tool_filter:
-                type: array
-                nullable: true
-                items:
-                  type: string
-                description: Optional tool allow-list for this connector
-            required:
-            - name
-        disabled_connectors:
-          type: array
-          nullable: true
-          description: Connector names to disable for this analytics request.
-          items:
-            type: string
-      required:
-      - query
-    SubQuestionsEvent:
-      description: Sub-questions event
-      allOf:
-      - $ref: '#/components/schemas/BaseSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - sub_questions
-          data:
-            type: object
-            required:
-            - sub_questions
-            properties:
-              sub_questions:
-                type: array
-                description: Sub-questions
-                items:
-                  type: string
-                  description: Sub-question
     CustomMetadata:
-      type: object
-      nullable: true
+      type:
+      - object
+      - 'null'
       description: User-defined metadata. This field may contain additional structured data based on the document type and user configuration.
       properties:
         edgar_metadata:
@@ -1343,219 +905,6 @@ components:
           required:
           - public_url
           - accession_number
-    SearchResultsEvent:
-      description: Search result id streaming event
-      allOf:
-      - $ref: '#/components/schemas/ChatSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - search_results
-          data:
-            type: object
-            required:
-            - chat_message_id
-            properties:
-              chat_message_id:
-                type: string
-                description: Chat message id (You can retrieve search_results using the chat_message_id through the references API.)
-    DialogueIdEvent:
-      type: object
-      description: Dialogue id streaming event
-      allOf:
-      - $ref: '#/components/schemas/ChatSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - dialogue_id
-          data:
-            type: object
-            required:
-            - dialogue_id
-            properties:
-              dialogue_id:
-                type: string
-                description: 'A unique identifier (UUID) that represents a specific dialogue or message exchange within a chat session. This ID is provided as an event during the chat process, appearing in the stream before any think events.
-
-
-                  The dialogue_id serves to uniquely identify individual dialogue instances within a chat session, enabling precise control over message streaming and interruption. Here, a dialogue is defined as a single question and answer pair - so a single chat_session is composed of a sequence of dialogues.
-
-
-                  Unlike using only the chat_session_id, the dialogue_id prevents race conditions that could occur when multiple windows or instances interact with the same chat session simultaneously. '
-    BaseSseEvent:
-      type: object
-      description: Base structure for SSE events
-      required:
-      - event_name
-      - data
-      properties:
-        event_name:
-          type: string
-          enum:
-          - status
-          - research_progress
-          - round
-          - think
-          - sub_questions
-          - tool_call
-          - tool_response
-          - search_results
-          - answer
-          description: Type of SSE event
-        data:
-          type: object
-          description: Event-specific data payload
-    AnalyticsRequest:
-      type: object
-      properties:
-        query:
-          type: string
-          description: The analytics query to process. Include ticker symbols, date ranges, and any other filtering context directly in the query text (e.g., "Compare MSFT and GOOG revenue growth from 2023 to 2025").
-        conversation_id:
-          type: string
-          nullable: true
-          description: Existing conversation ID to continue a multi-turn conversation. Omit or set to null for a new conversation.
-        organization_id:
-          type: string
-          format: uuid
-          description: Organization ID. Required for platform API keys to identify the target organization.
-          example: 123e4567-e89b-12d3-a456-426614174000
-        user_id:
-          type: string
-          description: User ID. Required together with `user_email` for platform API keys to identify the specific user.
-          example: user-123
-        user_email:
-          type: string
-          format: email
-          description: User email. Required together with `user_id` for platform API keys to identify the specific user.
-          example: john.doe@example.com
-      required:
-      - query
-    SearchRequest:
-      type: object
-      properties:
-        query:
-          type: string
-          description: A search query
-          example: What are the latest updates on AAPL?
-        stock_ids:
-          type: array
-          items:
-            type: string
-          description: Bloomberg stock IDs (optional)
-          example:
-          - BBG001S5N8V8
-        tickers:
-          type: array
-          items:
-            type: string
-          description: Ticker symbols (optional)
-          example:
-          - AAPL
-        external_types:
-          type: array
-          items:
-            type: string
-          description: External document types (optional, defaults to ["transcript", "filing", "news", "ir_slide"])
-          default:
-          - transcript
-          - filing
-          - news
-          - ir_slide
-          example:
-          - transcript
-          - filing
-          - news
-          - ir_slide
-        top_k:
-          type: number
-          description: 'Specifies the number of top search results to return.
-
-            If the value exceeds 50, it will be capped at 50
-
-            The number of returned results will be less than or equal to the specified top_k value.
-
-            Results are sorted by relevancy in descending order (from highest to lowest).'
-          example: 50
-        upload_period:
-          type: object
-          description: Filter documents by upload date range. At least one of start_time or end_time must be provided.
-          properties:
-            start_time:
-              $ref: '#/components/schemas/DateFilter'
-            end_time:
-              $ref: '#/components/schemas/DateFilter'
-          example:
-            start_time:
-              year: 2025
-              month: 1
-              day: 1
-            end_time:
-              year: 2026
-              month: 1
-              day: 17
-        search_types:
-          type: array
-          items:
-            type: string
-            enum:
-            - rms
-            - external
-            - all
-          description: Types of search to perform
-          example:
-          - rms
-          - external
-        rms_types:
-          type: array
-          items:
-            type: string
-          description: Filter by RMS document type. Only applies when `search_types` includes `rms`.
-          nullable: true
-        rms_sub_types:
-          type: array
-          items:
-            type: string
-          description: Filter by RMS document subtype within `rms_types`.
-          nullable: true
-      required:
-      - query
-    AnswerEvent:
-      description: Final answer streaming event
-      allOf:
-      - $ref: '#/components/schemas/BaseSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - answer
-          data:
-            type: object
-            required:
-            - answer_piece
-            properties:
-              answer_piece:
-                type: string
-                description: A piece of the final answer (streamed incrementally). Citations are embedded as [hash] format.
-                example: '### Executive Summary'
-    StatusEvent:
-      description: Stream status event (start/finish)
-      allOf:
-      - $ref: '#/components/schemas/BaseSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - status
-          data:
-            type: object
-            required:
-            - status
-            properties:
-              status:
-                type: string
-                enum:
-                - start
-                - finish
-                description: Stream status indicator
     AnalyticsAnswerEvent:
       description: Final answer event. Contains the complete answer in a single event (not streamed incrementally).
       allOf:
@@ -1572,37 +921,19 @@ components:
               answer_piece:
                 type: string
                 description: The complete final answer content. Unlike other SSE endpoints, analytics sends the full answer in a single event rather than streaming it incrementally.
-    AnalyticsSseEvent:
-      type: object
-      description: Base structure for all Analytics SSE events
-      required:
-      - event_name
-      - data
-      properties:
-        event_name:
-          type: string
-          enum:
-          - message
-          - status
-          - think
-          - tool_use_block
-          - tool_result_block
-          - answer
-          - keepalive
-          description: Type of event in the analytics stream
-        data:
-          type: object
-          description: Event-specific data payload
     ReferenceMetadata:
       type: object
       description: Additional metadata information
       properties:
         source:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           example: news
         rms_type:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - emailnotes
           - generalnotes
@@ -1611,34 +942,41 @@ components:
           - structured-data
           - public_transcript
           - private_transcript
-          nullable: true
         rms_sub_type:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         rms_document_type:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - note
           - attachment
-          nullable: true
         parent_id:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         parent_document_id:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         countries:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         regions:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         participants:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: object
             properties:
@@ -1647,52 +985,64 @@ components:
               organization:
                 type: string
               role:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
               participant_type:
-                type: string
+                type:
+                - string
+                - 'null'
                 enum:
                 - author
                 - analyst
                 - attendee
                 - mentioned
                 - others
-                nullable: true
-          nullable: true
         tags:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         publisher:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         calendar_date:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          nullable: true
         creation_timestamp:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         last_contribution_timestamp:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         creator_name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Name of the user who created the document
-          nullable: true
         last_contributor_name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Name of the user who last contributed to the document
-          nullable: true
         fiscal_year:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
         fiscal_quarter:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         document_category:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - internal
           - brokerage
@@ -1701,9 +1051,10 @@ components:
           - external
           - earnings_call
           - filing
-          nullable: true
         document_subcategory:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - calls
           - model
@@ -1727,14 +1078,16 @@ components:
           - interim_report
           - offerings
           - others
-          nullable: true
         document_tags:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         sector:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
             enum:
@@ -1749,9 +1102,10 @@ components:
             - Transportation
             - Telecom Services
             - Utilities
-          nullable: true
         subsector:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
             enum:
@@ -1833,25 +1187,28 @@ components:
             - Power
             - Utilities
             - Water
-          nullable: true
         stock_ids:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         tickers:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         company_names:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         offset:
-          type: array
-          nullable: true
+          type:
+          - array
+          - 'null'
           items:
             type: object
             properties:
@@ -1866,23 +1223,152 @@ components:
               page:
                 type: integer
         blocks:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: integer
-          nullable: true
           description: Transcript block indices for this chunk.
-    ApiErrorResponse:
+    AnalyticsToolResultBlockEvent:
+      description: Tool execution result event. Contains the output from a tool call.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - tool_result_block
+          data:
+            type: object
+            required:
+            - content
+            properties:
+              content:
+                type: string
+                description: JSON-encoded result from the tool execution
+    AnalyticsToolUseBlockEvent:
+      description: Tool invocation event. Indicates a tool is being called during analysis. Multiple tool_use_block events may be sent in parallel batches.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - tool_use_block
+          data:
+            type: object
+            required:
+            - name
+            - input
+            properties:
+              name:
+                type: string
+                description: Name of the tool being called (e.g., mcp__linq__manticore_sql, mcp__linq__factset_query)
+                example: mcp__linq__manticore_sql
+              input:
+                type: object
+                description: Input arguments passed to the tool. Structure varies by tool.
+                additionalProperties: true
+    BaseSseEvent:
       type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-          nullable: true
+      description: Base structure for SSE events
       required:
-      - error
-      - payload
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - status
+          - research_progress
+          - round
+          - think
+          - sub_questions
+          - tool_call
+          - tool_response
+          - search_results
+          - answer
+          description: Type of SSE event
+        data:
+          type: object
+          description: Event-specific data payload
+    AnalyticsRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: The analytics query to process. Include ticker symbols, date ranges, and any other filtering context directly in the query text (e.g., "Compare MSFT and GOOG revenue growth from 2023 to 2025").
+        conversation_id:
+          type:
+          - string
+          - 'null'
+          description: Existing conversation ID to continue a multi-turn conversation. Omit or set to null for a new conversation.
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID. Required for platform API keys to identify the target organization.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        user_id:
+          type: string
+          description: User ID. Required together with `user_email` for platform API keys to identify the specific user.
+          example: user-123
+        user_email:
+          type: string
+          format: email
+          description: User email. Required together with `user_id` for platform API keys to identify the specific user.
+          example: john.doe@example.com
+      required:
+      - query
+    StatusEvent:
+      description: Stream status event (start/finish)
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                description: Stream status indicator
+    AnswerEvent:
+      description: Final answer streaming event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - answer
+          data:
+            type: object
+            required:
+            - answer_piece
+            properties:
+              answer_piece:
+                type: string
+                description: A piece of the final answer (streamed incrementally). Citations are embedded as [hash] format.
+                example: '### Executive Summary'
+    AnalyticsThinkEvent:
+      description: Thinking/reasoning process stream. Sent as the model reasons through the problem.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - think
+          data:
+            type: object
+            required:
+            - think_piece
+            properties:
+              think_piece:
+                type: string
+                description: A piece of the thinking/reasoning process (streamed incrementally)
     ThinkEvent:
       description: Thinking/reasoning process stream
       allOf:
@@ -1900,6 +1386,585 @@ components:
                 type: string
                 description: A piece of the thinking/reasoning process (streamed incrementally)
                 example: <PLAN_REASONING>
+    SearchResponse:
+      type: object
+      properties:
+        chat_message_id:
+          type: string
+          format: uuid
+          description: Chat message ID
+        search_result_count:
+          type: number
+          description: Search result count
+        execution_time_ms:
+          type: number
+          description: Execution time in milliseconds
+        references:
+          type: array
+          items:
+            type: object
+            properties:
+              citation_idx:
+                type: string
+                description: Citation index
+              chunk_id:
+                type: string
+                description: Chunk ID
+              document_id:
+                type: string
+                description: Document ID
+              text:
+                type: string
+                description: Text
+              text_type:
+                type: string
+                description: Text type
+              document_name:
+                type: string
+                description: Document name
+              external_url:
+                type: string
+                description: External URL
+              metadata:
+                $ref: '#/components/schemas/ReferenceMetadata'
+              custom_metadata:
+                $ref: '#/components/schemas/CustomMetadata'
+            required:
+            - citation_idx
+            - chunk_id
+            - text
+            - text_type
+            - document_name
+            - external_url
+            - metadata
+          description: References
+      required:
+      - chat_message_id
+    SearchResultsEvent:
+      description: Search result id streaming event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - search_results
+          data:
+            type: object
+            required:
+            - chat_message_id
+            properties:
+              chat_message_id:
+                type: string
+                description: Chat message id (You can retrieve search_results using the chat_message_id through the references API.)
+    ConversationEvent:
+      description: Conversation event
+      allOf:
+      - $ref: '#/components/schemas/ChatSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - conversation
+          data:
+            type: object
+            required:
+            - conversation_id
+            properties:
+              conversation_id:
+                type: string
+                description: Unique conversation identifier. Use for multi-turn continuation and References API.
+              message:
+                type: string
+                description: Status message (e.g., 'Successfully created a conversation.')
+            description: Event-specific data payload
+    ChatSseV2Request:
+      type: object
+      properties:
+        query:
+          type: string
+          description: A search query
+          example: What are the latest updates on AAPL?
+        conversation_id:
+          type: string
+          format: uuid
+          description: 'Conversation id (optional)
+
+
+            Every user-initiated chat is grouped under a conversation. A conversation contains one or more messages generated either by the user or LinqAlpha. Use the conversation_id to track the context of previous interactions.'
+          example: 123e4567-e89b-12d3-a456-426614174000
+        stock_ids:
+          type: array
+          items:
+            type: string
+          description: Bloomberg stock IDs (optional)
+          example:
+          - BBG001S5N8V8
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols (optional)
+          example:
+          - AAPL
+        external_types:
+          type: array
+          items:
+            type: string
+          description: External document types (optional, defaults to ["transcript", "filing", "news", "ir_slide"])
+          default:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+          example:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+        top_k:
+          type: number
+          description: 'Specifies the number of top search results to return.
+
+            If the value exceeds 50, it will be capped at 50
+
+            The number of returned results will be less than or equal to the specified top_k value.
+
+            Results are sorted by relevancy in descending order (from highest to lowest).'
+          example: 50
+        upload_period:
+          type: object
+          description: Filter documents by upload date range. At least one of start_time or end_time must be provided.
+          properties:
+            start_time:
+              $ref: '#/components/schemas/DateFilter'
+            end_time:
+              $ref: '#/components/schemas/DateFilter'
+          example:
+            start_time:
+              year: 2025
+              month: 1
+              day: 1
+            end_time:
+              year: 2026
+              month: 1
+              day: 17
+      required:
+      - query
+    DateFilter:
+      type: object
+      description: Date filter with year, month, and optional day
+      properties:
+        year:
+          type: integer
+          description: Year (e.g., 2025)
+          example: 2025
+        month:
+          type: integer
+          description: Month (1-12)
+          minimum: 1
+          maximum: 12
+          example: 1
+        day:
+          type: integer
+          description: Day of month (1-31, optional)
+          minimum: 1
+          maximum: 31
+          example: 15
+      required:
+      - year
+      - month
+    SubQuestionsEvent:
+      description: Sub-questions event
+      allOf:
+      - $ref: '#/components/schemas/BaseSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - sub_questions
+          data:
+            type: object
+            required:
+            - sub_questions
+            properties:
+              sub_questions:
+                type: array
+                description: Sub-questions
+                items:
+                  type: string
+                  description: Sub-question
+    AnalyticsV2Request:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID
+        user_id:
+          type: string
+          format: uuid
+          description: User ID
+        user_email:
+          type: string
+          format: email
+          description: User email
+        user_name:
+          type: string
+          description: User name
+        query:
+          type: string
+          description: The analytics query to process.
+          example: What are the latest insights on AAPL earnings?
+        conversation_id:
+          type:
+          - string
+          - 'null'
+          description: Existing conversation ID for multi-turn continuation. Omit or null for new conversation.
+        search_types:
+          type:
+          - object
+          - 'null'
+          description: Structured source selection. Controls which document sources to query. Omitting a category means don't search it.
+          properties:
+            rms:
+              type:
+              - array
+              - 'null'
+              items:
+                type: object
+                properties:
+                  workspace:
+                    type: string
+                    enum:
+                    - personal
+                    - organization
+                    description: Workspace scope
+                  source:
+                    type:
+                    - string
+                    - 'null'
+                    description: 'Source type for this RMS selection. For Vault-uploaded documents (referenced by their rms_document_id in document_ids), you MUST set source to "vault". If omitted, the documents are searched generically: they are not retrieved for direct file citation, the answer''s [N] markers won''t resolve, and GET /v2/analytics/conversations/{id}/references returns an empty list.'
+                  type:
+                    type:
+                    - string
+                    - 'null'
+                  subtypes:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                  container_ids:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                  document_ids:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                required:
+                - workspace
+            external:
+              type:
+              - array
+              - 'null'
+              description: Third-party sources
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                  subtypes:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                  document_ids:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                required:
+                - type
+            structured:
+              type:
+              - array
+              - 'null'
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                required:
+                - type
+        filters:
+          type:
+          - object
+          - 'null'
+          description: Metadata filters. Hard filters exclude non-matching documents (AND between fields, OR within arrays). Soft filters boost relevance without excluding.
+          properties:
+            rms:
+              type:
+              - object
+              - 'null'
+              properties:
+                hard_filters:
+                  type:
+                  - object
+                  - 'null'
+                  description: Strict metadata constraints for internal sources. AND between fields, OR within arrays.
+                soft_filters:
+                  type:
+                  - object
+                  - 'null'
+                  description: Preferred but not required metadata for internal sources. Boosts relevance.
+            external:
+              type:
+              - object
+              - 'null'
+              properties:
+                soft_filters:
+                  type:
+                  - object
+                  - 'null'
+                  description: Preferred metadata for external sources. No hard filters on external by design.
+        connectors:
+          type:
+          - array
+          - 'null'
+          description: Customer MCP connectors to enable for this analytics request.
+          items:
+            type: object
+            additionalProperties: true
+            properties:
+              name:
+                type: string
+                description: Connector name
+              tool_filter:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+                description: Optional tool allow-list for this connector
+            required:
+            - name
+        disabled_connectors:
+          type:
+          - array
+          - 'null'
+          description: Connector names to disable for this analytics request.
+          items:
+            type: string
+      required:
+      - query
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    AnalyticsKeepaliveEvent:
+      description: Heartbeat event sent periodically (every ~15s during idle periods) to keep the connection alive.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - keepalive
+          data:
+            type: object
+            required:
+            - timestamp
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+                description: ISO 8601 timestamp of the keepalive event
+                example: '2026-02-26T22:46:50.780316'
+    AnalyticsMessageEvent:
+      description: User message echo event. Second event in the stream (after conversation), echoing the user's query.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - message
+          data:
+            type: object
+            required:
+            - message_id
+            - message_type
+            - message
+            properties:
+              message_id:
+                type: integer
+                description: Unique message identifier
+              message_type:
+                type: string
+                enum:
+                - user
+                - assistant
+                description: Type of message
+              message:
+                type: string
+                description: The message content
+    AnalyticsStatusEvent:
+      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                - keep_alive
+                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
+    ChatSseEvent:
+      type: object
+      description: Base structure for all Chat SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - conversation
+          - status
+          - think
+          - sub_questions
+          - dialogue_id
+          - search_results
+          - answer
+        data:
+          type: object
+          description: Event-specific data payload
+    SearchRequest:
+      type: object
+      properties:
+        query:
+          type: string
+          description: A search query
+          example: What are the latest updates on AAPL?
+        stock_ids:
+          type: array
+          items:
+            type: string
+          description: Bloomberg stock IDs (optional)
+          example:
+          - BBG001S5N8V8
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols (optional)
+          example:
+          - AAPL
+        external_types:
+          type: array
+          items:
+            type: string
+          description: External document types (optional, defaults to ["transcript", "filing", "news", "ir_slide"])
+          default:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+          example:
+          - transcript
+          - filing
+          - news
+          - ir_slide
+        top_k:
+          type: number
+          description: 'Specifies the number of top search results to return.
+
+            If the value exceeds 50, it will be capped at 50
+
+            The number of returned results will be less than or equal to the specified top_k value.
+
+            Results are sorted by relevancy in descending order (from highest to lowest).'
+          example: 50
+        upload_period:
+          type: object
+          description: Filter documents by upload date range. At least one of start_time or end_time must be provided.
+          properties:
+            start_time:
+              $ref: '#/components/schemas/DateFilter'
+            end_time:
+              $ref: '#/components/schemas/DateFilter'
+          example:
+            start_time:
+              year: 2025
+              month: 1
+              day: 1
+            end_time:
+              year: 2026
+              month: 1
+              day: 17
+        search_types:
+          type: array
+          items:
+            type: string
+            enum:
+            - rms
+            - external
+            - all
+          description: Types of search to perform
+          example:
+          - rms
+          - external
+        rms_types:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Filter by RMS document type. Only applies when `search_types` includes `rms`.
+        rms_sub_types:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Filter by RMS document subtype within `rms_types`.
+      required:
+      - query
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

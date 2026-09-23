@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing Data API
+  title: LinqAlpha Data API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -21,7 +21,7 @@ paths:
 
         **How to find chat_message_id:**
 
-        Look for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see [search_results event response](https://docs.linqalpha.com/api-reference/basic/chat_v2#option-6).'
+        Look for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see search_results event response.'
       parameters:
       - name: chat_message_id
         in: path
@@ -68,6 +68,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV1ChatMessagesByChatMessageId
+      x-operation-id-source: derived
   /v1/references:
     get:
       summary: References
@@ -76,14 +78,14 @@ paths:
 
         **How to find chat_message_id:**
 
-        Look for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see [search_results event response](https://docs.linqalpha.com/api-reference/basic/chat_v2#option-6).
+        Look for the event with `event_name` set to `search_results` in the Chat API response data. For detailed instructions, see search_results event response.
 
 
         **How to view original documents:**
 
         1. **Via Viewer:** `https://chat.linqalpha.com/rms/viewer?chat_message_id={chat_message_id}&citation_idx={citation_idx}`
 
-        2. **Direct Download:** If the reference contains a `document_id`, you can access the original document directly through the [presigned_url endpoint](https://docs.linqalpha.com/api-reference/basic/presigned_url).'
+        2. **Direct Download:** If the reference contains a `document_id`, you can access the original document directly through the presigned_url endpoint.'
       parameters:
       - name: chat_message_id
         in: query
@@ -175,13 +177,15 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV1References
+      x-operation-id-source: derived
   /v2/conversations/{conversation_id}/references:
     get:
       summary: References (v2)
       description: 'Retrieves the list of evidence references (citations) used in a conversation.
 
 
-        The [Analytics SSE](/api-reference/basic/analytics-sse) endpoint streams the generated answer but **does not include references in the response**. Use this endpoint after the stream completes to fetch the full list of references that were cited in the answer.
+        The Analytics SSE endpoint streams the generated answer but **does not include references in the response**. Use this endpoint after the stream completes to fetch the full list of references that were cited in the answer.
 
 
         **Usage Flow:**
@@ -335,6 +339,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV2ConversationsByConversationIdReferences
+      x-operation-id-source: derived
   /v2/analytics/conversations/{conversation_id}/references:
     get:
       summary: Analytics V2 References
@@ -507,6 +513,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV2AnalyticsConversationsByConversationIdReferences
+      x-operation-id-source: derived
   /v1/ttsql:
     post:
       summary: TTSQL
@@ -580,6 +588,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Data
+      operationId: postV1Ttsql
+      x-operation-id-source: derived
   /v1/map_tickers:
     get:
       summary: Map tickers to stock IDs
@@ -605,8 +615,9 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: string
-                    nullable: true
+                    type:
+                    - string
+                    - 'null'
                   payload:
                     type: array
                     items:
@@ -670,6 +681,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV1MapTickers
+      x-operation-id-source: derived
   /v1/documents/{document_id}/presigned_url:
     get:
       summary: Presigned URL
@@ -721,6 +734,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV1DocumentsByDocumentIdPresignedUrl
+      x-operation-id-source: derived
   /v1/documents/batch_presigned_urls:
     get:
       summary: Batch Presigned URLs
@@ -880,8 +895,9 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: object
-                    nullable: true
+                    type:
+                    - object
+                    - 'null'
                   payload:
                     type: object
                     properties:
@@ -894,35 +910,42 @@ paths:
                               type: string
                               description: Document ID
                             ticker:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Ticker symbol
                             doc_type:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document type (e.g., filing, earnings_call)
                             doc_sub_type:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document sub-type (e.g., 10-K, press_release)
                             name:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document name
                             fiscal_date:
-                              type: string
+                              type:
+                              - string
+                              - 'null'
                               format: date
-                              nullable: true
                               description: Fiscal period end date
                             calendar_date:
-                              type: string
+                              type:
+                              - string
+                              - 'null'
                               format: date
-                              nullable: true
                               description: Calendar date
                             published_at:
-                              type: string
+                              type:
+                              - string
+                              - 'null'
                               format: date-time
-                              nullable: true
                               description: Publication date
                             presigned_url:
                               type: string
@@ -986,6 +1009,8 @@ paths:
                 payload: null
       tags:
       - Data
+      operationId: getV1DocumentsBatchPresignedUrls
+      x-operation-id-source: derived
   /v2/documents/{document_id}/presigned_url:
     get:
       summary: Presigned URL V2
@@ -1028,8 +1053,9 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: object
-                    nullable: true
+                    type:
+                    - object
+                    - 'null'
                   payload:
                     type: object
                     properties:
@@ -1037,15 +1063,17 @@ paths:
                         type: string
                         description: Document ID
                       document_name:
-                        type: string
-                        nullable: true
+                        type:
+                        - string
+                        - 'null'
                         description: Document filename. Populated for RMS, null for external.
                       presigned_url:
                         type: string
                         description: Temporary download URL
                       expiration_seconds:
-                        type: integer
-                        nullable: true
+                        type:
+                        - integer
+                        - 'null'
                         description: URL validity in seconds. 3600 for RMS, null for external.
               example:
                 error: null
@@ -1074,6 +1102,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Data
+      operationId: getV2DocumentsByDocumentIdPresignedUrl
+      x-operation-id-source: derived
   /v2/documents/presigned_urls:
     get:
       summary: Batch Presigned URLs V2
@@ -1253,8 +1283,9 @@ paths:
                 type: object
                 properties:
                   error:
-                    type: object
-                    nullable: true
+                    type:
+                    - object
+                    - 'null'
                   payload:
                     type: object
                     properties:
@@ -1267,43 +1298,52 @@ paths:
                               type: string
                               description: Document ID
                             document_name:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document filename
                             ticker:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Primary ticker
                             doc_type:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document type
                             doc_sub_type:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Document sub-type
                             source:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Source type (RMS only, e.g. thirdBridge)
                             fiscal_date:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Fiscal period
                             calendar_date:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Calendar date
                             published_at:
-                              type: string
-                              nullable: true
+                              type:
+                              - string
+                              - 'null'
                               description: Publication date
                             presigned_url:
                               type: string
                               description: Temporary download URL
                             expiration_seconds:
-                              type: integer
-                              nullable: true
+                              type:
+                              - integer
+                              - 'null'
                               description: URL validity. 3600 for RMS, null for external.
                       total_count:
                         type: integer
@@ -1360,418 +1400,47 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Data
+      operationId: getV2DocumentsPresignedUrls
+      x-operation-id-source: derived
 components:
   schemas:
-    CustomMetadata:
-      type: object
-      nullable: true
-      description: User-defined metadata. This field may contain additional structured data based on the document type and user configuration.
-      properties:
-        edgar_metadata:
-          type: object
-          description: SEC EDGAR filing metadata. This field is only available for SEC filing documents and is provided upon request. Not all users will have access to this data. Contact support@linqalpha.com to enable EDGAR metadata for your organization.
-          properties:
-            public_url:
-              type: string
-              format: uri
-              description: Public EDGAR URL to the source filing document on the SEC website
-              example: https://www.sec.gov/Archives/edgar/data/1045810/000104581023000227/nvda-20231029.htm
-            accession_number:
-              type: string
-              description: 'SEC accession number uniquely identifying the filing. Format: XXXXXXXXXX-XX-XXXXXX'
-              example: 0001045810-23-000227
-              pattern: ^\d{10}-\d{2}-\d{6}$
-            filing_values:
-              type: object
-              description: Additional SEC filing identifiers
-              properties:
-                film_number:
-                  type: string
-                  description: SEC film number assigned to the filing
-                  example: '231428716'
-                sec_file_number:
-                  type: string
-                  description: SEC file number for the registrant
-                  example: 000-23985
-          required:
-          - public_url
-          - accession_number
-    AnalyticsReferencesResponse:
-      type: object
-      description: Wrapper for analytics references response (normalized format). The payload contains a list of references with enriched metadata.
-      properties:
-        error:
-          type: object
-          nullable: true
-          description: Error object. Null on success.
-        payload:
-          type: object
-          nullable: true
-          properties:
-            references:
-              type: array
-              items:
-                type: object
-                description: Reference in normalized format with enriched metadata
-                properties:
-                  id:
-                    type: string
-                    description: Citation index as string (e.g., "1")
-                  citation_idx:
-                    type: string
-                    description: Citation index as string
-                  search_type:
-                    type: string
-                    enum:
-                    - rms
-                    - external
-                    description: Source type
-                  chunk_id:
-                    type: string
-                    description: Chunk identifier
-                  text:
-                    type: string
-                    description: Reference text content
-                  text_type:
-                    type: string
-                    enum:
-                    - paragraph
-                    - table
-                    - image
-                    - news
-                    description: Content type
-                  document_id:
-                    type: string
-                    description: Source document ID
-                  document_name:
-                    type: string
-                    description: Document title
-                  s3_file_key:
-                    type: string
-                    nullable: true
-                    description: S3 file path for document download
-                  external_url:
-                    type: string
-                    nullable: true
-                    description: External URL for the document
-                  metadata:
-                    type: object
-                    description: Enriched metadata with financial and document classification fields
-                    properties:
-                      calendar_date:
-                        type: string
-                        nullable: true
-                        description: Publication or event date
-                      fiscal_year:
-                        type: integer
-                        nullable: true
-                      fiscal_quarter:
-                        type: integer
-                        nullable: true
-                      source:
-                        type: string
-                        nullable: true
-                      tickers:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      company_names:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      stock_ids:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      document_category:
-                        type: string
-                        nullable: true
-                      document_subcategory:
-                        type: string
-                        nullable: true
-                      rms_document_type:
-                        type: string
-                        nullable: true
-                      rms_type:
-                        type: string
-                        nullable: true
-                      rms_sub_type:
-                        type: string
-                        nullable: true
-                      sector:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      subsector:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      publisher:
-                        type: string
-                        nullable: true
-                      countries:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      regions:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      participants:
-                        type: array
-                        nullable: true
-                      tags:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                      offset:
-                        type: array
-                        nullable: true
-                      parent_id:
-                        type: string
-                        nullable: true
-                        description: Parent document ID
-                      parent_document_id:
-                        type: string
-                        nullable: true
-                        description: Parent document ID (same as parent_id)
-                      creation_timestamp:
-                        type: string
-                        nullable: true
-                        description: Document creation timestamp (ISO 8601)
-                      last_contribution_timestamp:
-                        type: string
-                        nullable: true
-                        description: Last modification timestamp (ISO 8601)
-                      document_tags:
-                        type: array
-                        items:
-                          type: string
-                        nullable: true
-                        description: Document classification tags (e.g. research_report, brokerage)
-                      creator_name:
-                        type: string
-                        nullable: true
-                        description: Document creator name
-                      last_contributor_name:
-                        type: string
-                        nullable: true
-                        description: Last contributor name
-                  custom_metadata:
-                    type: object
-                    nullable: true
-                    description: Additional custom metadata
-    ApiError:
-      type: object
-      properties:
-        code:
-          type: string
-          description: 'Error code indicating the type of error. Common codes:
-
-            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
-
-            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
-
-            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
-
-            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
-
-            - Not Found: `NOT_FOUND`'
-          example: INVALID_REQUEST_BODY
-        msg:
-          type: string
-          description: Error message (deprecated, use `message` instead)
-          example: query is required and must be a string
-        message:
-          type: string
-          description: Error message providing more details about the error
-          example: query is required and must be a string
-      required:
-      - code
-    EarningsScheduleEvent:
+    CurrencyInfo:
       type: object
       required:
-      - stock_id
-      - stock_name
-      - event_datetime
-      - direction
-      - is_estimated
+      - currency
+      - exchange_rate
       properties:
-        stock_id:
+        currency:
           type: string
-          description: Bloomberg Global ID of the company
-          example: BBG001S5N8V8
-        stock_name:
-          type: string
-          description: Company name
-          example: Apple Inc.
-        event_datetime:
-          type: string
-          description: Earnings-call / release datetime (ISO 8601)
-          example: '2026-07-30T00:00:00'
-        direction:
-          type: string
-          enum:
-          - prior
-          - upcoming
-          description: Whether the event is in the past (prior) or future (upcoming) relative to now
-        is_estimated:
-          type: boolean
-          description: True when the date is a vendor projection rather than a confirmed/announced date. Always false for prior events; only ever true for upcoming events.
-          example: true
-        fiscal_date:
-          type: string
-          format: date
-          nullable: true
-          description: Fiscal period the event reports on
-          example: '2026-09-30'
-        link:
-          type: string
-          nullable: true
-          description: Webcast link, if available
-        event_description:
-          type: string
-          nullable: true
-          description: Human-readable event description
-          example: Q3 2026 Earnings Release (Projected)
-    ReferencesResponse:
+          description: Currency code (ISO 4217)
+          example: USD
+        exchange_rate:
+          type: number
+          description: Exchange rate to base currency
+          example: 1
+    ReferencesV2Response:
       type: object
       properties:
         references:
           type: array
           items:
-            $ref: '#/components/schemas/RMSReference'
-          description: References
+            $ref: '#/components/schemas/ReferenceV2'
+          description: List of references associated with the conversation
       required:
       - references
-    ChatMessageResponse:
-      type: object
-      properties:
-        chat_message_id:
-          type: string
-          format: uuid
-          description: Chat message ID
-        message:
-          type: string
-          description: Chat message
-        message_type:
-          type: string
-          description: Chat message type
-          enum:
-          - assistant
-          - user
-          - think
-          example: assistant
-        created_at:
-          type: string
-          description: Chat message created at
-          example: '2025-10-30T09:11:31.667544Z'
-    TtsResponse:
-      type: object
-      required:
-      - code
-      - success
-      - message
-      - response
-      properties:
-        code:
-          type: integer
-          description: Response code (0 for success)
-          example: 0
-        success:
-          type: boolean
-          description: Indicates whether the request was successful
-          example: true
-        message:
-          type: string
-          description: Response message
-          example: success
-        response:
-          $ref: '#/components/schemas/TtsQueryResult'
-    TtsQueryResult:
-      type: object
-      required:
-      - execution_id
-      - rdb_result
-      properties:
-        execution_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the query execution
-          example: 2548d578-0446-4abc-b6f6-f50c966d341c
-        stock_name_mapping:
-          type: object
-          additionalProperties:
-            type: string
-          description: Mapping of stock IDs to company names
-          example:
-            BBG001S5TZJ6: NVIDIA Corporation
-        currency_info:
-          type: array
-          items:
-            $ref: '#/components/schemas/CurrencyInfo'
-          description: Currency information for each stock
-        field_currency_info:
-          type: object
-          additionalProperties:
-            type: string
-          description: Currency information for each field
-          example:
-            BBG001S6Q004:
-              SALES: TWD
-              EPS: TWD
-              ff_sales: TWD
-        execution_duration:
-          type: number
-          description: Execution duration in milliseconds
-        date_range:
-          type: array
-          items:
-            type: string
-            format: date
-          minItems: 2
-          maxItems: 2
-          description: Date range for the query [start_date, end_date]
-          example:
-          - '2024-01-01'
-          - '2024-12-31'
-        rdb_result:
-          type: string
-          description: Query results formatted as markdown tables
-          example: '### Company Annual Financials
-
-
-            | name | Fiscal Period End Date | Dividends Per Share |
-
-            | --- | --- | --- |
-
-            | NVIDIA Corporation | 2024-01-31 | 0.016 |'
-        earnings_schedule:
-          type: array
-          items:
-            $ref: '#/components/schemas/EarningsScheduleEvent'
-          description: Prior/upcoming earnings-call schedule events for the resolved companies, returned when the query asks for earnings-call dates (e.g. "When does Apple next report?"). Returned only for organizations entitled to earnings-call schedule retrieval; omitted entirely for all other organizations.
-        earnings_schedule_truncated:
-          type: boolean
-          description: True when an unbounded universe scan ("which companies report this week?") was capped by a load/window limit, so the returned list is partial. Always false for company-specific queries. Present only alongside earnings_schedule.
     ReferenceMetadata:
       type: object
       description: Additional metadata information
       properties:
         source:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           example: news
         rms_type:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - emailnotes
           - generalnotes
@@ -1780,34 +1449,41 @@ components:
           - structured-data
           - public_transcript
           - private_transcript
-          nullable: true
         rms_sub_type:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         rms_document_type:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - note
           - attachment
-          nullable: true
         parent_id:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         parent_document_id:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         countries:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         regions:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         participants:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: object
             properties:
@@ -1816,52 +1492,64 @@ components:
               organization:
                 type: string
               role:
-                type: string
-                nullable: true
+                type:
+                - string
+                - 'null'
               participant_type:
-                type: string
+                type:
+                - string
+                - 'null'
                 enum:
                 - author
                 - analyst
                 - attendee
                 - mentioned
                 - others
-                nullable: true
-          nullable: true
         tags:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         publisher:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         calendar_date:
-          type: string
+          type:
+          - string
+          - 'null'
           format: date-time
-          nullable: true
         creation_timestamp:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         last_contribution_timestamp:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         creator_name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Name of the user who created the document
-          nullable: true
         last_contributor_name:
-          type: string
+          type:
+          - string
+          - 'null'
           description: Name of the user who last contributed to the document
-          nullable: true
         fiscal_year:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
         fiscal_quarter:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         document_category:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - internal
           - brokerage
@@ -1870,9 +1558,10 @@ components:
           - external
           - earnings_call
           - filing
-          nullable: true
         document_subcategory:
-          type: string
+          type:
+          - string
+          - 'null'
           enum:
           - calls
           - model
@@ -1896,14 +1585,16 @@ components:
           - interim_report
           - offerings
           - others
-          nullable: true
         document_tags:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         sector:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
             enum:
@@ -1918,9 +1609,10 @@ components:
             - Transportation
             - Telecom Services
             - Utilities
-          nullable: true
         subsector:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
             enum:
@@ -2002,25 +1694,28 @@ components:
             - Power
             - Utilities
             - Water
-          nullable: true
         stock_ids:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         tickers:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         company_names:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         offset:
-          type: array
-          nullable: true
+          type:
+          - array
+          - 'null'
           items:
             type: object
             properties:
@@ -2035,169 +1730,301 @@ components:
               page:
                 type: integer
         blocks:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: integer
-          nullable: true
           description: Transcript block indices for this chunk.
     ReferenceMetadataV2:
       type: object
       properties:
         rms_type:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         rms_sub_type:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         rms_document_type:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Document type (e.g., "earnings_call", "filing")
         source:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         countries:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         regions:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         participants:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         tags:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
         publisher:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         calendar_date:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         fiscal_year:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         fiscal_quarter:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         document_category:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Document category (e.g., "earnings_call")
         document_subcategory:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         sector:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         subsector:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         stock_ids:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
           description: Bloomberg Global Identifiers (e.g., ["BBG001S5N8V8"])
         tickers:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
           description: Ticker symbols (e.g., ["AAPL"])
         company_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        offset:
+          type:
+          - integer
+          - 'null'
+        snippet:
+          type:
+          - string
+          - 'null'
+    TtsRequest:
+      type: object
+      required:
+      - query
+      properties:
+        query:
+          type: string
+          description: Natural language query to be converted to SQL
+          example: Show me NVIDIA's quarterly revenue and net income for 2024
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    TtsResponse:
+      type: object
+      required:
+      - code
+      - success
+      - message
+      - response
+      properties:
+        code:
+          type: integer
+          description: Response code (0 for success)
+          example: 0
+        success:
+          type: boolean
+          description: Indicates whether the request was successful
+          example: true
+        message:
+          type: string
+          description: Response message
+          example: success
+        response:
+          $ref: '#/components/schemas/TtsQueryResult'
+    EarningsScheduleEvent:
+      type: object
+      required:
+      - stock_id
+      - stock_name
+      - event_datetime
+      - direction
+      - is_estimated
+      properties:
+        stock_id:
+          type: string
+          description: Bloomberg Global ID of the company
+          example: BBG001S5N8V8
+        stock_name:
+          type: string
+          description: Company name
+          example: Apple Inc.
+        event_datetime:
+          type: string
+          description: Earnings-call / release datetime (ISO 8601)
+          example: '2026-07-30T00:00:00'
+        direction:
+          type: string
+          enum:
+          - prior
+          - upcoming
+          description: Whether the event is in the past (prior) or future (upcoming) relative to now
+        is_estimated:
+          type: boolean
+          description: True when the date is a vendor projection rather than a confirmed/announced date. Always false for prior events; only ever true for upcoming events.
+          example: true
+        fiscal_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Fiscal period the event reports on
+          example: '2026-09-30'
+        link:
+          type:
+          - string
+          - 'null'
+          description: Webcast link, if available
+        event_description:
+          type:
+          - string
+          - 'null'
+          description: Human-readable event description
+          example: Q3 2026 Earnings Release (Projected)
+    TtsQueryResult:
+      type: object
+      required:
+      - execution_id
+      - rdb_result
+      properties:
+        execution_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the query execution
+          example: 2548d578-0446-4abc-b6f6-f50c966d341c
+        stock_name_mapping:
+          type: object
+          additionalProperties:
+            type: string
+          description: Mapping of stock IDs to company names
+          example:
+            BBG001S5TZJ6: NVIDIA Corporation
+        currency_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyInfo'
+          description: Currency information for each stock
+        field_currency_info:
+          type: object
+          additionalProperties:
+            type: string
+          description: Currency information for each field
+          example:
+            BBG001S6Q004:
+              SALES: TWD
+              EPS: TWD
+              ff_sales: TWD
+        execution_duration:
+          type: number
+          description: Execution duration in milliseconds
+        date_range:
           type: array
           items:
             type: string
-          nullable: true
-        offset:
-          type: integer
-          nullable: true
-        snippet:
+            format: date
+          minItems: 2
+          maxItems: 2
+          description: Date range for the query [start_date, end_date]
+          example:
+          - '2024-01-01'
+          - '2024-12-31'
+        rdb_result:
           type: string
-          nullable: true
-    ReferencesV2Response:
-      type: object
-      properties:
-        references:
+          description: Query results formatted as markdown tables
+          example: '### Company Annual Financials
+
+
+            | name | Fiscal Period End Date | Dividends Per Share |
+
+            | --- | --- | --- |
+
+            | NVIDIA Corporation | 2024-01-31 | 0.016 |'
+        earnings_schedule:
           type: array
           items:
-            $ref: '#/components/schemas/ReferenceV2'
-          description: List of references associated with the conversation
-      required:
-      - references
-    CurrencyInfo:
-      type: object
-      required:
-      - currency
-      - exchange_rate
-      properties:
-        currency:
-          type: string
-          description: Currency code (ISO 4217)
-          example: USD
-        exchange_rate:
-          type: number
-          description: Exchange rate to base currency
-          example: 1
-    ReferenceV2:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Reference ID
-        citation_idx:
-          type: integer
-          description: Citation index number
-        search_type:
-          type: string
-          description: Type of search that produced this reference (e.g., "rms")
-        chunk_id:
-          type: string
-          description: Chunk identifier
-        text:
-          type: string
-          description: Reference text content
-        text_type:
-          type: string
-          description: Type of text (e.g., "paragraph")
-        document_id:
-          type: string
-          format: uuid
-          description: Document ID. Use with presigned_url endpoint for direct download.
-        document_name:
-          type: string
-          description: Document name
-        s3_file_key:
-          type: string
-          nullable: true
-          description: S3 file key (may be null)
-        external_url:
-          type: string
-          description: External URL for the document
-        metadata:
-          $ref: '#/components/schemas/ReferenceMetadataV2'
-      required:
-      - id
-      - citation_idx
-      - search_type
-      - chunk_id
-      - text
-      - text_type
-      - document_id
-      - document_name
-      - s3_file_key
-      - external_url
-      - metadata
+            $ref: '#/components/schemas/EarningsScheduleEvent'
+          description: Prior/upcoming earnings-call schedule events for the resolved companies, returned when the query asks for earnings-call dates (e.g. "When does Apple next report?"). Returned only for organizations entitled to earnings-call schedule retrieval; omitted entirely for all other organizations.
+        earnings_schedule_truncated:
+          type: boolean
+          description: True when an unbounded universe scan ("which companies report this week?") was capped by a load/window limit, so the returned list is partial. Always false for company-specific queries. Present only alongside earnings_schedule.
     RMSReference:
       type: object
       properties:
@@ -2258,27 +2085,329 @@ components:
       - document_name
       - external_url
       - metadata
-    ApiErrorResponse:
+    ReferenceV2:
       type: object
-      description: Standard error response wrapper
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Reference ID
+        citation_idx:
+          type: integer
+          description: Citation index number
+        search_type:
+          type: string
+          description: Type of search that produced this reference (e.g., "rms")
+        chunk_id:
+          type: string
+          description: Chunk identifier
+        text:
+          type: string
+          description: Reference text content
+        text_type:
+          type: string
+          description: Type of text (e.g., "paragraph")
+        document_id:
+          type: string
+          format: uuid
+          description: Document ID. Use with presigned_url endpoint for direct download.
+        document_name:
+          type: string
+          description: Document name
+        s3_file_key:
+          type:
+          - string
+          - 'null'
+          description: S3 file key (may be null)
+        external_url:
+          type: string
+          description: External URL for the document
+        metadata:
+          $ref: '#/components/schemas/ReferenceMetadataV2'
+      required:
+      - id
+      - citation_idx
+      - search_type
+      - chunk_id
+      - text
+      - text_type
+      - document_id
+      - document_name
+      - s3_file_key
+      - external_url
+      - metadata
+    AnalyticsReferencesResponse:
+      type: object
+      description: Wrapper for analytics references response (normalized format). The payload contains a list of references with enriched metadata.
       properties:
         error:
-          $ref: '#/components/schemas/ApiError'
+          type:
+          - object
+          - 'null'
+          description: Error object. Null on success.
         payload:
-          description: Always null for error responses
-          nullable: true
-      required:
-      - error
-      - payload
-    TtsRequest:
+          type:
+          - object
+          - 'null'
+          properties:
+            references:
+              type: array
+              items:
+                type: object
+                description: Reference in normalized format with enriched metadata
+                properties:
+                  id:
+                    type: string
+                    description: Citation index as string (e.g., "1")
+                  citation_idx:
+                    type: string
+                    description: Citation index as string
+                  search_type:
+                    type: string
+                    enum:
+                    - rms
+                    - external
+                    description: Source type
+                  chunk_id:
+                    type: string
+                    description: Chunk identifier
+                  text:
+                    type: string
+                    description: Reference text content
+                  text_type:
+                    type: string
+                    enum:
+                    - paragraph
+                    - table
+                    - image
+                    - news
+                    description: Content type
+                  document_id:
+                    type: string
+                    description: Source document ID
+                  document_name:
+                    type: string
+                    description: Document title
+                  s3_file_key:
+                    type:
+                    - string
+                    - 'null'
+                    description: S3 file path for document download
+                  external_url:
+                    type:
+                    - string
+                    - 'null'
+                    description: External URL for the document
+                  metadata:
+                    type: object
+                    description: Enriched metadata with financial and document classification fields
+                    properties:
+                      calendar_date:
+                        type:
+                        - string
+                        - 'null'
+                        description: Publication or event date
+                      fiscal_year:
+                        type:
+                        - integer
+                        - 'null'
+                      fiscal_quarter:
+                        type:
+                        - integer
+                        - 'null'
+                      source:
+                        type:
+                        - string
+                        - 'null'
+                      tickers:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      company_names:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      stock_ids:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      document_category:
+                        type:
+                        - string
+                        - 'null'
+                      document_subcategory:
+                        type:
+                        - string
+                        - 'null'
+                      rms_document_type:
+                        type:
+                        - string
+                        - 'null'
+                      rms_type:
+                        type:
+                        - string
+                        - 'null'
+                      rms_sub_type:
+                        type:
+                        - string
+                        - 'null'
+                      sector:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      subsector:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      publisher:
+                        type:
+                        - string
+                        - 'null'
+                      countries:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      regions:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      participants:
+                        type:
+                        - array
+                        - 'null'
+                      tags:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                      offset:
+                        type:
+                        - array
+                        - 'null'
+                      parent_id:
+                        type:
+                        - string
+                        - 'null'
+                        description: Parent document ID
+                      parent_document_id:
+                        type:
+                        - string
+                        - 'null'
+                        description: Parent document ID (same as parent_id)
+                      creation_timestamp:
+                        type:
+                        - string
+                        - 'null'
+                        description: Document creation timestamp (ISO 8601)
+                      last_contribution_timestamp:
+                        type:
+                        - string
+                        - 'null'
+                        description: Last modification timestamp (ISO 8601)
+                      document_tags:
+                        type:
+                        - array
+                        - 'null'
+                        items:
+                          type: string
+                        description: Document classification tags (e.g. research_report, brokerage)
+                      creator_name:
+                        type:
+                        - string
+                        - 'null'
+                        description: Document creator name
+                      last_contributor_name:
+                        type:
+                        - string
+                        - 'null'
+                        description: Last contributor name
+                  custom_metadata:
+                    type:
+                    - object
+                    - 'null'
+                    description: Additional custom metadata
+    ChatMessageResponse:
       type: object
-      required:
-      - query
       properties:
-        query:
+        chat_message_id:
           type: string
-          description: Natural language query to be converted to SQL
-          example: Show me NVIDIA's quarterly revenue and net income for 2024
+          format: uuid
+          description: Chat message ID
+        message:
+          type: string
+          description: Chat message
+        message_type:
+          type: string
+          description: Chat message type
+          enum:
+          - assistant
+          - user
+          - think
+          example: assistant
+        created_at:
+          type: string
+          description: Chat message created at
+          example: '2025-10-30T09:11:31.667544Z'
+    ReferencesResponse:
+      type: object
+      properties:
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/RMSReference'
+          description: References
+      required:
+      - references
+    CustomMetadata:
+      type:
+      - object
+      - 'null'
+      description: User-defined metadata. This field may contain additional structured data based on the document type and user configuration.
+      properties:
+        edgar_metadata:
+          type: object
+          description: SEC EDGAR filing metadata. This field is only available for SEC filing documents and is provided upon request. Not all users will have access to this data. Contact support@linqalpha.com to enable EDGAR metadata for your organization.
+          properties:
+            public_url:
+              type: string
+              format: uri
+              description: Public EDGAR URL to the source filing document on the SEC website
+              example: https://www.sec.gov/Archives/edgar/data/1045810/000104581023000227/nvda-20231029.htm
+            accession_number:
+              type: string
+              description: 'SEC accession number uniquely identifying the filing. Format: XXXXXXXXXX-XX-XXXXXX'
+              example: 0001045810-23-000227
+              pattern: ^\d{10}-\d{2}-\d{6}$
+            filing_values:
+              type: object
+              description: Additional SEC filing identifiers
+              properties:
+                film_number:
+                  type: string
+                  description: SEC film number assigned to the filing
+                  example: '231428716'
+                sec_file_number:
+                  type: string
+                  description: SEC file number for the registrant
+                  example: 000-23985
+          required:
+          - public_url
+          - accession_number
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

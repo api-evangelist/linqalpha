@@ -1,4 +1,4 @@
-generated: '2026-07-19'
+generated: '2026-09-19'
 method: searched
 source: live probes of /.well-known/ on the LinqAlpha website and API hosts
 hosts:
@@ -19,6 +19,11 @@ hosts:
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: linqalpha-api-oauth-protected-resource.json
+    bytes: 165
+  path_echo_control: passed
 - host: https://linqalpha.com
   documents:
   - path: /.well-known/security.txt
@@ -32,8 +37,20 @@ hosts:
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
-notes: >-
-  api.linqalpha.com publishes RFC 8414 OAuth 2.0 Authorization Server Metadata advertising
-  authorization_code with PKCE (S256), RFC 7591 dynamic client registration, and a single
-  scope (mcp:tools). This is the OAuth surface fronting the LinqAlpha MCP server; the REST
-  API itself authenticates with the X-API-KEY header. No security.txt is published on any host.
+notes: api.linqalpha.com publishes RFC 8414 OAuth 2.0 Authorization Server Metadata advertising authorization_code
+  with PKCE (S256), RFC 7591 dynamic client registration, and a single scope (mcp:tools). This is the
+  OAuth surface fronting the LinqAlpha MCP server; the REST API itself authenticates with the X-API-KEY
+  header. No security.txt is published on any host.
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://api.linqalpha.com
+    path: /.well-known/oauth-protected-resource
+    file: linqalpha-api-oauth-protected-resource.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host
+note: 'MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s
+  primary hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed
+  and were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'

@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing Source Management API
+  title: LinqAlpha Source Management API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -50,6 +50,8 @@ paths:
           description: Unauthorized - invalid or missing API key
       tags:
       - Source Management
+      operationId: postV1SourceBatches
+      x-operation-id-source: derived
   /v1/sources/upload_url:
     post:
       summary: Get Upload URL
@@ -68,7 +70,7 @@ paths:
 
         2. Call this endpoint with `name`, `source_type`, `source_batch_id` (returns `upload_url`, `file_key`, `content_type`, `expires_in`)
 
-        3. PUT the file to `upload_url` with `Content-Type: <content_type>` header
+        3. PUT the file to `upload_url` with `Content-Type: ` header
 
         4. Register the source via `POST /v1/sources` with `file_key` from step 2
 
@@ -120,10 +122,56 @@ paths:
           description: Source batch already contains the maximum number of sources (10)
       tags:
       - Source Management
+      operationId: postV1SourcesUploadUrl
+      x-operation-id-source: derived
   /v1/sources:
     post:
       summary: Create Source
-      description: "Registers a previously-uploaded file as a document source under a source batch and queues it for asynchronous parsing. Once `status: \"success\"`, the source is searchable in chat/search conversations that reference its `source_batch_id`.\n\n**Important Notes:**\n- **Prerequisite:** A source batch must be created first using `POST /v1/source_batches`\n- **The file must already be in S3** before calling this endpoint. Two ways to get it there:\n  - **Recommended:** call `POST /v1/sources/upload_url` to obtain a presigned PUT URL, upload the file directly via that URL, then pass the returned `file_key` here. No client-side AWS setup required.\n  - **Alternative:** if you already have your own S3 staging bucket integrated with us, upload there and pass the resulting `file_key`.\n- **Processing:** Sources are queued for asynchronous processing. Use `GET /v1/sources/{source_id}` to poll the processing status before using in conversations.\n- **File Requirements:**\n  - Supported formats: PDF, DOCX, XLSX, DOC, TXT, PPTX\n  - Maximum size: 20MB per file\n  - Maximum files per batch: 10 files\n- **Usage in Conversations:**\n  - Reference sources via `source_batch_id` in chat/search API requests\n  - All sources in a batch are accessible when the batch is referenced\n  - Sources remain available for reuse within conversations that reference their batch\n\n**Workflow (presigned-URL path):**\n1. `POST /v1/source_batches` → `source_batch_id`\n2. `POST /v1/sources/upload_url` → `upload_url`, `file_key`, `content_type`\n3. PUT the file body to `upload_url` with header `Content-Type: <content_type>`\n4. `POST /v1/sources` (this endpoint) with `file_key` from step 2\n5. Poll `GET /v1/sources/{source_id}` until `status: \"success\"`\n6. Reference `source_batch_id` in chat/search requests"
+      description: 'Registers a previously-uploaded file as a document source under a source batch and queues it for asynchronous parsing. Once `status: "success"`, the source is searchable in chat/search conversations that reference its `source_batch_id`.
+
+
+        **Important Notes:**
+
+        - **Prerequisite:** A source batch must be created first using `POST /v1/source_batches`
+
+        - **The file must already be in S3** before calling this endpoint. Two ways to get it there:
+
+        - **Recommended:** call `POST /v1/sources/upload_url` to obtain a presigned PUT URL, upload the file directly via that URL, then pass the returned `file_key` here. No client-side AWS setup required.
+
+        - **Alternative:** if you already have your own S3 staging bucket integrated with us, upload there and pass the resulting `file_key`.
+
+        - **Processing:** Sources are queued for asynchronous processing. Use `GET /v1/sources/{source_id}` to poll the processing status before using in conversations.
+
+        - **File Requirements:**
+
+        - Supported formats: PDF, DOCX, XLSX, DOC, TXT, PPTX
+
+        - Maximum size: 20MB per file
+
+        - Maximum files per batch: 10 files
+
+        - **Usage in Conversations:**
+
+        - Reference sources via `source_batch_id` in chat/search API requests
+
+        - All sources in a batch are accessible when the batch is referenced
+
+        - Sources remain available for reuse within conversations that reference their batch
+
+
+        **Workflow (presigned-URL path):**
+
+        1. `POST /v1/source_batches` → `source_batch_id`
+
+        2. `POST /v1/sources/upload_url` → `upload_url`, `file_key`, `content_type`
+
+        3. PUT the file body to `upload_url` with header `Content-Type: `
+
+        4. `POST /v1/sources` (this endpoint) with `file_key` from step 2
+
+        5. Poll `GET /v1/sources/{source_id}` until `status: "success"`
+
+        6. Reference `source_batch_id` in chat/search requests'
       requestBody:
         required: true
         content:
@@ -153,6 +201,8 @@ paths:
           description: Source batch not found
       tags:
       - Source Management
+      operationId: postV1Sources
+      x-operation-id-source: derived
   /v1/sources/{source_id}:
     get:
       summary: Get Source Status
@@ -208,8 +258,47 @@ paths:
           description: Source not found
       tags:
       - Source Management
+      operationId: getV1SourcesBySourceId
+      x-operation-id-source: derived
 components:
   schemas:
+    UploadUrlRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
+          example: Q4_Revenue_Report.pdf
+        source_type:
+          type: string
+          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
+          enum:
+          - pdf
+          - docx
+          - xlsx
+          - pptx
+          - doc
+          - txt
+          example: pdf
+        source_batch_id:
+          type: string
+          format: uuid
+          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+      - name
+      - source_type
+      - source_batch_id
+    CreateSourceBatchResponse:
+      type: object
+      properties:
+        source_batch_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+      - source_batch_id
     CreateSourceBatchRequest:
       type: object
       properties:
@@ -243,58 +332,6 @@ components:
           example: Financial documents including revenue reports, expense summaries, and forecasts for Q4 2024
       required:
       - name
-    UploadUrlRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
-          example: Q4_Revenue_Report.pdf
-        source_type:
-          type: string
-          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
-          enum:
-          - pdf
-          - docx
-          - xlsx
-          - pptx
-          - doc
-          - txt
-          example: pdf
-        source_batch_id:
-          type: string
-          format: uuid
-          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
-          example: 123e4567-e89b-12d3-a456-426614174000
-      required:
-      - name
-      - source_type
-      - source_batch_id
-    UploadUrlResponse:
-      type: object
-      properties:
-        upload_url:
-          type: string
-          format: uri
-          description: 'Presigned S3 PUT URL. Single-use, signed with the `content_type` value below. Send the file body via `PUT <upload_url>` with header `Content-Type: <content_type>`.'
-          example: https://linq-vertex-documents.s3.amazonaws.com/uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf?X-Amz-Algorithm=...&X-Amz-Signature=...
-        file_key:
-          type: string
-          description: Server-generated object key. Pass this as `file_key` in the subsequent `POST /v1/sources` call to register the uploaded file.
-          example: uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf
-        content_type:
-          type: string
-          description: Content-Type baked into the presigned URL signature. Client MUST send this exact value as the `Content-Type` header on the PUT, otherwise S3 rejects with HTTP 403 (`SignatureDoesNotMatch`).
-          example: application/pdf
-        expires_in:
-          type: integer
-          description: Seconds until `upload_url` expires. After this, request a new URL.
-          example: 600
-      required:
-      - upload_url
-      - file_key
-      - content_type
-      - expires_in
     GetSourceResponse:
       type: object
       properties:
@@ -324,30 +361,31 @@ components:
       required:
       - source_id
       - status
-    CreateSourceResponse:
+    UploadUrlResponse:
       type: object
       properties:
-        source_id:
+        upload_url:
           type: string
-          format: uuid
-          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
-          example: 456e7890-e89b-12d3-a456-426614174001
-        size:
+          format: uri
+          description: 'Presigned S3 PUT URL. Single-use, signed with the `content_type` value below. Send the file body via `PUT <upload_url>` with header `Content-Type: <content_type>`.'
+          example: https://linq-vertex-documents.s3.amazonaws.com/uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf?X-Amz-Algorithm=...&X-Amz-Signature=...
+        file_key:
+          type: string
+          description: Server-generated object key. Pass this as `file_key` in the subsequent `POST /v1/sources` call to register the uploaded file.
+          example: uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf
+        content_type:
+          type: string
+          description: Content-Type baked into the presigned URL signature. Client MUST send this exact value as the `Content-Type` header on the PUT, otherwise S3 rejects with HTTP 403 (`SignatureDoesNotMatch`).
+          example: application/pdf
+        expires_in:
           type: integer
-          description: File size in bytes
-          minimum: 0
-          example: 2048576
-        status:
-          type: string
-          description: Initial processing status (typically 'processing' when first created)
-          enum:
-          - processing
-          - success
-          - failed
-          example: processing
+          description: Seconds until `upload_url` expires. After this, request a new URL.
+          example: 600
       required:
-      - source_id
-      - size
+      - upload_url
+      - file_key
+      - content_type
+      - expires_in
     CreateSourceRequest:
       type: object
       properties:
@@ -385,16 +423,30 @@ components:
       - source_batch_id
       - name
       - file_key
-    CreateSourceBatchResponse:
+    CreateSourceResponse:
       type: object
       properties:
-        source_batch_id:
+        source_id:
           type: string
           format: uuid
-          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
-          example: 123e4567-e89b-12d3-a456-426614174000
+          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
+          example: 456e7890-e89b-12d3-a456-426614174001
+        size:
+          type: integer
+          description: File size in bytes
+          minimum: 0
+          example: 2048576
+        status:
+          type: string
+          description: Initial processing status (typically 'processing' when first created)
+          enum:
+          - processing
+          - success
+          - failed
+          example: processing
       required:
-      - source_batch_id
+      - source_id
+      - size
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

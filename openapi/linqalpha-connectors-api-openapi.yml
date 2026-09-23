@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: LinqAlpha Briefing Connectors API
+  title: LinqAlpha Connectors API
   description: Linq helps finance professionals make informed decisions using Retrieval-Augmented Generation (RAG)-enhanced answers. By leveraging cutting-edge Large Language Models (LLM) and supplementary technology, Linq provides the most optimized responses based on your queries.
   version: 1.0.0
   license:
@@ -32,6 +32,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: getV2Connectors
+      x-operation-id-source: derived
     post:
       summary: Create a customer connector
       description: Creates a customer MCP connector. Credential fields are write-only and are never logged.
@@ -62,6 +64,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: postV2Connectors
+      x-operation-id-source: derived
   /v2/connectors/{id}:
     get:
       summary: Get a customer connector
@@ -93,6 +97,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: getV2ConnectorsById
+      x-operation-id-source: derived
     patch:
       summary: Update a customer connector
       description: Updates a customer MCP connector. Credential fields are write-only and are never logged.
@@ -135,6 +141,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: patchV2ConnectorsById
+      x-operation-id-source: derived
     delete:
       summary: Delete a customer connector
       description: Deletes a customer MCP connector for the authenticated organization.
@@ -165,6 +173,8 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: deleteV2ConnectorsById
+      x-operation-id-source: derived
   /v2/connectors/{id}/test:
     post:
       summary: Test a customer connector
@@ -196,21 +206,18 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       tags:
       - Connectors
+      operationId: postV2ConnectorsByIdTest
+      x-operation-id-source: derived
 components:
   schemas:
-    ConnectorListApiResponse:
+    ApiErrorResponse:
       type: object
-      description: List response — the payload is an array of connectors.
+      description: Standard error response wrapper
       properties:
         error:
-          nullable: true
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
+          $ref: '#/components/schemas/ApiError'
         payload:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/ConnectorProxyPayload'
+          description: Always null for error responses
       required:
       - error
       - payload
@@ -241,6 +248,26 @@ components:
           example: query is required and must be a string
       required:
       - code
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
+    ConnectorProxyPayload:
+      type: object
+      description: Opaque connector payload. Credential values are write-only and are not returned.
+      additionalProperties: true
     ConnectorMutationRequest:
       type: object
       description: Customer connector create/update body. Any additional fields you include are preserved and forwarded with the request.
@@ -263,27 +290,10 @@ components:
       type: object
       properties:
         error:
-          nullable: true
           oneOf:
           - $ref: '#/components/schemas/ApiError'
         payload:
           $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
-    ConnectorProxyPayload:
-      type: object
-      description: Opaque connector payload. Credential values are write-only and are not returned.
-      additionalProperties: true
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-          nullable: true
       required:
       - error
       - payload
