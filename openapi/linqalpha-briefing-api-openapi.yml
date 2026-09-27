@@ -635,22 +635,22 @@ paths:
           description: Invalid `delivery_id` (not a valid UUID).
 components:
   schemas:
-    ReferencesV2Response:
+    ApiErrorResponse:
       type: object
+      description: Standard error response wrapper
       properties:
-        references:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReferenceV2'
-          description: List of references associated with the conversation
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
       required:
-      - references
-    BriefingDeliveryDetail:
+      - error
+      - payload
+    BriefingDelivery:
       type: object
       properties:
         id:
           type: string
-          description: Delivery ID
         status:
           type: string
           enum:
@@ -664,44 +664,108 @@ components:
           type:
           - string
           - 'null'
-          description: ISO 8601 timestamp when delivered
         scheduled_at:
           type:
           - string
           - 'null'
-          description: ISO 8601 timestamp when scheduled
         email_title:
           type:
           - string
           - 'null'
-          description: Email subject line
         tickers:
           type: array
           items:
             type: string
-          description: Ticker symbols included
         frequency:
           type:
           - string
           - 'null'
-          enum:
-          - daily
-          - weekly
-          - monthly
-          description: Schedule frequency
-        content:
-          type:
-          - string
-          - 'null'
-          description: Full briefing content. Markdown for most briefings; may be HTML for certain briefing types.
-        chat_session_id:
-          type:
-          - string
-          - 'null'
-          description: Chat session ID from this delivery's generation (informational; the on-demand endpoints do not accept it as input).
         created_at:
           type: string
-          description: ISO 8601 creation timestamp
+    AnalyticsStatusEvent:
+      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                - keep_alive
+                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
+    AnalyticsAnswerEvent:
+      description: Final answer event. Contains the complete answer in a single event (not streamed incrementally).
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - answer
+          data:
+            type: object
+            required:
+            - answer_piece
+            properties:
+              answer_piece:
+                type: string
+                description: The complete final answer content. Unlike other SSE endpoints, analytics sends the full answer in a single event rather than streaming it incrementally.
+    AnalyticsSseEvent:
+      type: object
+      description: Base structure for all Analytics SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - message
+          - status
+          - think
+          - tool_use_block
+          - tool_result_block
+          - answer
+          - keepalive
+          description: Type of event in the analytics stream
+        data:
+          type: object
+          description: Event-specific data payload
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
     ReferenceMetadataV2:
       type: object
       properties:
@@ -807,44 +871,177 @@ components:
           type:
           - string
           - 'null'
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-      required:
-      - error
-      - payload
-    ApiError:
+    ReferencesV2Response:
       type: object
       properties:
-        code:
-          type: string
-          description: 'Error code indicating the type of error. Common codes:
-
-            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
-
-            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
-
-            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
-
-            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
-
-            - Not Found: `NOT_FOUND`'
-          example: INVALID_REQUEST_BODY
-        msg:
-          type: string
-          description: Error message (deprecated, use `message` instead)
-          example: query is required and must be a string
-        message:
-          type: string
-          description: Error message providing more details about the error
-          example: query is required and must be a string
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferenceV2'
+          description: List of references associated with the conversation
       required:
-      - code
+      - references
+    Briefing:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type:
+          - string
+          - 'null'
+        topic:
+          type: string
+        tickers:
+          type: array
+          items:
+            type: string
+        language:
+          type:
+          - string
+          - 'null'
+        scheduled_time:
+          type: string
+          description: Time in h:mm AM/PM format, echoing the value provided on create/update (e.g. '9:00 AM')
+        timezone:
+          type: string
+          description: IANA timezone
+        frequency:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+        scheduled_day_of_week:
+          type:
+          - integer
+          - 'null'
+        scheduled_day_of_month:
+          type:
+          - integer
+          - 'null'
+        next_delivery_at:
+          type:
+          - string
+          - 'null'
+        is_active:
+          type: boolean
+        source_type:
+          type: string
+        attach_pdf:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    ReferenceV2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Reference ID
+        citation_idx:
+          type: integer
+          description: Citation index number
+        search_type:
+          type: string
+          description: Type of search that produced this reference (e.g., "rms")
+        chunk_id:
+          type: string
+          description: Chunk identifier
+        text:
+          type: string
+          description: Reference text content
+        text_type:
+          type: string
+          description: Type of text (e.g., "paragraph")
+        document_id:
+          type: string
+          format: uuid
+          description: Document ID. Use with presigned_url endpoint for direct download.
+        document_name:
+          type: string
+          description: Document name
+        s3_file_key:
+          type:
+          - string
+          - 'null'
+          description: S3 file key (may be null)
+        external_url:
+          type: string
+          description: External URL for the document
+        metadata:
+          $ref: '#/components/schemas/ReferenceMetadataV2'
+      required:
+      - id
+      - citation_idx
+      - search_type
+      - chunk_id
+      - text
+      - text_type
+      - document_id
+      - document_name
+      - s3_file_key
+      - external_url
+      - metadata
+    BriefingDeliveryDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Delivery ID
+        status:
+          type: string
+          enum:
+          - pending
+          - sent
+          - failed
+          - resynced
+          - skipped
+          description: Delivery status
+        delivered_at:
+          type:
+          - string
+          - 'null'
+          description: ISO 8601 timestamp when delivered
+        scheduled_at:
+          type:
+          - string
+          - 'null'
+          description: ISO 8601 timestamp when scheduled
+        email_title:
+          type:
+          - string
+          - 'null'
+          description: Email subject line
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols included
+        frequency:
+          type:
+          - string
+          - 'null'
+          enum:
+          - daily
+          - weekly
+          - monthly
+          description: Schedule frequency
+        content:
+          type:
+          - string
+          - 'null'
+          description: Full briefing content. Markdown for most briefings; may be HTML for certain briefing types.
+        chat_session_id:
+          type:
+          - string
+          - 'null'
+          description: Chat session ID from this delivery's generation (informational; the on-demand endpoints do not accept it as input).
+        created_at:
+          type: string
+          description: ISO 8601 creation timestamp
     BriefingUpdateRequest:
       type: object
       description: All fields are optional. Only include fields you want to change.
@@ -956,203 +1153,6 @@ components:
         user_name:
           type: string
           description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
-    ReferenceV2:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Reference ID
-        citation_idx:
-          type: integer
-          description: Citation index number
-        search_type:
-          type: string
-          description: Type of search that produced this reference (e.g., "rms")
-        chunk_id:
-          type: string
-          description: Chunk identifier
-        text:
-          type: string
-          description: Reference text content
-        text_type:
-          type: string
-          description: Type of text (e.g., "paragraph")
-        document_id:
-          type: string
-          format: uuid
-          description: Document ID. Use with presigned_url endpoint for direct download.
-        document_name:
-          type: string
-          description: Document name
-        s3_file_key:
-          type:
-          - string
-          - 'null'
-          description: S3 file key (may be null)
-        external_url:
-          type: string
-          description: External URL for the document
-        metadata:
-          $ref: '#/components/schemas/ReferenceMetadataV2'
-      required:
-      - id
-      - citation_idx
-      - search_type
-      - chunk_id
-      - text
-      - text_type
-      - document_id
-      - document_name
-      - s3_file_key
-      - external_url
-      - metadata
-    AnalyticsStatusEvent:
-      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - status
-          data:
-            type: object
-            required:
-            - status
-            properties:
-              status:
-                type: string
-                enum:
-                - start
-                - finish
-                - keep_alive
-                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
-    BriefingDelivery:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - pending
-          - sent
-          - failed
-          - resynced
-          - skipped
-          description: Delivery status
-        delivered_at:
-          type:
-          - string
-          - 'null'
-        scheduled_at:
-          type:
-          - string
-          - 'null'
-        email_title:
-          type:
-          - string
-          - 'null'
-        tickers:
-          type: array
-          items:
-            type: string
-        frequency:
-          type:
-          - string
-          - 'null'
-        created_at:
-          type: string
-    Briefing:
-      type: object
-      properties:
-        id:
-          type: string
-        title:
-          type:
-          - string
-          - 'null'
-        topic:
-          type: string
-        tickers:
-          type: array
-          items:
-            type: string
-        language:
-          type:
-          - string
-          - 'null'
-        scheduled_time:
-          type: string
-          description: Time in h:mm AM/PM format, echoing the value provided on create/update (e.g. '9:00 AM')
-        timezone:
-          type: string
-          description: IANA timezone
-        frequency:
-          type: string
-          enum:
-          - daily
-          - weekly
-          - monthly
-        scheduled_day_of_week:
-          type:
-          - integer
-          - 'null'
-        scheduled_day_of_month:
-          type:
-          - integer
-          - 'null'
-        next_delivery_at:
-          type:
-          - string
-          - 'null'
-        is_active:
-          type: boolean
-        source_type:
-          type: string
-        attach_pdf:
-          type: boolean
-        created_at:
-          type: string
-        updated_at:
-          type: string
-    AnalyticsSseEvent:
-      type: object
-      description: Base structure for all Analytics SSE events
-      required:
-      - event_name
-      - data
-      properties:
-        event_name:
-          type: string
-          enum:
-          - message
-          - status
-          - think
-          - tool_use_block
-          - tool_result_block
-          - answer
-          - keepalive
-          description: Type of event in the analytics stream
-        data:
-          type: object
-          description: Event-specific data payload
-    AnalyticsAnswerEvent:
-      description: Final answer event. Contains the complete answer in a single event (not streamed incrementally).
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - answer
-          data:
-            type: object
-            required:
-            - answer_piece
-            properties:
-              answer_piece:
-                type: string
-                description: The complete final answer content. Unlike other SSE endpoints, analytics sends the full answer in a single event rather than streaming it incrementally.
     BriefingCreateRequest:
       type: object
       required:

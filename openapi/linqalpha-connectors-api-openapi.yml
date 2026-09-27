@@ -248,22 +248,6 @@ components:
           example: query is required and must be a string
       required:
       - code
-    ConnectorListApiResponse:
-      type: object
-      description: List response — the payload is an array of connectors.
-      properties:
-        error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
-        payload:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
     ConnectorProxyPayload:
       type: object
       description: Opaque connector payload. Credential values are write-only and are not returned.
@@ -294,6 +278,22 @@ components:
           - $ref: '#/components/schemas/ApiError'
         payload:
           $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
       required:
       - error
       - payload

@@ -179,15 +179,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateConversationFeedbackResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Indicates whether the feedback was successfully submitted
-          example: true
-      required:
-      - success
     ApiErrorResponse:
       type: object
       description: Standard error response wrapper
@@ -226,6 +217,15 @@ components:
           example: query is required and must be a string
       required:
       - code
+    CreateConversationFeedbackResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the feedback was successfully submitted
+          example: true
+      required:
+      - success
     CreateConversationFeedbackRequest:
       type: object
       properties:

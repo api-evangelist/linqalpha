@@ -143,13 +143,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    VaultStatusResponse:
-      type: object
-      properties:
-        statuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/VaultDocumentStatus'
     VaultDocumentStatus:
       type: object
       properties:
@@ -169,14 +162,29 @@ components:
           - string
           - 'null'
           description: Deterministic terminal-failure code (e.g. `PASSWORD_PROTECTED`, `FILE_SIZE_EXCEEDED`, `CONVERSION_FAILED`). Branch on this instead of parsing `status` text; `null` unless the document terminally failed.
-    VaultConfirmResponse:
+    VaultPresignedUrlResponse:
       type: object
       properties:
-        rms_document_id:
-          type:
-          - string
-          - 'null'
-          description: RMS document id; null when the upload deduplicated into an existing document. Use it to poll GET /v2/vault/status.
+        presigned_url:
+          type: string
+          format: uri
+          description: Single-use presigned upload (PUT) URL. Upload the file body via PUT with header Content-Type matching the request content_type.
+        file_key:
+          type: string
+          description: Server-generated file key. Pass back to POST /v2/vault/confirm.
+        document_id:
+          type: string
+          description: Document id for this upload. Pass back to confirm.
+        expiration_seconds:
+          type: integer
+          example: 600
+    VaultStatusResponse:
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultDocumentStatus'
     VaultPresignedUrlRequest:
       type: object
       required:
@@ -213,22 +221,6 @@ components:
         user_name:
           type: string
           description: User name (optional).
-    VaultPresignedUrlResponse:
-      type: object
-      properties:
-        presigned_url:
-          type: string
-          format: uri
-          description: Single-use presigned upload (PUT) URL. Upload the file body via PUT with header Content-Type matching the request content_type.
-        file_key:
-          type: string
-          description: Server-generated file key. Pass back to POST /v2/vault/confirm.
-        document_id:
-          type: string
-          description: Document id for this upload. Pass back to confirm.
-        expiration_seconds:
-          type: integer
-          example: 600
     VaultConfirmRequest:
       type: object
       required:
@@ -272,6 +264,14 @@ components:
         user_name:
           type: string
           description: User name (optional).
+    VaultConfirmResponse:
+      type: object
+      properties:
+        rms_document_id:
+          type:
+          - string
+          - 'null'
+          description: RMS document id; null when the upload deduplicated into an existing document. Use it to poll GET /v2/vault/status.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

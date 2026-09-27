@@ -46,7 +46,7 @@ created: '2026-07-17'
 modified: '2026-07-19'
 tags:
 - Company
-- Financial-Services
+- Financial Services
 - Investment Research
 - Artificial Intelligence
 - Agents
@@ -68,6 +68,7 @@ tags_raw:
 - SEC Filings
 - Retrieval Augmented Generation
 - MCP
+- Financial-Services
 apis:
 - aid: linqalpha:linqalpha-briefing-api
   name: LinqAlpha Briefing API
