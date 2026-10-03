@@ -210,17 +210,55 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ApiErrorResponse:
+    ConnectorApiResponse:
       type: object
-      description: Standard error response wrapper
       properties:
         error:
-          $ref: '#/components/schemas/ApiError'
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
         payload:
-          description: Always null for error responses
+          $ref: '#/components/schemas/ConnectorProxyPayload'
       required:
       - error
       - payload
+    ConnectorMutationRequest:
+      type: object
+      description: Customer connector create/update body. Any additional fields you include are preserved and forwarded with the request.
+      additionalProperties: true
+      properties:
+        name:
+          type: string
+          description: Connector name
+        credentials:
+          type: object
+          description: Write-only credential payload.
+          additionalProperties: true
+          properties:
+            headers:
+              type: object
+              additionalProperties:
+                type: string
+              description: Write-only HTTP headers used by the connector upstream. Values are not returned by read endpoints.
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
+    ConnectorProxyPayload:
+      type: object
+      description: Opaque connector payload. Credential values are write-only and are not returned.
+      additionalProperties: true
     ApiError:
       type: object
       properties:
@@ -248,52 +286,14 @@ components:
           example: query is required and must be a string
       required:
       - code
-    ConnectorProxyPayload:
+    ApiErrorResponse:
       type: object
-      description: Opaque connector payload. Credential values are write-only and are not returned.
-      additionalProperties: true
-    ConnectorMutationRequest:
-      type: object
-      description: Customer connector create/update body. Any additional fields you include are preserved and forwarded with the request.
-      additionalProperties: true
-      properties:
-        name:
-          type: string
-          description: Connector name
-        credentials:
-          type: object
-          description: Write-only credential payload.
-          additionalProperties: true
-          properties:
-            headers:
-              type: object
-              additionalProperties:
-                type: string
-              description: Write-only HTTP headers used by the connector upstream. Values are not returned by read endpoints.
-    ConnectorApiResponse:
-      type: object
+      description: Standard error response wrapper
       properties:
         error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
+          $ref: '#/components/schemas/ApiError'
         payload:
-          $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
-    ConnectorListApiResponse:
-      type: object
-      description: List response — the payload is an array of connectors.
-      properties:
-        error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
-        payload:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ConnectorProxyPayload'
+          description: Always null for error responses
       required:
       - error
       - payload

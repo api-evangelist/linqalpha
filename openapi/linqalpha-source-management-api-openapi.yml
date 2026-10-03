@@ -262,6 +262,106 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CreateSourceBatchResponse:
+      type: object
+      properties:
+        source_batch_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+      - source_batch_id
+    CreateSourceRequest:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: User ID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID
+          example: 123e4567-e89b-12d3-a456-426614174000
+        user_email:
+          type: string
+          description: User email
+          example: john.doe@example.com
+        user_name:
+          type: string
+          description: User name
+          example: John Doe
+        source_batch_id:
+          type: string
+          format: uuid
+          description: ID of the source batch to add this source to. The batch must be created first via POST /v1/source_batches.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        name:
+          type: string
+          description: Display name for the source, typically the original filename. Must not include a file extension.
+          example: Q4_Revenue_Report
+        file_key:
+          type: string
+          description: S3 object key path where the file is stored. The file must be accessible to the API service and meet format/size requirements (PDF, DOCX, XLSX, DOC, TXT, PPTX; max 20MB).
+          example: uploaded_sources/2024/q4/revenue_report.pdf
+      required:
+      - source_batch_id
+      - name
+      - file_key
+    GetSourceResponse:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Source identifier
+          example: 456e7890-e89b-12d3-a456-426614174001
+        status:
+          type: string
+          description: 'Current processing status:
+
+            - `processing`: File is being parsed and indexed
+
+            - `success`: Source is ready for use in conversations
+
+            - `failed`: Processing failed, source cannot be used'
+          enum:
+          - processing
+          - success
+          - failed
+          example: success
+        error:
+          type: string
+          description: Error message if status is 'failed' (optional)
+          example: File format not supported
+      required:
+      - source_id
+      - status
+    CreateSourceResponse:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
+          example: 456e7890-e89b-12d3-a456-426614174001
+        size:
+          type: integer
+          description: File size in bytes
+          minimum: 0
+          example: 2048576
+        status:
+          type: string
+          description: Initial processing status (typically 'processing' when first created)
+          enum:
+          - processing
+          - success
+          - failed
+          example: processing
+      required:
+      - source_id
+      - size
     UploadUrlResponse:
       type: object
       properties:
@@ -320,106 +420,6 @@ components:
           example: Financial documents including revenue reports, expense summaries, and forecasts for Q4 2024
       required:
       - name
-    CreateSourceRequest:
-      type: object
-      properties:
-        user_id:
-          type: string
-          description: User ID
-          example: 123e4567-e89b-12d3-a456-426614174000
-        organization_id:
-          type: string
-          format: uuid
-          description: Organization ID
-          example: 123e4567-e89b-12d3-a456-426614174000
-        user_email:
-          type: string
-          description: User email
-          example: john.doe@example.com
-        user_name:
-          type: string
-          description: User name
-          example: John Doe
-        source_batch_id:
-          type: string
-          format: uuid
-          description: ID of the source batch to add this source to. The batch must be created first via POST /v1/source_batches.
-          example: 123e4567-e89b-12d3-a456-426614174000
-        name:
-          type: string
-          description: Display name for the source, typically the original filename. Must not include a file extension.
-          example: Q4_Revenue_Report
-        file_key:
-          type: string
-          description: S3 object key path where the file is stored. The file must be accessible to the API service and meet format/size requirements (PDF, DOCX, XLSX, DOC, TXT, PPTX; max 20MB).
-          example: uploaded_sources/2024/q4/revenue_report.pdf
-      required:
-      - source_batch_id
-      - name
-      - file_key
-    CreateSourceResponse:
-      type: object
-      properties:
-        source_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
-          example: 456e7890-e89b-12d3-a456-426614174001
-        size:
-          type: integer
-          description: File size in bytes
-          minimum: 0
-          example: 2048576
-        status:
-          type: string
-          description: Initial processing status (typically 'processing' when first created)
-          enum:
-          - processing
-          - success
-          - failed
-          example: processing
-      required:
-      - source_id
-      - size
-    GetSourceResponse:
-      type: object
-      properties:
-        source_id:
-          type: string
-          format: uuid
-          description: Source identifier
-          example: 456e7890-e89b-12d3-a456-426614174001
-        status:
-          type: string
-          description: 'Current processing status:
-
-            - `processing`: File is being parsed and indexed
-
-            - `success`: Source is ready for use in conversations
-
-            - `failed`: Processing failed, source cannot be used'
-          enum:
-          - processing
-          - success
-          - failed
-          example: success
-        error:
-          type: string
-          description: Error message if status is 'failed' (optional)
-          example: File format not supported
-      required:
-      - source_id
-      - status
-    CreateSourceBatchResponse:
-      type: object
-      properties:
-        source_batch_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
-          example: 123e4567-e89b-12d3-a456-426614174000
-      required:
-      - source_batch_id
     UploadUrlRequest:
       type: object
       properties:

@@ -77,6 +77,31 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    McpJsonRpcResponse:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type:
+          - integer
+          - 'null'
+          description: Request identifier (null for error responses)
+        result:
+          type: object
+          description: Method result (present on success)
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: JSON-RPC error code
+            message:
+              type: string
+              description: Error message
+          description: Error object (present on failure)
     McpJsonRpcRequest:
       type: object
       required:
@@ -103,31 +128,6 @@ components:
         params:
           type: object
           description: 'Method-specific parameters. For tools/call: { name: string, arguments: object }'
-    McpJsonRpcResponse:
-      type: object
-      properties:
-        jsonrpc:
-          type: string
-          enum:
-          - '2.0'
-        id:
-          type:
-          - integer
-          - 'null'
-          description: Request identifier (null for error responses)
-        result:
-          type: object
-          description: Method result (present on success)
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              description: JSON-RPC error code
-            message:
-              type: string
-              description: Error message
-          description: Error object (present on failure)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
