@@ -239,26 +239,6 @@ components:
               additionalProperties:
                 type: string
               description: Write-only HTTP headers used by the connector upstream. Values are not returned by read endpoints.
-    ConnectorListApiResponse:
-      type: object
-      description: List response — the payload is an array of connectors.
-      properties:
-        error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
-        payload:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
-    ConnectorProxyPayload:
-      type: object
-      description: Opaque connector payload. Credential values are write-only and are not returned.
-      additionalProperties: true
     ApiError:
       type: object
       properties:
@@ -294,6 +274,26 @@ components:
           $ref: '#/components/schemas/ApiError'
         payload:
           description: Always null for error responses
+      required:
+      - error
+      - payload
+    ConnectorProxyPayload:
+      type: object
+      description: Opaque connector payload. Credential values are write-only and are not returned.
+      additionalProperties: true
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
       required:
       - error
       - payload

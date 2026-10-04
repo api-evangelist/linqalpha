@@ -1404,20 +1404,25 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CurrencyInfo:
+    TtsRequest:
       type: object
       required:
-      - currency
-      - exchange_rate
+      - query
       properties:
-        currency:
+        query:
           type: string
-          description: Currency code (ISO 4217)
-          example: USD
-        exchange_rate:
-          type: number
-          description: Exchange rate to base currency
-          example: 1
+          description: Natural language query to be converted to SQL
+          example: Show me NVIDIA's quarterly revenue and net income for 2024
+    ReferencesV2Response:
+      type: object
+      properties:
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferenceV2'
+          description: List of references associated with the conversation
+      required:
+      - references
     ReferenceMetadataV2:
       type: object
       properties:
@@ -1523,6 +1528,256 @@ components:
           type:
           - string
           - 'null'
+    EarningsScheduleEvent:
+      type: object
+      required:
+      - stock_id
+      - stock_name
+      - event_datetime
+      - direction
+      - is_estimated
+      properties:
+        stock_id:
+          type: string
+          description: Bloomberg Global ID of the company
+          example: BBG001S5N8V8
+        stock_name:
+          type: string
+          description: Company name
+          example: Apple Inc.
+        event_datetime:
+          type: string
+          description: Earnings-call / release datetime (ISO 8601)
+          example: '2026-07-30T00:00:00'
+        direction:
+          type: string
+          enum:
+          - prior
+          - upcoming
+          description: Whether the event is in the past (prior) or future (upcoming) relative to now
+        is_estimated:
+          type: boolean
+          description: True when the date is a vendor projection rather than a confirmed/announced date. Always false for prior events; only ever true for upcoming events.
+          example: true
+        fiscal_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Fiscal period the event reports on
+          example: '2026-09-30'
+        link:
+          type:
+          - string
+          - 'null'
+          description: Webcast link, if available
+        event_description:
+          type:
+          - string
+          - 'null'
+          description: Human-readable event description
+          example: Q3 2026 Earnings Release (Projected)
+    TtsQueryResult:
+      type: object
+      required:
+      - execution_id
+      - rdb_result
+      properties:
+        execution_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the query execution
+          example: 2548d578-0446-4abc-b6f6-f50c966d341c
+        stock_name_mapping:
+          type: object
+          additionalProperties:
+            type: string
+          description: Mapping of stock IDs to company names
+          example:
+            BBG001S5TZJ6: NVIDIA Corporation
+        currency_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyInfo'
+          description: Currency information for each stock
+        field_currency_info:
+          type: object
+          additionalProperties:
+            type: string
+          description: Currency information for each field
+          example:
+            BBG001S6Q004:
+              SALES: TWD
+              EPS: TWD
+              ff_sales: TWD
+        execution_duration:
+          type: number
+          description: Execution duration in milliseconds
+        date_range:
+          type: array
+          items:
+            type: string
+            format: date
+          minItems: 2
+          maxItems: 2
+          description: Date range for the query [start_date, end_date]
+          example:
+          - '2024-01-01'
+          - '2024-12-31'
+        rdb_result:
+          type: string
+          description: Query results formatted as markdown tables
+          example: '### Company Annual Financials
+
+
+            | name | Fiscal Period End Date | Dividends Per Share |
+
+            | --- | --- | --- |
+
+            | NVIDIA Corporation | 2024-01-31 | 0.016 |'
+        earnings_schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/EarningsScheduleEvent'
+          description: Prior/upcoming earnings-call schedule events for the resolved companies, returned when the query asks for earnings-call dates (e.g. "When does Apple next report?"). Returned only for organizations entitled to earnings-call schedule retrieval; omitted entirely for all other organizations.
+        earnings_schedule_truncated:
+          type: boolean
+          description: True when an unbounded universe scan ("which companies report this week?") was capped by a load/window limit, so the returned list is partial. Always false for company-specific queries. Present only alongside earnings_schedule.
+    CurrencyInfo:
+      type: object
+      required:
+      - currency
+      - exchange_rate
+      properties:
+        currency:
+          type: string
+          description: Currency code (ISO 4217)
+          example: USD
+        exchange_rate:
+          type: number
+          description: Exchange rate to base currency
+          example: 1
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    ReferencesResponse:
+      type: object
+      properties:
+        references:
+          type: array
+          items:
+            $ref: '#/components/schemas/RMSReference'
+          description: References
+      required:
+      - references
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
+    ReferenceV2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Reference ID
+        citation_idx:
+          type: integer
+          description: Citation index number
+        search_type:
+          type: string
+          description: Type of search that produced this reference (e.g., "rms")
+        chunk_id:
+          type: string
+          description: Chunk identifier
+        text:
+          type: string
+          description: Reference text content
+        text_type:
+          type: string
+          description: Type of text (e.g., "paragraph")
+        document_id:
+          type: string
+          format: uuid
+          description: Document ID. Use with presigned_url endpoint for direct download.
+        document_name:
+          type: string
+          description: Document name
+        s3_file_key:
+          type:
+          - string
+          - 'null'
+          description: S3 file key (may be null)
+        external_url:
+          type: string
+          description: External URL for the document
+        metadata:
+          $ref: '#/components/schemas/ReferenceMetadataV2'
+      required:
+      - id
+      - citation_idx
+      - search_type
+      - chunk_id
+      - text
+      - text_type
+      - document_id
+      - document_name
+      - s3_file_key
+      - external_url
+      - metadata
+    TtsResponse:
+      type: object
+      required:
+      - code
+      - success
+      - message
+      - response
+      properties:
+        code:
+          type: integer
+          description: Response code (0 for success)
+          example: 0
+        success:
+          type: boolean
+          description: Indicates whether the request was successful
+          example: true
+        message:
+          type: string
+          description: Response message
+          example: success
+        response:
+          $ref: '#/components/schemas/TtsQueryResult'
     RMSReference:
       type: object
       properties:
@@ -1583,16 +1838,6 @@ components:
       - document_name
       - external_url
       - metadata
-    ReferencesV2Response:
-      type: object
-      properties:
-        references:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReferenceV2'
-          description: List of references associated with the conversation
-      required:
-      - references
     AnalyticsReferencesResponse:
       type: object
       description: Wrapper for analytics references response (normalized format). The payload contains a list of references with enriched metadata.
@@ -1798,66 +2043,63 @@ components:
                     - object
                     - 'null'
                     description: Additional custom metadata
-    ReferenceV2:
+    ChatMessageResponse:
       type: object
       properties:
-        id:
+        chat_message_id:
           type: string
           format: uuid
-          description: Reference ID
-        citation_idx:
-          type: integer
-          description: Citation index number
-        search_type:
+          description: Chat message ID
+        message:
           type: string
-          description: Type of search that produced this reference (e.g., "rms")
-        chunk_id:
+          description: Chat message
+        message_type:
           type: string
-          description: Chunk identifier
-        text:
+          description: Chat message type
+          enum:
+          - assistant
+          - user
+          - think
+          example: assistant
+        created_at:
           type: string
-          description: Reference text content
-        text_type:
-          type: string
-          description: Type of text (e.g., "paragraph")
-        document_id:
-          type: string
-          format: uuid
-          description: Document ID. Use with presigned_url endpoint for direct download.
-        document_name:
-          type: string
-          description: Document name
-        s3_file_key:
-          type:
-          - string
-          - 'null'
-          description: S3 file key (may be null)
-        external_url:
-          type: string
-          description: External URL for the document
-        metadata:
-          $ref: '#/components/schemas/ReferenceMetadataV2'
-      required:
-      - id
-      - citation_idx
-      - search_type
-      - chunk_id
-      - text
-      - text_type
-      - document_id
-      - document_name
-      - s3_file_key
-      - external_url
-      - metadata
-    TtsRequest:
-      type: object
-      required:
-      - query
+          description: Chat message created at
+          example: '2025-10-30T09:11:31.667544Z'
+    CustomMetadata:
+      type:
+      - object
+      - 'null'
+      description: User-defined metadata. This field may contain additional structured data based on the document type and user configuration.
       properties:
-        query:
-          type: string
-          description: Natural language query to be converted to SQL
-          example: Show me NVIDIA's quarterly revenue and net income for 2024
+        edgar_metadata:
+          type: object
+          description: SEC EDGAR filing metadata. This field is only available for SEC filing documents and is provided upon request. Not all users will have access to this data. Contact support@linqalpha.com to enable EDGAR metadata for your organization.
+          properties:
+            public_url:
+              type: string
+              format: uri
+              description: Public EDGAR URL to the source filing document on the SEC website
+              example: https://www.sec.gov/Archives/edgar/data/1045810/000104581023000227/nvda-20231029.htm
+            accession_number:
+              type: string
+              description: 'SEC accession number uniquely identifying the filing. Format: XXXXXXXXXX-XX-XXXXXX'
+              example: 0001045810-23-000227
+              pattern: ^\d{10}-\d{2}-\d{6}$
+            filing_values:
+              type: object
+              description: Additional SEC filing identifiers
+              properties:
+                film_number:
+                  type: string
+                  description: SEC film number assigned to the filing
+                  example: '231428716'
+                sec_file_number:
+                  type: string
+                  description: SEC file number for the registrant
+                  example: 000-23985
+          required:
+          - public_url
+          - accession_number
     ReferenceMetadata:
       type: object
       description: Additional metadata information
@@ -2166,248 +2408,6 @@ components:
           items:
             type: integer
           description: Transcript block indices for this chunk.
-    ApiError:
-      type: object
-      properties:
-        code:
-          type: string
-          description: 'Error code indicating the type of error. Common codes:
-
-            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
-
-            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
-
-            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
-
-            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
-
-            - Not Found: `NOT_FOUND`'
-          example: INVALID_REQUEST_BODY
-        msg:
-          type: string
-          description: Error message (deprecated, use `message` instead)
-          example: query is required and must be a string
-        message:
-          type: string
-          description: Error message providing more details about the error
-          example: query is required and must be a string
-      required:
-      - code
-    ChatMessageResponse:
-      type: object
-      properties:
-        chat_message_id:
-          type: string
-          format: uuid
-          description: Chat message ID
-        message:
-          type: string
-          description: Chat message
-        message_type:
-          type: string
-          description: Chat message type
-          enum:
-          - assistant
-          - user
-          - think
-          example: assistant
-        created_at:
-          type: string
-          description: Chat message created at
-          example: '2025-10-30T09:11:31.667544Z'
-    CustomMetadata:
-      type:
-      - object
-      - 'null'
-      description: User-defined metadata. This field may contain additional structured data based on the document type and user configuration.
-      properties:
-        edgar_metadata:
-          type: object
-          description: SEC EDGAR filing metadata. This field is only available for SEC filing documents and is provided upon request. Not all users will have access to this data. Contact support@linqalpha.com to enable EDGAR metadata for your organization.
-          properties:
-            public_url:
-              type: string
-              format: uri
-              description: Public EDGAR URL to the source filing document on the SEC website
-              example: https://www.sec.gov/Archives/edgar/data/1045810/000104581023000227/nvda-20231029.htm
-            accession_number:
-              type: string
-              description: 'SEC accession number uniquely identifying the filing. Format: XXXXXXXXXX-XX-XXXXXX'
-              example: 0001045810-23-000227
-              pattern: ^\d{10}-\d{2}-\d{6}$
-            filing_values:
-              type: object
-              description: Additional SEC filing identifiers
-              properties:
-                film_number:
-                  type: string
-                  description: SEC film number assigned to the filing
-                  example: '231428716'
-                sec_file_number:
-                  type: string
-                  description: SEC file number for the registrant
-                  example: 000-23985
-          required:
-          - public_url
-          - accession_number
-    ReferencesResponse:
-      type: object
-      properties:
-        references:
-          type: array
-          items:
-            $ref: '#/components/schemas/RMSReference'
-          description: References
-      required:
-      - references
-    TtsResponse:
-      type: object
-      required:
-      - code
-      - success
-      - message
-      - response
-      properties:
-        code:
-          type: integer
-          description: Response code (0 for success)
-          example: 0
-        success:
-          type: boolean
-          description: Indicates whether the request was successful
-          example: true
-        message:
-          type: string
-          description: Response message
-          example: success
-        response:
-          $ref: '#/components/schemas/TtsQueryResult'
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-      required:
-      - error
-      - payload
-    TtsQueryResult:
-      type: object
-      required:
-      - execution_id
-      - rdb_result
-      properties:
-        execution_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the query execution
-          example: 2548d578-0446-4abc-b6f6-f50c966d341c
-        stock_name_mapping:
-          type: object
-          additionalProperties:
-            type: string
-          description: Mapping of stock IDs to company names
-          example:
-            BBG001S5TZJ6: NVIDIA Corporation
-        currency_info:
-          type: array
-          items:
-            $ref: '#/components/schemas/CurrencyInfo'
-          description: Currency information for each stock
-        field_currency_info:
-          type: object
-          additionalProperties:
-            type: string
-          description: Currency information for each field
-          example:
-            BBG001S6Q004:
-              SALES: TWD
-              EPS: TWD
-              ff_sales: TWD
-        execution_duration:
-          type: number
-          description: Execution duration in milliseconds
-        date_range:
-          type: array
-          items:
-            type: string
-            format: date
-          minItems: 2
-          maxItems: 2
-          description: Date range for the query [start_date, end_date]
-          example:
-          - '2024-01-01'
-          - '2024-12-31'
-        rdb_result:
-          type: string
-          description: Query results formatted as markdown tables
-          example: '### Company Annual Financials
-
-
-            | name | Fiscal Period End Date | Dividends Per Share |
-
-            | --- | --- | --- |
-
-            | NVIDIA Corporation | 2024-01-31 | 0.016 |'
-        earnings_schedule:
-          type: array
-          items:
-            $ref: '#/components/schemas/EarningsScheduleEvent'
-          description: Prior/upcoming earnings-call schedule events for the resolved companies, returned when the query asks for earnings-call dates (e.g. "When does Apple next report?"). Returned only for organizations entitled to earnings-call schedule retrieval; omitted entirely for all other organizations.
-        earnings_schedule_truncated:
-          type: boolean
-          description: True when an unbounded universe scan ("which companies report this week?") was capped by a load/window limit, so the returned list is partial. Always false for company-specific queries. Present only alongside earnings_schedule.
-    EarningsScheduleEvent:
-      type: object
-      required:
-      - stock_id
-      - stock_name
-      - event_datetime
-      - direction
-      - is_estimated
-      properties:
-        stock_id:
-          type: string
-          description: Bloomberg Global ID of the company
-          example: BBG001S5N8V8
-        stock_name:
-          type: string
-          description: Company name
-          example: Apple Inc.
-        event_datetime:
-          type: string
-          description: Earnings-call / release datetime (ISO 8601)
-          example: '2026-07-30T00:00:00'
-        direction:
-          type: string
-          enum:
-          - prior
-          - upcoming
-          description: Whether the event is in the past (prior) or future (upcoming) relative to now
-        is_estimated:
-          type: boolean
-          description: True when the date is a vendor projection rather than a confirmed/announced date. Always false for prior events; only ever true for upcoming events.
-          example: true
-        fiscal_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: Fiscal period the event reports on
-          example: '2026-09-30'
-        link:
-          type:
-          - string
-          - 'null'
-          description: Webcast link, if available
-        event_description:
-          type:
-          - string
-          - 'null'
-          description: Human-readable event description
-          example: Q3 2026 Earnings Release (Projected)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

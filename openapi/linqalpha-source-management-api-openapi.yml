@@ -262,6 +262,111 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    CreateSourceResponse:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
+          example: 456e7890-e89b-12d3-a456-426614174001
+        size:
+          type: integer
+          description: File size in bytes
+          minimum: 0
+          example: 2048576
+        status:
+          type: string
+          description: Initial processing status (typically 'processing' when first created)
+          enum:
+          - processing
+          - success
+          - failed
+          example: processing
+      required:
+      - source_id
+      - size
+    UploadUrlRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
+          example: Q4_Revenue_Report.pdf
+        source_type:
+          type: string
+          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
+          enum:
+          - pdf
+          - docx
+          - xlsx
+          - pptx
+          - doc
+          - txt
+          example: pdf
+        source_batch_id:
+          type: string
+          format: uuid
+          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
+          example: 123e4567-e89b-12d3-a456-426614174000
+      required:
+      - name
+      - source_type
+      - source_batch_id
+    UploadUrlResponse:
+      type: object
+      properties:
+        upload_url:
+          type: string
+          format: uri
+          description: 'Presigned S3 PUT URL. Single-use, signed with the `content_type` value below. Send the file body via `PUT <upload_url>` with header `Content-Type: <content_type>`.'
+          example: https://linq-vertex-documents.s3.amazonaws.com/uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf?X-Amz-Algorithm=...&X-Amz-Signature=...
+        file_key:
+          type: string
+          description: Server-generated object key. Pass this as `file_key` in the subsequent `POST /v1/sources` call to register the uploaded file.
+          example: uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf
+        content_type:
+          type: string
+          description: Content-Type baked into the presigned URL signature. Client MUST send this exact value as the `Content-Type` header on the PUT, otherwise S3 rejects with HTTP 403 (`SignatureDoesNotMatch`).
+          example: application/pdf
+        expires_in:
+          type: integer
+          description: Seconds until `upload_url` expires. After this, request a new URL.
+          example: 600
+      required:
+      - upload_url
+      - file_key
+      - content_type
+      - expires_in
+    GetSourceResponse:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Source identifier
+          example: 456e7890-e89b-12d3-a456-426614174001
+        status:
+          type: string
+          description: 'Current processing status:
+
+            - `processing`: File is being parsed and indexed
+
+            - `success`: Source is ready for use in conversations
+
+            - `failed`: Processing failed, source cannot be used'
+          enum:
+          - processing
+          - success
+          - failed
+          example: success
+        error:
+          type: string
+          description: Error message if status is 'failed' (optional)
+          example: File format not supported
+      required:
+      - source_id
+      - status
     CreateSourceBatchResponse:
       type: object
       properties:
@@ -309,84 +414,6 @@ components:
       - source_batch_id
       - name
       - file_key
-    GetSourceResponse:
-      type: object
-      properties:
-        source_id:
-          type: string
-          format: uuid
-          description: Source identifier
-          example: 456e7890-e89b-12d3-a456-426614174001
-        status:
-          type: string
-          description: 'Current processing status:
-
-            - `processing`: File is being parsed and indexed
-
-            - `success`: Source is ready for use in conversations
-
-            - `failed`: Processing failed, source cannot be used'
-          enum:
-          - processing
-          - success
-          - failed
-          example: success
-        error:
-          type: string
-          description: Error message if status is 'failed' (optional)
-          example: File format not supported
-      required:
-      - source_id
-      - status
-    CreateSourceResponse:
-      type: object
-      properties:
-        source_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
-          example: 456e7890-e89b-12d3-a456-426614174001
-        size:
-          type: integer
-          description: File size in bytes
-          minimum: 0
-          example: 2048576
-        status:
-          type: string
-          description: Initial processing status (typically 'processing' when first created)
-          enum:
-          - processing
-          - success
-          - failed
-          example: processing
-      required:
-      - source_id
-      - size
-    UploadUrlResponse:
-      type: object
-      properties:
-        upload_url:
-          type: string
-          format: uri
-          description: 'Presigned S3 PUT URL. Single-use, signed with the `content_type` value below. Send the file body via `PUT <upload_url>` with header `Content-Type: <content_type>`.'
-          example: https://linq-vertex-documents.s3.amazonaws.com/uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf?X-Amz-Algorithm=...&X-Amz-Signature=...
-        file_key:
-          type: string
-          description: Server-generated object key. Pass this as `file_key` in the subsequent `POST /v1/sources` call to register the uploaded file.
-          example: uploads/1715000000000_a1b2c3d4_Q4_Revenue_Report.pdf/original.pdf
-        content_type:
-          type: string
-          description: Content-Type baked into the presigned URL signature. Client MUST send this exact value as the `Content-Type` header on the PUT, otherwise S3 rejects with HTTP 403 (`SignatureDoesNotMatch`).
-          example: application/pdf
-        expires_in:
-          type: integer
-          description: Seconds until `upload_url` expires. After this, request a new URL.
-          example: 600
-      required:
-      - upload_url
-      - file_key
-      - content_type
-      - expires_in
     CreateSourceBatchRequest:
       type: object
       properties:
@@ -420,33 +447,6 @@ components:
           example: Financial documents including revenue reports, expense summaries, and forecasts for Q4 2024
       required:
       - name
-    UploadUrlRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
-          example: Q4_Revenue_Report.pdf
-        source_type:
-          type: string
-          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
-          enum:
-          - pdf
-          - docx
-          - xlsx
-          - pptx
-          - doc
-          - txt
-          example: pdf
-        source_batch_id:
-          type: string
-          format: uuid
-          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
-          example: 123e4567-e89b-12d3-a456-426614174000
-      required:
-      - name
-      - source_type
-      - source_batch_id
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -635,122 +635,117 @@ paths:
           description: Invalid `delivery_id` (not a valid UUID).
 components:
   schemas:
-    ReferenceMetadataV2:
+    BriefingUpdateRequest:
       type: object
+      description: All fields are optional. Only include fields you want to change.
       properties:
-        rms_type:
-          type:
-          - string
-          - 'null'
-        rms_sub_type:
-          type:
-          - string
-          - 'null'
-        rms_document_type:
-          type:
-          - string
-          - 'null'
-          description: Document type (e.g., "earnings_call", "filing")
-        source:
-          type:
-          - string
-          - 'null'
-        countries:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        regions:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        participants:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-        publisher:
-          type:
-          - string
-          - 'null'
-        calendar_date:
-          type:
-          - string
-          - 'null'
-        fiscal_year:
-          type:
-          - string
-          - 'null'
-        fiscal_quarter:
-          type:
-          - string
-          - 'null'
-        document_category:
-          type:
-          - string
-          - 'null'
-          description: Document category (e.g., "earnings_call")
-        document_subcategory:
-          type:
-          - string
-          - 'null'
-        sector:
-          type:
-          - string
-          - 'null'
-        subsector:
-          type:
-          - string
-          - 'null'
+        topic:
+          type: string
+          description: Briefing instructions/topic
         stock_ids:
-          type:
-          - array
-          - 'null'
+          type: array
           items:
             type: string
-          description: Bloomberg Global Identifiers (e.g., ["BBG001S5N8V8"])
+          description: Internal stock UUIDs (preferred)
         tickers:
-          type:
-          - array
-          - 'null'
+          type: array
           items:
             type: string
-          description: Ticker symbols (e.g., ["AAPL"])
-        company_names:
+          description: Ticker symbols (auto-resolved)
+        language:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-        offset:
+          enum:
+          - English
+          - Spanish
+          - French
+          - German
+          - Italian
+          - Portuguese
+          - Dutch
+          - Hindi
+          - Japanese
+          - Chinese
+          - Finnish
+          - Korean
+          - Polish
+          - Russian
+          - Turkish
+          - Ukrainian
+          - Vietnamese
+          description: Output language (null = auto-detect)
+        scheduled_time:
+          type: string
+          description: h:mm AM/PM format (e.g. '9:00 AM')
+        timezone:
+          type: string
+          description: IANA timezone (e.g. Asia/Seoul)
+        frequency:
+          type: string
+          enum:
+          - daily
+          - weekly
+          - monthly
+        scheduled_day_of_week:
           type:
           - integer
           - 'null'
-        snippet:
+          minimum: 0
+          maximum: 6
+          description: 0=Sun, 6=Sat
+        scheduled_day_of_month:
+          type:
+          - integer
+          - 'null'
+          minimum: 1
+          maximum: 31
+        title:
           type:
           - string
           - 'null'
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-      required:
-      - error
-      - payload
+          description: Custom briefing title
+        source_type:
+          type: string
+          enum:
+          - tfs_only
+          - rms_only
+          - both
+        attach_pdf:
+          type: boolean
+        is_active:
+          type: boolean
+          description: Enable/disable the schedule
+        rms_sources:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: string
+              workspace:
+                type: string
+          description: RMS source configurations
+        watchlist_group_id:
+          type:
+          - string
+          - 'null'
+          description: 'Watchlist group ID to link for dynamic ticker sync. Note: unlinking by sending null is not currently supported.'
+        use_custom_email_title:
+          type: boolean
+          description: Use title as fixed email subject
+        organization_id:
+          type: string
+          description: 'Platform (EDS) keys only: org UUID under the key''s platform. Ignored by org-bound keys.'
+        user_id:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s customer_id (your external user id, not a UUID). Ignored by org-bound keys.'
+        user_email:
+          type: string
+          description: 'Platform (EDS) keys only: the target user''s email. Ignored by org-bound keys.'
+        user_name:
+          type: string
+          description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
     ReferencesV2Response:
       type: object
       properties:
@@ -761,57 +756,84 @@ components:
           description: List of references associated with the conversation
       required:
       - references
-    ReferenceV2:
+    AnalyticsSseEvent:
+      type: object
+      description: Base structure for all Analytics SSE events
+      required:
+      - event_name
+      - data
+      properties:
+        event_name:
+          type: string
+          enum:
+          - message
+          - status
+          - think
+          - tool_use_block
+          - tool_result_block
+          - answer
+          - keepalive
+          description: Type of event in the analytics stream
+        data:
+          type: object
+          description: Event-specific data payload
+    BriefingDeliveryDetail:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          description: Reference ID
-        citation_idx:
-          type: integer
-          description: Citation index number
-        search_type:
+          description: Delivery ID
+        status:
           type: string
-          description: Type of search that produced this reference (e.g., "rms")
-        chunk_id:
-          type: string
-          description: Chunk identifier
-        text:
-          type: string
-          description: Reference text content
-        text_type:
-          type: string
-          description: Type of text (e.g., "paragraph")
-        document_id:
-          type: string
-          format: uuid
-          description: Document ID. Use with presigned_url endpoint for direct download.
-        document_name:
-          type: string
-          description: Document name
-        s3_file_key:
+          enum:
+          - pending
+          - sent
+          - failed
+          - resynced
+          - skipped
+          description: Delivery status
+        delivered_at:
           type:
           - string
           - 'null'
-          description: S3 file key (may be null)
-        external_url:
+          description: ISO 8601 timestamp when delivered
+        scheduled_at:
+          type:
+          - string
+          - 'null'
+          description: ISO 8601 timestamp when scheduled
+        email_title:
+          type:
+          - string
+          - 'null'
+          description: Email subject line
+        tickers:
+          type: array
+          items:
+            type: string
+          description: Ticker symbols included
+        frequency:
+          type:
+          - string
+          - 'null'
+          enum:
+          - daily
+          - weekly
+          - monthly
+          description: Schedule frequency
+        content:
+          type:
+          - string
+          - 'null'
+          description: Full briefing content. Markdown for most briefings; may be HTML for certain briefing types.
+        chat_session_id:
+          type:
+          - string
+          - 'null'
+          description: Chat session ID from this delivery's generation (informational; the on-demand endpoints do not accept it as input).
+        created_at:
           type: string
-          description: External URL for the document
-        metadata:
-          $ref: '#/components/schemas/ReferenceMetadataV2'
-      required:
-      - id
-      - citation_idx
-      - search_type
-      - chunk_id
-      - text
-      - text_type
-      - document_id
-      - document_name
-      - s3_file_key
-      - external_url
-      - metadata
+          description: ISO 8601 creation timestamp
     BriefingCreateRequest:
       type: object
       required:
@@ -926,6 +948,131 @@ components:
         user_name:
           type: string
           description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
+    ReferenceMetadataV2:
+      type: object
+      properties:
+        rms_type:
+          type:
+          - string
+          - 'null'
+        rms_sub_type:
+          type:
+          - string
+          - 'null'
+        rms_document_type:
+          type:
+          - string
+          - 'null'
+          description: Document type (e.g., "earnings_call", "filing")
+        source:
+          type:
+          - string
+          - 'null'
+        countries:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        regions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        participants:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        publisher:
+          type:
+          - string
+          - 'null'
+        calendar_date:
+          type:
+          - string
+          - 'null'
+        fiscal_year:
+          type:
+          - string
+          - 'null'
+        fiscal_quarter:
+          type:
+          - string
+          - 'null'
+        document_category:
+          type:
+          - string
+          - 'null'
+          description: Document category (e.g., "earnings_call")
+        document_subcategory:
+          type:
+          - string
+          - 'null'
+        sector:
+          type:
+          - string
+          - 'null'
+        subsector:
+          type:
+          - string
+          - 'null'
+        stock_ids:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Bloomberg Global Identifiers (e.g., ["BBG001S5N8V8"])
+        tickers:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Ticker symbols (e.g., ["AAPL"])
+        company_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        offset:
+          type:
+          - integer
+          - 'null'
+        snippet:
+          type:
+          - string
+          - 'null'
+    AnalyticsStatusEvent:
+      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
+      allOf:
+      - $ref: '#/components/schemas/AnalyticsSseEvent'
+      - properties:
+          event_name:
+            enum:
+            - status
+          data:
+            type: object
+            required:
+            - status
+            properties:
+              status:
+                type: string
+                enum:
+                - start
+                - finish
+                - keep_alive
+                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
     ApiError:
       type: object
       properties:
@@ -953,33 +1100,11 @@ components:
           example: query is required and must be a string
       required:
       - code
-    AnalyticsSseEvent:
-      type: object
-      description: Base structure for all Analytics SSE events
-      required:
-      - event_name
-      - data
-      properties:
-        event_name:
-          type: string
-          enum:
-          - message
-          - status
-          - think
-          - tool_use_block
-          - tool_result_block
-          - answer
-          - keepalive
-          description: Type of event in the analytics stream
-        data:
-          type: object
-          description: Event-specific data payload
-    BriefingDeliveryDetail:
+    BriefingDelivery:
       type: object
       properties:
         id:
           type: string
-          description: Delivery ID
         status:
           type: string
           enum:
@@ -993,44 +1118,86 @@ components:
           type:
           - string
           - 'null'
-          description: ISO 8601 timestamp when delivered
         scheduled_at:
           type:
           - string
           - 'null'
-          description: ISO 8601 timestamp when scheduled
         email_title:
           type:
           - string
           - 'null'
-          description: Email subject line
         tickers:
           type: array
           items:
             type: string
-          description: Ticker symbols included
         frequency:
           type:
           - string
           - 'null'
-          enum:
-          - daily
-          - weekly
-          - monthly
-          description: Schedule frequency
-        content:
-          type:
-          - string
-          - 'null'
-          description: Full briefing content. Markdown for most briefings; may be HTML for certain briefing types.
-        chat_session_id:
-          type:
-          - string
-          - 'null'
-          description: Chat session ID from this delivery's generation (informational; the on-demand endpoints do not accept it as input).
         created_at:
           type: string
-          description: ISO 8601 creation timestamp
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
+    ReferenceV2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Reference ID
+        citation_idx:
+          type: integer
+          description: Citation index number
+        search_type:
+          type: string
+          description: Type of search that produced this reference (e.g., "rms")
+        chunk_id:
+          type: string
+          description: Chunk identifier
+        text:
+          type: string
+          description: Reference text content
+        text_type:
+          type: string
+          description: Type of text (e.g., "paragraph")
+        document_id:
+          type: string
+          format: uuid
+          description: Document ID. Use with presigned_url endpoint for direct download.
+        document_name:
+          type: string
+          description: Document name
+        s3_file_key:
+          type:
+          - string
+          - 'null'
+          description: S3 file key (may be null)
+        external_url:
+          type: string
+          description: External URL for the document
+        metadata:
+          $ref: '#/components/schemas/ReferenceMetadataV2'
+      required:
+      - id
+      - citation_idx
+      - search_type
+      - chunk_id
+      - text
+      - text_type
+      - document_id
+      - document_name
+      - s3_file_key
+      - external_url
+      - metadata
     Briefing:
       type: object
       properties:
@@ -1084,42 +1251,6 @@ components:
           type: string
         updated_at:
           type: string
-    BriefingDelivery:
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: string
-          enum:
-          - pending
-          - sent
-          - failed
-          - resynced
-          - skipped
-          description: Delivery status
-        delivered_at:
-          type:
-          - string
-          - 'null'
-        scheduled_at:
-          type:
-          - string
-          - 'null'
-        email_title:
-          type:
-          - string
-          - 'null'
-        tickers:
-          type: array
-          items:
-            type: string
-        frequency:
-          type:
-          - string
-          - 'null'
-        created_at:
-          type: string
     AnalyticsAnswerEvent:
       description: Final answer event. Contains the complete answer in a single event (not streamed incrementally).
       allOf:
@@ -1136,137 +1267,6 @@ components:
               answer_piece:
                 type: string
                 description: The complete final answer content. Unlike other SSE endpoints, analytics sends the full answer in a single event rather than streaming it incrementally.
-    AnalyticsStatusEvent:
-      description: Stream status event indicating start, finish, or keep_alive of the analytics stream.
-      allOf:
-      - $ref: '#/components/schemas/AnalyticsSseEvent'
-      - properties:
-          event_name:
-            enum:
-            - status
-          data:
-            type: object
-            required:
-            - status
-            properties:
-              status:
-                type: string
-                enum:
-                - start
-                - finish
-                - keep_alive
-                description: Stream lifecycle status. 'keep_alive' is sent periodically during long tool execution gaps.
-    BriefingUpdateRequest:
-      type: object
-      description: All fields are optional. Only include fields you want to change.
-      properties:
-        topic:
-          type: string
-          description: Briefing instructions/topic
-        stock_ids:
-          type: array
-          items:
-            type: string
-          description: Internal stock UUIDs (preferred)
-        tickers:
-          type: array
-          items:
-            type: string
-          description: Ticker symbols (auto-resolved)
-        language:
-          type:
-          - string
-          - 'null'
-          enum:
-          - English
-          - Spanish
-          - French
-          - German
-          - Italian
-          - Portuguese
-          - Dutch
-          - Hindi
-          - Japanese
-          - Chinese
-          - Finnish
-          - Korean
-          - Polish
-          - Russian
-          - Turkish
-          - Ukrainian
-          - Vietnamese
-          description: Output language (null = auto-detect)
-        scheduled_time:
-          type: string
-          description: h:mm AM/PM format (e.g. '9:00 AM')
-        timezone:
-          type: string
-          description: IANA timezone (e.g. Asia/Seoul)
-        frequency:
-          type: string
-          enum:
-          - daily
-          - weekly
-          - monthly
-        scheduled_day_of_week:
-          type:
-          - integer
-          - 'null'
-          minimum: 0
-          maximum: 6
-          description: 0=Sun, 6=Sat
-        scheduled_day_of_month:
-          type:
-          - integer
-          - 'null'
-          minimum: 1
-          maximum: 31
-        title:
-          type:
-          - string
-          - 'null'
-          description: Custom briefing title
-        source_type:
-          type: string
-          enum:
-          - tfs_only
-          - rms_only
-          - both
-        attach_pdf:
-          type: boolean
-        is_active:
-          type: boolean
-          description: Enable/disable the schedule
-        rms_sources:
-          type: array
-          items:
-            type: object
-            properties:
-              source:
-                type: string
-              workspace:
-                type: string
-          description: RMS source configurations
-        watchlist_group_id:
-          type:
-          - string
-          - 'null'
-          description: 'Watchlist group ID to link for dynamic ticker sync. Note: unlinking by sending null is not currently supported.'
-        use_custom_email_title:
-          type: boolean
-          description: Use title as fixed email subject
-        organization_id:
-          type: string
-          description: 'Platform (EDS) keys only: org UUID under the key''s platform. Ignored by org-bound keys.'
-        user_id:
-          type: string
-          description: 'Platform (EDS) keys only: the target user''s customer_id (your external user id, not a UUID). Ignored by org-bound keys.'
-        user_email:
-          type: string
-          description: 'Platform (EDS) keys only: the target user''s email. Ignored by org-bound keys.'
-        user_name:
-          type: string
-          description: 'Platform (EDS) keys only: optional display name (used only when creating the user).'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

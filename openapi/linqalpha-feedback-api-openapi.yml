@@ -179,6 +179,44 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Error code indicating the type of error. Common codes:
+
+            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
+
+            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
+
+            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
+
+            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
+
+            - Not Found: `NOT_FOUND`'
+          example: INVALID_REQUEST_BODY
+        msg:
+          type: string
+          description: Error message (deprecated, use `message` instead)
+          example: query is required and must be a string
+        message:
+          type: string
+          description: Error message providing more details about the error
+          example: query is required and must be a string
+      required:
+      - code
+    ApiErrorResponse:
+      type: object
+      description: Standard error response wrapper
+      properties:
+        error:
+          $ref: '#/components/schemas/ApiError'
+        payload:
+          description: Always null for error responses
+      required:
+      - error
+      - payload
     CreateConversationFeedbackRequest:
       type: object
       properties:
@@ -220,6 +258,15 @@ components:
       required:
       - conversation_id
       - rating
+    CreateConversationFeedbackResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the feedback was successfully submitted
+          example: true
+      required:
+      - success
     DeleteConversationFeedbackResponse:
       type: object
       properties:
@@ -234,53 +281,6 @@ components:
               example: true
           required:
           - success
-    CreateConversationFeedbackResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: Indicates whether the feedback was successfully submitted
-          example: true
-      required:
-      - success
-    ApiError:
-      type: object
-      properties:
-        code:
-          type: string
-          description: 'Error code indicating the type of error. Common codes:
-
-            - Authentication: `API_KEY_MISSING`, `INVALID_API_KEY`
-
-            - Validation: `INVALID_REQUEST_BODY`, `ORGANIZATION_ID_MISSING`, `TICKERS_MISSING`, `CHAT_MESSAGE_ID_MISSING`, `DOCUMENT_ID_MISSING`
-
-            - Service: `SEARCH_FAIL`, `TTS_FAIL`, `CREATE_CONV_FAIL`, `GET_STOCK_FAIL`, `CREATE_MSG_FAIL`, `ALPHA_COMP_FAIL`, `GET_REF_FAIL`
-
-            - Connectors: `CONNECTOR_LIST_FAIL`, `CONNECTOR_NOT_FOUND`, `CONNECTOR_CREATE_FAIL`, `CONNECTOR_UPDATE_FAIL`, `CONNECTOR_DELETE_FAIL`, `CONNECTOR_TEST_FAIL`
-
-            - Not Found: `NOT_FOUND`'
-          example: INVALID_REQUEST_BODY
-        msg:
-          type: string
-          description: Error message (deprecated, use `message` instead)
-          example: query is required and must be a string
-        message:
-          type: string
-          description: Error message providing more details about the error
-          example: query is required and must be a string
-      required:
-      - code
-    ApiErrorResponse:
-      type: object
-      description: Standard error response wrapper
-      properties:
-        error:
-          $ref: '#/components/schemas/ApiError'
-        payload:
-          description: Always null for error responses
-      required:
-      - error
-      - payload
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

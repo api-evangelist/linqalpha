@@ -143,6 +143,76 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    VaultConfirmResponse:
+      type: object
+      properties:
+        rms_document_id:
+          type:
+          - string
+          - 'null'
+          description: RMS document id; null when the upload deduplicated into an existing document. Use it to poll GET /v2/vault/status.
+    VaultStatusResponse:
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultDocumentStatus'
+    VaultPresignedUrlRequest:
+      type: object
+      required:
+      - file_name
+      - content_type
+      properties:
+        file_name:
+          type: string
+          description: Original file name (with extension).
+          example: Q4_report.pdf
+        content_type:
+          type: string
+          description: MIME type of the file.
+          example: application/pdf
+        workspace:
+          type: string
+          enum:
+          - personal
+          - organization
+          default: personal
+          description: 'Vault scope the document is uploaded into. Must match between presigned_url and confirm. Note: the analytics SSE search must use the same workspace to retrieve the document.'
+        organization_id:
+          type: string
+          format: uuid
+          description: Organization ID (optional).
+        user_id:
+          type: string
+          format: uuid
+          description: User id (optional).
+        user_email:
+          type: string
+          format: email
+          description: User email (optional).
+        user_name:
+          type: string
+          description: User name (optional).
+    VaultDocumentStatus:
+      type: object
+      properties:
+        rms_document_id:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        status:
+          type:
+          - string
+          - 'null'
+          description: Processing status. Poll until `Synced` (complete and searchable). See the status values table on this page.
+        fail_code:
+          type:
+          - string
+          - 'null'
+          description: Deterministic terminal-failure code (e.g. `PASSWORD_PROTECTED`, `FILE_SIZE_EXCEEDED`, `CONVERSION_FAILED`). Branch on this instead of parsing `status` text; `null` unless the document terminally failed.
     VaultConfirmRequest:
       type: object
       required:
@@ -202,76 +272,6 @@ components:
         expiration_seconds:
           type: integer
           example: 600
-    VaultPresignedUrlRequest:
-      type: object
-      required:
-      - file_name
-      - content_type
-      properties:
-        file_name:
-          type: string
-          description: Original file name (with extension).
-          example: Q4_report.pdf
-        content_type:
-          type: string
-          description: MIME type of the file.
-          example: application/pdf
-        workspace:
-          type: string
-          enum:
-          - personal
-          - organization
-          default: personal
-          description: 'Vault scope the document is uploaded into. Must match between presigned_url and confirm. Note: the analytics SSE search must use the same workspace to retrieve the document.'
-        organization_id:
-          type: string
-          format: uuid
-          description: Organization ID (optional).
-        user_id:
-          type: string
-          format: uuid
-          description: User id (optional).
-        user_email:
-          type: string
-          format: email
-          description: User email (optional).
-        user_name:
-          type: string
-          description: User name (optional).
-    VaultDocumentStatus:
-      type: object
-      properties:
-        rms_document_id:
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        status:
-          type:
-          - string
-          - 'null'
-          description: Processing status. Poll until `Synced` (complete and searchable). See the status values table on this page.
-        fail_code:
-          type:
-          - string
-          - 'null'
-          description: Deterministic terminal-failure code (e.g. `PASSWORD_PROTECTED`, `FILE_SIZE_EXCEEDED`, `CONVERSION_FAILED`). Branch on this instead of parsing `status` text; `null` unless the document terminally failed.
-    VaultConfirmResponse:
-      type: object
-      properties:
-        rms_document_id:
-          type:
-          - string
-          - 'null'
-          description: RMS document id; null when the upload deduplicated into an existing document. Use it to poll GET /v2/vault/status.
-    VaultStatusResponse:
-      type: object
-      properties:
-        statuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/VaultDocumentStatus'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
