@@ -262,56 +262,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateSourceResponse:
+    CreateSourceBatchResponse:
       type: object
       properties:
-        source_id:
-          type: string
-          format: uuid
-          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
-          example: 456e7890-e89b-12d3-a456-426614174001
-        size:
-          type: integer
-          description: File size in bytes
-          minimum: 0
-          example: 2048576
-        status:
-          type: string
-          description: Initial processing status (typically 'processing' when first created)
-          enum:
-          - processing
-          - success
-          - failed
-          example: processing
-      required:
-      - source_id
-      - size
-    UploadUrlRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
-          example: Q4_Revenue_Report.pdf
-        source_type:
-          type: string
-          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
-          enum:
-          - pdf
-          - docx
-          - xlsx
-          - pptx
-          - doc
-          - txt
-          example: pdf
         source_batch_id:
           type: string
           format: uuid
-          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
+          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
           example: 123e4567-e89b-12d3-a456-426614174000
       required:
-      - name
-      - source_type
       - source_batch_id
     UploadUrlResponse:
       type: object
@@ -367,15 +326,32 @@ components:
       required:
       - source_id
       - status
-    CreateSourceBatchResponse:
+    UploadUrlRequest:
       type: object
       properties:
+        name:
+          type: string
+          description: Display name for the source, typically the original filename. Used to construct the S3 object key.
+          example: Q4_Revenue_Report.pdf
+        source_type:
+          type: string
+          description: File extension. Determines the expected `Content-Type` baked into the presigned URL signature.
+          enum:
+          - pdf
+          - docx
+          - xlsx
+          - pptx
+          - doc
+          - txt
+          example: pdf
         source_batch_id:
           type: string
           format: uuid
-          description: Unique identifier for the created source batch. Use this ID when uploading sources and referencing the batch in chat/search requests.
+          description: Source batch the upload will be registered under. Must be created first via `POST /v1/source_batches`. Per-batch source limit (10) is enforced here.
           example: 123e4567-e89b-12d3-a456-426614174000
       required:
+      - name
+      - source_type
       - source_batch_id
     CreateSourceRequest:
       type: object
@@ -414,6 +390,30 @@ components:
       - source_batch_id
       - name
       - file_key
+    CreateSourceResponse:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the created source. Use this ID to poll processing status via GET /v1/sources/{source_id}.
+          example: 456e7890-e89b-12d3-a456-426614174001
+        size:
+          type: integer
+          description: File size in bytes
+          minimum: 0
+          example: 2048576
+        status:
+          type: string
+          description: Initial processing status (typically 'processing' when first created)
+          enum:
+          - processing
+          - success
+          - failed
+          example: processing
+      required:
+      - source_id
+      - size
     CreateSourceBatchRequest:
       type: object
       properties:

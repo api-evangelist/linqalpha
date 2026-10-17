@@ -210,17 +210,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ConnectorApiResponse:
-      type: object
-      properties:
-        error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
-        payload:
-          $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
     ConnectorMutationRequest:
       type: object
       description: Customer connector create/update body. Any additional fields you include are preserved and forwarded with the request.
@@ -239,6 +228,22 @@ components:
               additionalProperties:
                 type: string
               description: Write-only HTTP headers used by the connector upstream. Values are not returned by read endpoints.
+    ConnectorListApiResponse:
+      type: object
+      description: List response — the payload is an array of connectors.
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
     ApiError:
       type: object
       properties:
@@ -266,6 +271,17 @@ components:
           example: query is required and must be a string
       required:
       - code
+    ConnectorApiResponse:
+      type: object
+      properties:
+        error:
+          oneOf:
+          - $ref: '#/components/schemas/ApiError'
+        payload:
+          $ref: '#/components/schemas/ConnectorProxyPayload'
+      required:
+      - error
+      - payload
     ApiErrorResponse:
       type: object
       description: Standard error response wrapper
@@ -281,22 +297,6 @@ components:
       type: object
       description: Opaque connector payload. Credential values are write-only and are not returned.
       additionalProperties: true
-    ConnectorListApiResponse:
-      type: object
-      description: List response — the payload is an array of connectors.
-      properties:
-        error:
-          oneOf:
-          - $ref: '#/components/schemas/ApiError'
-        payload:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ConnectorProxyPayload'
-      required:
-      - error
-      - payload
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
