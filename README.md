@@ -64,6 +64,145 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-LinqAlpha is a company surfaced as a portfolio company of techstars and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+LinqAlpha is a domain-specialized multi-agent AI platform for institutional investment research, serving hedge funds, asset managers and investment banks. It runs retrieval-augmented, agentic analysis across SEC filings, earnings-call transcripts, IR materials, news and macroeconomic data covering 57,600+ companies in 120+ countries and 30+ languages, returning answers with inline citations that resolve to the exact source chunks. The LinqAlpha API exposes that engine over a REST surface at api.linqalpha.com — streaming analytics and chat over Server-Sent Events, document search, natural-language-to-SQL, scheduled research briefings, an RMS/Vault ingestion path for a firm's own internal documents, and a source-grounding judge that scores how well each claim in an answer is backed by the sources it cited. LinqAlpha also publishes a first-party remote MCP server exposing 22 financial-data tools to AI assistants.
 
-Backed by: techstars — https://linqalpha.com/
+**Areas:** Company · Financial Services · Investment Research · Artificial Intelligence · Agents · Market Data · Stocks · Economic Data · SEC Filings · RAG · MCP
+
+## LinqAlpha on APIs.io
+
+Everything profiled for LinqAlpha is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/linqalpha/](https://apis.io/providers/linqalpha/)** — or go straight to one of the APIs or properties below.
+
+### APIs (10)
+
+- [LinqAlpha Briefing API](https://apis.io/apis/linqalpha/linqalpha-briefing-api/) — Briefing Agent — automated market briefings with scheduling and delivery
+- [LinqAlpha Connectors API](https://apis.io/apis/linqalpha/linqalpha-connectors-api/) — Customer Connectors — customer-owned MCP connector management
+- [LinqAlpha Data API](https://apis.io/apis/linqalpha/linqalpha-data-api/) — Data retrieval and mapping
+- [LinqAlpha Feedback API](https://apis.io/apis/linqalpha/linqalpha-feedback-api/) — Conversation feedback
+- [LinqAlpha MCP API](https://apis.io/apis/linqalpha/linqalpha-mcp-api/) — LinqAlpha MCP — Financial data tools for AI assistants via Model Context Protocol
+- [LinqAlpha RMS API](https://apis.io/apis/linqalpha/linqalpha-rms-api/) — Research Management System
+- [LinqAlpha Search API](https://apis.io/apis/linqalpha/linqalpha-search-api/) — Search and generate responses
+- [LinqAlpha Source Management API](https://apis.io/apis/linqalpha/linqalpha-source-management-api/) — Source batch and file management
+- [LinqAlpha Status API](https://apis.io/apis/linqalpha/linqalpha-status-api/) — Sync status — check organization, document, and container sync progress
+- [LinqAlpha Vault API](https://apis.io/apis/linqalpha/linqalpha-vault-api/) — The Vault API from LinqAlpha — 3 operation(s) for vault.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [linqalpha](https://apis.io/servers/linqalpha/linqalpha/)
+
+#### Collections (10)
+
+Postman and Open Collection request collections.
+
+- [LinqAlpha Briefing API](https://apis.io/collections/linqalpha/open-linqalpha-briefing-api/)
+- [LinqAlpha Briefing Connectors API](https://apis.io/collections/linqalpha/open-linqalpha-connectors-api/)
+- [LinqAlpha Briefing Data API](https://apis.io/collections/linqalpha/open-linqalpha-data-api/)
+- [LinqAlpha Briefing Feedback API](https://apis.io/collections/linqalpha/open-linqalpha-feedback-api/)
+- [LinqAlpha Briefing MCP API](https://apis.io/collections/linqalpha/open-linqalpha-mcp-api/)
+- [LinqAlpha Briefing RMS API](https://apis.io/collections/linqalpha/open-linqalpha-rms-api/)
+- [LinqAlpha Briefing Search API](https://apis.io/collections/linqalpha/open-linqalpha-search-api/)
+- [LinqAlpha Briefing Source Management API](https://apis.io/collections/linqalpha/open-linqalpha-source-management-api/)
+- [LinqAlpha Briefing Status API](https://apis.io/collections/linqalpha/open-linqalpha-status-api/)
+- [LinqAlpha Briefing Vault API](https://apis.io/collections/linqalpha/open-linqalpha-vault-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Linqalpha Api Overlay](https://apis.io/overlays/linqalpha/linqalpha-api-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Linqalpha Authentication](https://apis.io/security/linqalpha/linqalpha-authentication/)
+- [Linqalpha Domain Security](https://apis.io/security/linqalpha/linqalpha-domain-security/)
+- [Linqalpha Trust Center](https://apis.io/security/linqalpha/linqalpha-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Linqalpha Scopes](https://apis.io/scopes/linqalpha/linqalpha-scopes/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Linqalpha Rate Limits](https://apis.io/rate-limits/linqalpha/linqalpha-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://linqalpha.com/)
+- [Documentation](https://docs.linqalpha.com/quickstart)
+- [Getting started](https://docs.linqalpha.com/quickstart)
+- [API reference](https://docs.linqalpha.com/api-reference/basic/analytics-sse)
+- [Sign up](https://chat.linqalpha.com/analytics)
+- [Support](https://linqalpha.com/contact-sales)
+- [Blog](https://linqalpha.com/blog)
+- [Compliance](https://linqalpha.com/security)
+- [Terms of service](https://linqalpha.com/terms-of-use)
+- [Privacy policy](https://linqalpha.com/privacy-policy)
+- [Status](https://status.linqalpha.com/)
+
+## API Evangelist rating
+
+**Kin Score 47.9** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 51.6 |
+| Contract governance | 18.2 |
+| Operational transparency | 36.8 |
+| Developer ergonomics | 58.9 |
+| Access clarity | 36.8 |
+
+**Agent readiness 55.5** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 34.5** — Securities & Market Data
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/linqalpha/](https://apis.io/providers/linqalpha/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for LinqAlpha: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/linqalpha/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
